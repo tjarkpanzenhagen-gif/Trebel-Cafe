@@ -27,20 +27,26 @@ export default function Navigation() {
     setMenuOpen(false);
   }, [pathname]);
 
-  const navBg =
-    isHome && !scrolled
-      ? "bg-transparent"
-      : "bg-cream/95 backdrop-blur-sm shadow-sm";
-
-  const linkColor =
-    isHome && !scrolled ? "text-white" : "text-espresso";
+  const isTransparent = isHome && !scrolled;
+  const isPill = !isTransparent; // pill on scroll OR on non-home pages
+  const linkColor = isTransparent ? "text-white" : "text-espresso";
 
   return (
     <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}
-      >
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 pointer-events-none">
+        <motion.div
+          animate={
+            isPill
+              ? { maxWidth: 800, marginTop: 12, borderRadius: 50 }
+              : { maxWidth: 1440, marginTop: 0, borderRadius: 0 }
+          }
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className={`mx-auto h-16 flex items-center justify-between px-6 pointer-events-auto transition-[background-color,box-shadow] duration-500 ${
+            isPill
+              ? "bg-cream/95 backdrop-blur-md shadow-[0_2px_20px_rgba(44,24,16,0.08)]"
+              : "bg-transparent"
+          }`}
+        >
           {/* Logo */}
           <Link
             href="/"
@@ -79,7 +85,7 @@ export default function Navigation() {
             <span className={`block w-6 h-px bg-current transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
             <span className={`block w-6 h-px bg-current transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
           </button>
-        </div>
+        </motion.div>
       </header>
 
       {/* Mobile fullscreen overlay */}
