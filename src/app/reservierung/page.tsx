@@ -41,18 +41,18 @@ export default function ReservierungPage() {
                   placeholder="Wie können wir euch erreichen?"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-dm text-sm text-espresso/70 mb-2">Datum *</label>
                   <input
                     type="date"
                     required
-                    className="w-full border border-sand rounded-xl px-4 py-3 font-dm text-sm bg-cream focus:outline-none focus:border-terracotta transition-colors"
+                    className="w-full border border-sand rounded-xl px-4 py-3 font-dm text-base bg-cream focus:outline-none focus:border-terracotta transition-colors"
                   />
                 </div>
                 <div>
                   <label className="block font-dm text-sm text-espresso/70 mb-2">Uhrzeit *</label>
-                  <select className="w-full border border-sand rounded-xl px-4 py-3 font-dm text-sm bg-cream focus:outline-none focus:border-terracotta transition-colors">
+                  <select className="w-full border border-sand rounded-xl px-4 py-3 font-dm text-base bg-cream focus:outline-none focus:border-terracotta transition-colors">
                     {["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"].map((t) => (
                       <option key={t}>{t} Uhr</option>
                     ))}
