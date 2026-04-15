@@ -41,7 +41,7 @@ export default function ReservierungPage() {
                   placeholder="Wie können wir euch erreichen?"
                 />
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label className="block font-dm text-sm text-espresso/70 mb-2">Datum *</label>
                   <input
