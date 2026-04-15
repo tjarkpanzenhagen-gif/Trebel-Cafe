@@ -2,7 +2,7 @@ export const contact = {
   phone: "038320 649921",
   email: "trebelcafe@gmx.de",
   address: "Tribsees, Mecklenburg-Vorpommern",
-  mapsUrl: "https://maps.google.com/?q=Tribsees,+Mecklenburg-Vorpommern",
+  mapsUrl: "https://www.google.com/maps/place/Trebel+Caf%C3%A9/@54.0949137,12.7550876,643m/data=!3m2!1e3!4b1!4m6!3m5!1s0x47ac7dae9b7f237b:0xe944cc3786181c03!8m2!3d54.0949106!4d12.7576625!16s%2Fg%2F11kptknq_r?entry=ttu&g_ep=EgoyMDI2MDQxMi4wIKXMDSoASAFQAw%3D%3D",
 };
 
 export const hours = {
