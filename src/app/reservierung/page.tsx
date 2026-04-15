@@ -47,7 +47,7 @@ export default function ReservierungPage() {
                   <input
                     type="date"
                     required
-                    className="w-full border border-sand rounded-xl px-4 py-3 font-dm text-base bg-cream focus:outline-none focus:border-terracotta transition-colors"
+                    className="w-full max-w-full box-border appearance-none border border-sand rounded-xl px-4 py-3 font-dm text-base bg-cream focus:outline-none focus:border-terracotta transition-colors"
                   />
                 </div>
                 <div>
