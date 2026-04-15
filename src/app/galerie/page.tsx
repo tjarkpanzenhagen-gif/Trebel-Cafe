@@ -9,15 +9,15 @@ export const metadata: Metadata = {
 };
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=800&q=80", alt: "Gemütliche Café-Atmosphäre", tall: true },
-  { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80", alt: "Frisch gebackener Kuchen", tall: false },
-  { src: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=800&q=80", alt: "Cappuccino mit Herz", tall: false },
+  { src: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=800&q=80", alt: "Gemütliche Café-Atmosphäre", tall: true },
+  { src: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&q=80", alt: "Frisch gebackene Croissants", tall: false },
+  { src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=80", alt: "Cappuccino mit Latte Art", tall: false },
   { src: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80", alt: "Café-Innenraum mit warmem Licht", tall: true },
-  { src: "https://images.unsplash.com/photo-1612544448445-b8232cff3b6c?w=800&q=80", alt: "Selbstgebackene Brötchen", tall: false },
+  { src: "https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=800&q=80", alt: "Selbstgebackene Brötchen", tall: false },
   { src: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80", alt: "Kaffeespezialitäten", tall: false },
-  { src: "https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=800&q=80", alt: "Kuchenvitrine", tall: true },
+  { src: "https://images.unsplash.com/photo-1481931098730-318b6f776db0?w=800&q=80", alt: "Frühstückstisch", tall: true },
   { src: "https://images.unsplash.com/photo-1442975631134-d6106c90a05e?w=800&q=80", alt: "Tischgedeck im Café", tall: false },
-  { src: "https://images.unsplash.com/photo-1507133750040-4a8f57021571?w=800&q=80", alt: "Frühstücksset", tall: false },
+  { src: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=800&q=80", alt: "Kaffeebohnen und Tasse", tall: false },
 ];
 
 export default function GaleriePage() {

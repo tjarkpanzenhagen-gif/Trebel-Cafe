@@ -58,7 +58,7 @@ export default function UeberUnsPage() {
           <AnimatedSection delay={0.2}>
             <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=800&q=80"
+                src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&q=80"
                 alt="Frisch gebackener Kuchen aus unserer Backstube"
                 fill
                 className="object-cover"
