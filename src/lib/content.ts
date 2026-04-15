@@ -78,17 +78,14 @@ export const buffetDates = [
 
 export const promises = [
   {
-    icon: "🥐",
     title: "Alles selbst gebacken",
     text: "Jeder Kuchen, jedes Brot und jedes Brötchen entsteht in unserer eigenen Küche — mit Liebe und ohne Kompromisse.",
   },
   {
-    icon: "👨‍👩‍👧",
     title: "Familienbetrieb",
     text: "Das Trebelcafé wird von Familie Wendel-Bigalke geführt. Persönlich, herzlich und mit echtem Engagement.",
   },
   {
-    icon: "☕",
     title: "Gemütliche Atmosphäre",
     text: "Ein Ort zum Ankommen, Verweilen und Genießen — ob allein, zu zweit oder mit der ganzen Familie.",
   },

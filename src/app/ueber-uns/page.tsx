@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import SectionLabel from "@/components/ui/SectionLabel";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { CroissantIcon, HouseHeartIcon, Coffee01Icon } from "@hugeicons/core-free-icons";
 import { promises } from "@/lib/content";
+
+const promiseIcons = [CroissantIcon, HouseHeartIcon, Coffee01Icon];
 
 export const metadata: Metadata = {
   title: "Über uns — Trebelcafé Tribsees",
@@ -78,7 +82,9 @@ export default function UeberUnsPage() {
           {promises.map((p, i) => (
             <AnimatedSection key={p.title} delay={i * 0.15}>
               <div className="text-center p-8 bg-sand/30 rounded-2xl hover:-translate-y-1 hover:shadow-md transition-all duration-300">
-                <div className="text-4xl mb-4">{p.icon}</div>
+                <div className="flex justify-center mb-4">
+                  <HugeiconsIcon icon={promiseIcons[i]} size={30} color="#C4724A" strokeWidth={1.5} />
+                </div>
                 <h3 className="font-playfair text-xl text-espresso mb-3">{p.title}</h3>
                 <p className="font-dm text-sm text-espresso/60 leading-relaxed">{p.text}</p>
               </div>

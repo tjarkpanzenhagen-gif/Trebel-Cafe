@@ -9,7 +9,6 @@ const navLinks = [
   { href: "/speisekarte", label: "Speisekarte" },
   { href: "/ueber-uns", label: "Über uns" },
   { href: "/galerie", label: "Galerie" },
-  { href: "/reservierung", label: "Reservierung" },
 ];
 
 export default function Navigation() {
@@ -24,7 +23,6 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close menu on route change
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);

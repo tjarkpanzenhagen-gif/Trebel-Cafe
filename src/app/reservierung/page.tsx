@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import SectionLabel from "@/components/ui/SectionLabel";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { TelephoneIcon, Mail01Icon, Calendar01Icon } from "@hugeicons/core-free-icons";
 import { contact, buffetDates } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -15,9 +17,6 @@ export default function ReservierungPage() {
         <AnimatedSection className="text-center mb-16">
           <SectionLabel>Wir freuen uns auf euch</SectionLabel>
           <h1 className="font-playfair text-5xl text-espresso mb-4">Reservierung</h1>
-          <p className="font-dm text-espresso/60 max-w-md mx-auto">
-            Reserviert euren Tisch bequem per Telefon, E-Mail — oder über das Formular.
-          </p>
         </AnimatedSection>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -81,7 +80,7 @@ export default function ReservierungPage() {
                 type="submit"
                 className="w-full bg-terracotta text-white py-4 rounded-xl font-dm font-medium hover:bg-[#b3623c] transition-colors duration-300"
               >
-                Reservierungsanfrage senden
+                Anfrage senden
               </button>
               <p className="text-xs text-espresso/40 text-center font-dm">
                 Wir melden uns schnellstmöglich zur Bestätigung.
@@ -89,22 +88,33 @@ export default function ReservierungPage() {
             </form>
           </AnimatedSection>
 
-          {/* Direct contact + buffet dates */}
+          {/* Sidebar */}
           <AnimatedSection delay={0.2} className="space-y-10">
-            {/* Direct */}
+            {/* Direct contact */}
             <div className="bg-sand/30 rounded-2xl p-8">
-              <h3 className="font-playfair text-xl text-espresso mb-4">Direkt erreichen</h3>
-              <a href={`tel:${contact.phone}`} className="block font-dm text-espresso hover:text-terracotta transition-colors mb-2">
-                📞 {contact.phone}
+              <h3 className="font-playfair text-xl text-espresso mb-5">Lieber direkt?</h3>
+              <a
+                href={`tel:${contact.phone}`}
+                className="flex items-center gap-3 font-dm text-espresso hover:text-terracotta transition-colors mb-3"
+              >
+                <HugeiconsIcon icon={TelephoneIcon} size={16} color="currentColor" strokeWidth={1.5} />
+                {contact.phone}
               </a>
-              <a href={`mailto:${contact.email}`} className="block font-dm text-espresso/70 hover:text-terracotta transition-colors">
-                ✉️ {contact.email}
+              <a
+                href={`mailto:${contact.email}`}
+                className="flex items-center gap-3 font-dm text-espresso/70 hover:text-terracotta transition-colors"
+              >
+                <HugeiconsIcon icon={Mail01Icon} size={16} color="currentColor" strokeWidth={1.5} />
+                {contact.email}
               </a>
             </div>
 
             {/* Buffet dates */}
             <div>
-              <h3 className="font-playfair text-xl text-espresso mb-6">Nächste Frühstücksbuffets</h3>
+              <div className="flex items-center gap-2 mb-5">
+                <HugeiconsIcon icon={Calendar01Icon} size={18} color="#C4724A" strokeWidth={1.5} />
+                <h3 className="font-playfair text-xl text-espresso">Frühstücksbuffets 2026</h3>
+              </div>
               <div className="space-y-4">
                 {buffetDates.map((event) => (
                   <div key={event.date} className="border-l-2 border-terracotta pl-4">

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Clock01Icon, TelephoneIcon, Mail01Icon, MapPinIcon } from "@hugeicons/core-free-icons";
 import { contact, hours, closures2026 } from "@/lib/content";
 
 export default function Footer() {
@@ -16,8 +18,11 @@ export default function Footer() {
         {/* Hours */}
         <div>
           <h4 className="font-playfair text-cream text-lg mb-4">Öffnungszeiten</h4>
-          <p className="text-sm mb-1">{hours.open}</p>
-          <p className="text-sm mb-4">{hours.closed}</p>
+          <div className="flex items-start gap-2.5 mb-1">
+            <HugeiconsIcon icon={Clock01Icon} size={15} color="rgba(250,246,240,0.6)" strokeWidth={1.5} className="mt-0.5 flex-shrink-0" />
+            <p className="text-sm">{hours.open}</p>
+          </div>
+          <p className="text-sm mb-4 pl-[23px]">{hours.closed}</p>
           <p className="text-xs text-cream/50 font-medium uppercase tracking-wider mb-2">Schließzeiten 2026</p>
           {closures2026.map((c) => (
             <p key={c} className="text-xs text-cream/60">{c}</p>
@@ -27,13 +32,22 @@ export default function Footer() {
         {/* Contact */}
         <div>
           <h4 className="font-playfair text-cream text-lg mb-4">Kontakt</h4>
-          <p className="text-sm mb-1">{contact.address}</p>
-          <a href={`tel:${contact.phone}`} className="block text-sm hover:text-cream transition-colors mb-1">
-            {contact.phone}
-          </a>
-          <a href={`mailto:${contact.email}`} className="block text-sm hover:text-cream transition-colors mb-4">
-            {contact.email}
-          </a>
+          <div className="flex items-center gap-2.5 mb-2">
+            <HugeiconsIcon icon={MapPinIcon} size={15} color="rgba(250,246,240,0.6)" strokeWidth={1.5} className="flex-shrink-0" />
+            <p className="text-sm">{contact.address}</p>
+          </div>
+          <div className="flex items-center gap-2.5 mb-2">
+            <HugeiconsIcon icon={TelephoneIcon} size={15} color="rgba(250,246,240,0.6)" strokeWidth={1.5} className="flex-shrink-0" />
+            <a href={`tel:${contact.phone}`} className="text-sm hover:text-cream transition-colors">
+              {contact.phone}
+            </a>
+          </div>
+          <div className="flex items-center gap-2.5 mb-4">
+            <HugeiconsIcon icon={Mail01Icon} size={15} color="rgba(250,246,240,0.6)" strokeWidth={1.5} className="flex-shrink-0" />
+            <a href={`mailto:${contact.email}`} className="text-sm hover:text-cream transition-colors">
+              {contact.email}
+            </a>
+          </div>
           <a
             href={contact.mapsUrl}
             target="_blank"

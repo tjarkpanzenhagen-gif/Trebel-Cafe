@@ -3,7 +3,6 @@ import Promise from "@/components/home/Promise";
 import WeeklyMenu from "@/components/home/WeeklyMenu";
 import AboutTeaser from "@/components/home/AboutTeaser";
 import BuffetDates from "@/components/home/BuffetDates";
-import ContactSection from "@/components/home/ContactSection";
 
 export default function HomePage() {
   return (
@@ -13,7 +12,6 @@ export default function HomePage() {
       <WeeklyMenu />
       <AboutTeaser />
       <BuffetDates />
-      <ContactSection />
     </>
   );
 }
