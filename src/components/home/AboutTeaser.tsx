@@ -1,62 +1,44 @@
 import Image from "next/image";
 import AnimatedSection from "@/components/ui/AnimatedSection";
-import Link from "next/link";
+import SectionLabel from "@/components/ui/SectionLabel";
+import Button from "@/components/ui/Button";
 
 export default function AboutTeaser() {
   return (
-    <section className="bg-cream overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
-
-        {/* Image — full height, bleeds to edge */}
-        <AnimatedSection className="relative h-72 lg:h-auto order-last lg:order-first">
-          <Image
-            src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&q=80"
-            alt="Gemütliches Café-Ambiente im Trebelcafé"
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
-          {/* Subtle right-edge fade on desktop */}
-          <div className="hidden lg:block absolute inset-y-0 right-0 w-16 bg-gradient-to-r from-transparent to-cream" />
+    <section className="py-20 px-6 bg-sand/20">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        {/* Photo */}
+        <AnimatedSection>
+          <div className="relative h-80 md:h-[460px] rounded-2xl overflow-hidden shadow-lg">
+            <Image
+              src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80"
+              alt="Gemütliches Café-Ambiente im Trebelcafé"
+              fill
+              className="object-cover hover:scale-105 transition-transform duration-700"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
         </AnimatedSection>
 
-        {/* Text — generous padding, editorial */}
-        <AnimatedSection delay={0.15} className="flex flex-col justify-center px-10 md:px-16 lg:px-20 py-16 lg:py-24">
-          <p className="font-dm text-terracotta text-xs tracking-[0.3em] uppercase mb-8">
-            Unsere Geschichte
-          </p>
-
-          <h2
-            className="font-playfair text-espresso leading-[1.0] mb-8"
-            style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}
-          >
-            Ein Café mit Seele —<br />
-            <span className="font-light italic">geführt von Familie<br />Wendel-Bigalke.</span>
+        {/* Text */}
+        <AnimatedSection delay={0.2} className="flex flex-col justify-center">
+          <SectionLabel>Unsere Geschichte</SectionLabel>
+          <h2 className="font-playfair text-3xl md:text-4xl text-espresso mb-6 leading-snug">
+            Ein Café mit Seele — geführt von Familie Wendel-Bigalke.
           </h2>
-
-          <p className="font-dm text-espresso/60 leading-relaxed mb-8 text-sm md:text-base max-w-sm">
-            Im Herzen von Tribsees empfangen wir euch mit frisch gebackenem Kuchen,
-            hausgemachten Gerichten und der Wärme, die nur ein echter Familienbetrieb kennt.
+          <p className="font-dm text-espresso/70 leading-relaxed mb-4">
+            Im Herzen von Tribsees liegt unser kleines, gemütliches Café. Wir empfangen euch
+            mit frisch gebackenem Kuchen, hausgemachten Gerichten und der Wärme, die man nur
+            in einem echten Familienbetrieb findet.
           </p>
-
-          {/* Large blockquote */}
-          <div className="border-l border-terracotta pl-6 mb-10">
-            <p className="font-cormorant italic text-espresso/70" style={{ fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)" }}>
-              „Wir backen alles selbst — das ist kein<br />
-              Versprechen, das ist unser Alltag."
+          <blockquote className="border-l-2 border-terracotta pl-4 mb-6">
+            <p className="font-cormorant italic text-xl text-espresso/80">
+              &quot;Wir backen alles selbst — das ist kein Versprechen, das ist unser Alltag.&quot;
             </p>
-          </div>
-
-          {/* Text link — more editorial than a filled button */}
-          <Link
-            href="/ueber-uns"
-            className="group inline-flex items-center gap-3 font-dm text-sm text-espresso tracking-wide"
-          >
-            <span className="border-b border-espresso/30 group-hover:border-terracotta group-hover:text-terracotta transition-colors duration-300 pb-0.5">
-              Mehr über uns
-            </span>
-            <span className="text-terracotta group-hover:translate-x-1 transition-transform duration-300">→</span>
-          </Link>
+          </blockquote>
+          <Button href="/ueber-uns" variant="filled">
+            Mehr über uns →
+          </Button>
         </AnimatedSection>
       </div>
     </section>

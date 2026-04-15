@@ -3,9 +3,9 @@ import Button from "@/components/ui/Button";
 
 export default function Hero() {
   return (
-    <section className="relative h-screen min-h-[700px] overflow-hidden bg-espresso">
-      {/* Background image */}
-      <div className="absolute inset-0">
+    <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
+      {/* Background image with Ken-Burns */}
+      <div className="absolute inset-0 overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1600&q=80"
           alt="Gemütliches Café-Interieur mit warmem Licht"
@@ -16,97 +16,45 @@ export default function Hero() {
         />
       </div>
 
-      {/* Asymmetric gradient — heavy left, fading right */}
-      <div className="absolute inset-0 bg-gradient-to-r from-espresso/95 via-espresso/75 to-espresso/25" />
-      <div className="absolute inset-0 bg-gradient-to-t from-espresso/50 via-transparent to-transparent" />
+      {/* Warm overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-espresso/50 via-espresso/40 to-espresso/60" />
 
-      {/* Ghost display text — massive background word */}
+      {/* Grain overlay */}
       <div
-        className="absolute bottom-0 left-0 font-playfair leading-none select-none pointer-events-none text-white/[0.035]"
-        style={{ fontSize: "clamp(10rem, 28vw, 28rem)" }}
-        aria-hidden="true"
-      >
-        Café
-      </div>
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundSize: "128px 128px",
+        }}
+      />
 
-      {/* Rotating badge — top right */}
-      <div className="absolute top-28 right-8 md:right-14 w-24 h-24 animate-spin-slow" aria-hidden="true">
-        <svg viewBox="0 0 100 100" className="w-full h-full fill-none">
-          <defs>
-            <path id="badgePath" d="M 50,50 m -36,0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" />
-          </defs>
-          <text fontSize="8.5" letterSpacing="3.2" className="fill-cream/50 font-dm">
-            <textPath href="#badgePath">HANDGEMACHT · HERZLICH · TRIBSEES · </textPath>
-          </text>
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-2 h-2 rounded-full bg-terracotta" />
-        </div>
-      </div>
-
-      {/* Main editorial content — bottom-left anchored */}
-      <div className="relative z-10 h-full flex flex-col justify-end pb-16 md:pb-24 px-8 md:px-16 max-w-screen-xl mx-auto">
-
-        {/* Location tag */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-10 h-px bg-terracotta" />
-          <span className="font-dm text-terracotta text-xs tracking-[0.3em] uppercase">
-            Tribsees · Mecklenburg-Vorpommern
-          </span>
-        </div>
-
-        {/* Headline — editorial scale, stacked */}
-        <h1 className="font-playfair text-cream leading-[0.88] mb-8">
-          <span
-            className="block font-semibold"
-            style={{ fontSize: "clamp(3.2rem, 9.5vw, 9rem)" }}
-          >
-            Selbst-
-          </span>
-          <span
-            className="block font-semibold"
-            style={{ fontSize: "clamp(3.2rem, 9.5vw, 9rem)" }}
-          >
-            gebackenes
-          </span>
-          <span
-            className="block font-light italic text-sand"
-            style={{ fontSize: "clamp(2rem, 5.5vw, 5rem)", paddingLeft: "2vw" }}
-          >
-            mit Herz.
-          </span>
+      {/* Content */}
+      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+        <p className="font-cormorant italic text-sand text-xl tracking-[0.2em] mb-4 opacity-90">
+          Herzlich willkommen
+        </p>
+        <h1 className="font-playfair text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-tight mb-6">
+          Selbstgebackenes mit Herz —<br />
+          <span className="text-sand">mitten in Tribsees.</span>
         </h1>
-
-        {/* Meta line */}
-        <div className="flex flex-wrap items-center gap-x-8 gap-y-2 mb-10">
-          <span className="font-cormorant italic text-sand text-xl md:text-2xl">
-            Do – Mo · 9 bis 17 Uhr
-          </span>
-          <span className="font-dm text-cream/40 text-xs tracking-widest uppercase">
-            Familie Wendel-Bigalke
-          </span>
-        </div>
-
-        {/* CTAs */}
-        <div className="flex flex-wrap gap-4">
+        <p className="font-dm text-cream/80 text-lg md:text-xl mb-10 max-w-xl mx-auto leading-relaxed">
+          Familie Wendel-Bigalke begrüßt euch{" "}
+          <span className="text-sand font-medium">Do – Mo von 9 bis 17 Uhr</span>.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button href="/speisekarte" variant="filled">
-            Speisekarte
+            Speisekarte entdecken
           </Button>
           <Button href="/reservierung" variant="outline-light">
-            Reservierung
+            Tisch reservieren
           </Button>
         </div>
       </div>
 
-      {/* Vertical scroll indicator — right side */}
-      <div
-        className="absolute bottom-16 right-8 md:right-14 flex flex-col items-center gap-3 text-cream/30"
-        aria-hidden="true"
-      >
-        <div className="h-14 w-px bg-gradient-to-b from-transparent to-cream/30" />
-        <span className="writing-vertical font-dm text-[10px] tracking-[0.25em] uppercase">
-          Scroll
-        </span>
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-cream/50">
+        <p className="text-xs tracking-widest uppercase font-dm">Scroll</p>
+        <div className="w-px h-8 bg-cream/30 animate-pulse" />
       </div>
     </section>
   );
