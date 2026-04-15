@@ -23,7 +23,7 @@ export default function ReservierungPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Form */}
           <AnimatedSection>
-            <form className="space-y-5">
+            <form action="mailto:trebelcafe@gmx.de" method="POST" encType="text/plain" className="space-y-5">
               <div>
                 <label className="block font-dm text-sm text-espresso/70 mb-2">Euer Name *</label>
                 <input
