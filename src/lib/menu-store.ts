@@ -11,7 +11,7 @@ export type MenuItem = {
 
 const KV_KEY = "trebelcafe_menu";
 
-const INITIAL_MENU: MenuItem[] = [
+export const INITIAL_MENU: MenuItem[] = [
   { id: "1", name: "Käse-Schinken-Salat", description: "Frischer Salat mit würzigem Käse und feinem Schinken", price: "9,90 €", vegan: false, vegetarisch: false, glutenfrei: true, kategorie: "wochenkarte" },
   { id: "2", name: "Ofenkartoffel mit Quark", description: "Knusprige Ofenkartoffel mit hausgemachtem Kräuterquark", price: "10,50 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "wochenkarte" },
   { id: "3", name: "Kartoffelpuffer mit Fisch", description: "Goldbraune Kartoffelpuffer mit Räucherfischfilet", price: "13,90 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte" },
@@ -29,32 +29,48 @@ const INITIAL_MENU: MenuItem[] = [
   { id: "15", name: "Kuchen & Kaffee (Set)", description: "Ein Stück Kuchen + Filterkaffee", price: "6,50 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "getraenke" },
 ];
 
+function hasKVCredentials() {
+  return Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+}
+
 export async function readMenu(): Promise<MenuItem[]> {
-  if (process.env.VERCEL) {
-    const { kv } = await import("@vercel/kv");
-    const items = await kv.get<MenuItem[]>(KV_KEY);
-    if (!items) {
-      await kv.set(KV_KEY, INITIAL_MENU);
+  if (hasKVCredentials()) {
+    try {
+      const { kv } = await import("@vercel/kv");
+      const items = await kv.get<MenuItem[]>(KV_KEY);
+      if (!items) {
+        await kv.set(KV_KEY, INITIAL_MENU);
+        return INITIAL_MENU;
+      }
+      return items;
+    } catch {
       return INITIAL_MENU;
     }
-    return items;
   }
-  const { readFileSync } = await import("fs");
-  const { join } = await import("path");
-  try {
-    return JSON.parse(readFileSync(join(process.cwd(), "data", "menu.json"), "utf-8"));
-  } catch {
-    return INITIAL_MENU;
+  if (!process.env.VERCEL) {
+    // local file system
+    const { readFileSync } = await import("fs");
+    const { join } = await import("path");
+    try {
+      return JSON.parse(readFileSync(join(process.cwd(), "data", "menu.json"), "utf-8"));
+    } catch {
+      return INITIAL_MENU;
+    }
   }
+  return INITIAL_MENU;
 }
 
 export async function writeMenu(items: MenuItem[]): Promise<void> {
-  if (process.env.VERCEL) {
+  if (hasKVCredentials()) {
     const { kv } = await import("@vercel/kv");
     await kv.set(KV_KEY, items);
     return;
   }
-  const { writeFileSync } = await import("fs");
-  const { join } = await import("path");
-  writeFileSync(join(process.cwd(), "data", "menu.json"), JSON.stringify(items, null, 2));
+  if (!process.env.VERCEL) {
+    const { writeFileSync } = await import("fs");
+    const { join } = await import("path");
+    writeFileSync(join(process.cwd(), "data", "menu.json"), JSON.stringify(items, null, 2));
+    return;
+  }
+  throw new Error("KV_REST_API_URL und KV_REST_API_TOKEN fehlen in den Vercel Env-Variablen.");
 }
