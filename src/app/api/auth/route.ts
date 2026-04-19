@@ -1,18 +1,23 @@
 import { NextResponse } from "next/server";
 
-const USERNAME = "123";
-const PASSWORD = "123";
+function getEnv(key: string, fallback: string) {
+  return process.env[key] || fallback;
+}
 
 export async function POST(request: Request) {
   const { username, password } = await request.json();
-  if (username !== USERNAME || password !== PASSWORD) {
+  const validUser = getEnv("ADMIN_USERNAME", "admin");
+  const validPass = getEnv("ADMIN_PASSWORD", "changeme");
+  const sessionSecret = getEnv("ADMIN_SESSION_SECRET", "dev-secret-change-in-production");
+
+  if (username !== validUser || password !== validPass) {
     return NextResponse.json(
       { error: "Ungültige Anmeldedaten" },
       { status: 401 }
     );
   }
   const response = NextResponse.json({ ok: true });
-  response.cookies.set("admin_session", "1", {
+  response.cookies.set("admin_session", sessionSecret, {
     httpOnly: true,
     path: "/",
     maxAge: 60 * 60 * 24,

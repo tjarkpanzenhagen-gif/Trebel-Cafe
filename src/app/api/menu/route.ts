@@ -3,7 +3,8 @@ import { randomUUID } from "crypto";
 import { readMenu, writeMenu } from "@/lib/menu-store";
 
 function isAuthenticated(request: NextRequest) {
-  return request.cookies.get("admin_session")?.value === "1";
+  const secret = process.env.ADMIN_SESSION_SECRET || "dev-secret-change-in-production";
+  return request.cookies.get("admin_session")?.value === secret;
 }
 
 export async function GET() {
