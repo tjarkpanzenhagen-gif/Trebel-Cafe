@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
-import { cookies } from "next/headers";
 
 const DATA_PATH = join(process.cwd(), "data", "menu.json");
 
@@ -13,16 +12,16 @@ function writeMenu(data: unknown) {
   writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
 }
 
-async function isAuthenticated() {
-  const cookieStore = await cookies();
-  return cookieStore.get("admin_session")?.value === "1";
+function isAuthenticated(request: Request) {
+  const cookieHeader = request.headers.get("cookie") ?? "";
+  return cookieHeader.split(";").some((c) => c.trim() === "admin_session=1");
 }
 
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  if (!(await isAuthenticated())) {
+  if (!isAuthenticated(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const { id } = await params;
@@ -51,10 +50,10 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  if (!(await isAuthenticated())) {
+  if (!isAuthenticated(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const { id } = await params;

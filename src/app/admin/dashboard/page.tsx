@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Kategorie = "wochenkarte" | "kuchenUndGebaeck" | "getraenke";
 
@@ -87,6 +88,7 @@ function Modal({
   form,
   editingId,
   saving,
+  saveError,
   onChange,
   onSave,
   onClose,
@@ -94,6 +96,7 @@ function Modal({
   form: FormData;
   editingId: string | null;
   saving: boolean;
+  saveError: string;
   onChange: (form: FormData) => void;
   onSave: () => void;
   onClose: () => void;
@@ -164,7 +167,10 @@ function Modal({
             </div>
           </div>
         </div>
-        <div className="p-6 border-t border-sand flex gap-3 justify-end">
+        <div className="p-6 border-t border-sand flex gap-3 justify-end items-center">
+          {saveError && (
+            <p className="font-dm text-xs text-red-600 mr-auto">{saveError}</p>
+          )}
           <button
             onClick={onClose}
             className="px-4 py-2 font-dm text-sm text-espresso/60 hover:text-espresso transition-colors"
@@ -191,6 +197,7 @@ export default function AdminDashboardPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<FormData>({ ...EMPTY_FORM });
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const router = useRouter();
 
@@ -226,6 +233,7 @@ export default function AdminDashboardPage() {
   async function handleSave() {
     if (!form.name.trim() || !form.description.trim() || !form.price.trim()) return;
     setSaving(true);
+    setSaveError("");
     try {
       if (editingId) {
         const res = await fetch(`/api/menu/${editingId}`, {
@@ -236,6 +244,9 @@ export default function AdminDashboardPage() {
         if (res.ok) {
           const updated: MenuItem = await res.json();
           setItems((prev) => prev.map((i) => (i.id === editingId ? updated : i)));
+          setModalOpen(false);
+        } else {
+          setSaveError("Fehler beim Speichern. Bitte erneut anmelden.");
         }
       } else {
         const res = await fetch("/api/menu", {
@@ -246,9 +257,12 @@ export default function AdminDashboardPage() {
         if (res.ok) {
           const created: MenuItem = await res.json();
           setItems((prev) => [...prev, created]);
+          setActiveTab(created.kategorie);
+          setModalOpen(false);
+        } else {
+          setSaveError("Fehler beim Speichern. Bitte erneut anmelden.");
         }
       }
-      setModalOpen(false);
     } finally {
       setSaving(false);
     }
@@ -273,7 +287,15 @@ export default function AdminDashboardPage() {
     <div className="min-h-screen bg-cream">
       {/* Header */}
       <div className="bg-white border-b border-sand px-6 py-4 flex items-center justify-between">
-        <h1 className="font-playfair text-xl text-espresso">Trebelcafé Admin</h1>
+        <div className="flex items-center gap-5">
+          <Link
+            href="/"
+            className="font-dm text-sm text-espresso/50 hover:text-terracotta transition-colors"
+          >
+            ← Zur Website
+          </Link>
+          <h1 className="font-playfair text-xl text-espresso">Trebelcafé Admin</h1>
+        </div>
         <button
           onClick={handleLogout}
           className="font-dm text-sm text-espresso/50 hover:text-espresso transition-colors"
@@ -339,9 +361,10 @@ export default function AdminDashboardPage() {
           form={form}
           editingId={editingId}
           saving={saving}
+          saveError={saveError}
           onChange={setForm}
           onSave={handleSave}
-          onClose={() => setModalOpen(false)}
+          onClose={() => { setModalOpen(false); setSaveError(""); }}
         />
       )}
 
