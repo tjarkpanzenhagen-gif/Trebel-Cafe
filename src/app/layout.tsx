@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
-import Navigation from "@/components/layout/Navigation";
-import Footer from "@/components/layout/Footer";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -42,11 +40,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="de" className={`${playfair.variable} ${dmSans.variable} ${cormorant.variable}`}>
+    <html
+      lang="de"
+      className={`${playfair.variable} ${dmSans.variable} ${cormorant.variable}`}
+    >
       <body className="font-dm bg-cream text-espresso antialiased">
-        <Navigation />
-        <main>{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );
