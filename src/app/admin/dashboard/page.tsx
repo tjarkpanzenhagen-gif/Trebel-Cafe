@@ -246,7 +246,8 @@ export default function AdminDashboardPage() {
           setItems((prev) => prev.map((i) => (i.id === editingId ? updated : i)));
           setModalOpen(false);
         } else {
-          setSaveError("Fehler beim Speichern. Bitte erneut anmelden.");
+          const err = await res.json().catch(() => ({}));
+          setSaveError(`Fehler ${res.status}: ${err.error ?? "Unbekannt"}`);
         }
       } else {
         const res = await fetch("/api/menu", {
@@ -260,7 +261,8 @@ export default function AdminDashboardPage() {
           setActiveTab(created.kategorie);
           setModalOpen(false);
         } else {
-          setSaveError("Fehler beim Speichern. Bitte erneut anmelden.");
+          const err = await res.json().catch(() => ({}));
+          setSaveError(`Fehler ${res.status}: ${err.error ?? "Unbekannt"}`);
         }
       }
     } finally {
