@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 
 const USERNAME = "123";
 const PASSWORD = "123";
@@ -12,18 +11,18 @@ export async function POST(request: Request) {
       { status: 401 }
     );
   }
-  const cookieStore = await cookies();
-  cookieStore.set("admin_session", "1", {
+  const response = NextResponse.json({ ok: true });
+  response.cookies.set("admin_session", "1", {
     httpOnly: true,
     path: "/",
     maxAge: 60 * 60 * 24,
     sameSite: "lax",
   });
-  return NextResponse.json({ ok: true });
+  return response;
 }
 
 export async function DELETE() {
-  const cookieStore = await cookies();
-  cookieStore.delete("admin_session");
-  return NextResponse.json({ ok: true });
+  const response = NextResponse.json({ ok: true });
+  response.cookies.delete("admin_session");
+  return response;
 }

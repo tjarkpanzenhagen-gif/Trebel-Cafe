@@ -14,7 +14,10 @@ function writeMenu(data: unknown) {
 
 function isAuthenticated(request: Request) {
   const cookieHeader = request.headers.get("cookie") ?? "";
-  return cookieHeader.split(";").some((c) => c.trim() === "admin_session=1");
+  return cookieHeader.split(";").some((c) => {
+    const [name, value] = c.trim().split("=");
+    return name.trim() === "admin_session" && value?.trim() === "1";
+  });
 }
 
 export async function GET() {
