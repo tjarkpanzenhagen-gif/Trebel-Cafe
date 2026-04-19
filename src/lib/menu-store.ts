@@ -29,10 +29,8 @@ const INITIAL_MENU: MenuItem[] = [
   { id: "15", name: "Kuchen & Kaffee (Set)", description: "Ein Stück Kuchen + Filterkaffee", price: "6,50 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "getraenke" },
 ];
 
-const isVercel = Boolean(process.env.KV_REST_API_URL);
-
 export async function readMenu(): Promise<MenuItem[]> {
-  if (isVercel) {
+  if (process.env.VERCEL) {
     const { kv } = await import("@vercel/kv");
     const items = await kv.get<MenuItem[]>(KV_KEY);
     if (!items) {
@@ -41,7 +39,6 @@ export async function readMenu(): Promise<MenuItem[]> {
     }
     return items;
   }
-  // local: file system
   const { readFileSync } = await import("fs");
   const { join } = await import("path");
   try {
@@ -52,12 +49,11 @@ export async function readMenu(): Promise<MenuItem[]> {
 }
 
 export async function writeMenu(items: MenuItem[]): Promise<void> {
-  if (isVercel) {
+  if (process.env.VERCEL) {
     const { kv } = await import("@vercel/kv");
     await kv.set(KV_KEY, items);
     return;
   }
-  // local: file system
   const { writeFileSync } = await import("fs");
   const { join } = await import("path");
   writeFileSync(join(process.cwd(), "data", "menu.json"), JSON.stringify(items, null, 2));
