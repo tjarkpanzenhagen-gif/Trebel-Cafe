@@ -130,13 +130,16 @@ function Modal({
           </div>
           <div>
             <label className="block font-dm text-sm text-espresso/70 mb-1">Preis *</label>
-            <input
-              type="text"
-              value={form.price}
-              onChange={(e) => onChange({ ...form, price: e.target.value })}
-              placeholder="z.B. 9,90 €"
-              className="w-full border border-sand rounded-lg px-3 py-2 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors"
-            />
+            <div className="flex items-center border border-sand rounded-lg focus-within:border-terracotta transition-colors">
+              <input
+                type="text"
+                value={form.price}
+                onChange={(e) => onChange({ ...form, price: e.target.value })}
+                placeholder="9,90"
+                className="flex-1 px-3 py-2 font-dm text-sm text-espresso focus:outline-none bg-transparent rounded-l-lg"
+              />
+              <span className="px-3 font-dm text-sm text-espresso/40">€</span>
+            </div>
           </div>
           <div>
             <label className="block font-dm text-sm text-espresso/70 mb-2">Kategorie *</label>
@@ -221,7 +224,7 @@ export default function AdminDashboardPage() {
     setForm({
       name: item.name,
       description: item.description,
-      price: item.price,
+      price: item.price.replace(/\s*€\s*$/, ""),
       vegan: item.vegan,
       vegetarisch: item.vegetarisch,
       glutenfrei: item.glutenfrei,
@@ -234,12 +237,16 @@ export default function AdminDashboardPage() {
     if (!form.name.trim() || !form.description.trim() || !form.price.trim()) return;
     setSaving(true);
     setSaveError("");
+    const priceWithEuro = form.price.trim().endsWith("€")
+      ? form.price.trim()
+      : `${form.price.trim()} €`;
+    const formToSend = { ...form, price: priceWithEuro };
     try {
       if (editingId) {
         const res = await fetch(`/api/menu/${editingId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(formToSend),
         });
         if (res.ok) {
           const updated: MenuItem = await res.json();
@@ -253,7 +260,7 @@ export default function AdminDashboardPage() {
         const res = await fetch("/api/menu", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(formToSend),
         });
         if (res.ok) {
           const created: MenuItem = await res.json();
