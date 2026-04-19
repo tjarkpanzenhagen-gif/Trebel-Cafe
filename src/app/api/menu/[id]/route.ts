@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
@@ -12,16 +12,12 @@ function writeMenu(data: unknown) {
   writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
 }
 
-function isAuthenticated(request: Request) {
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  return cookieHeader.split(";").some((c) => {
-    const [name, value] = c.trim().split("=");
-    return name.trim() === "admin_session" && value?.trim() === "1";
-  });
+function isAuthenticated(request: NextRequest) {
+  return request.cookies.get("admin_session")?.value === "1";
 }
 
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   if (!isAuthenticated(request)) {
@@ -53,7 +49,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   if (!isAuthenticated(request)) {
