@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const navLinks = [
   { href: "/speisekarte", label: "Speisekarte" },
   { href: "/ueber-uns", label: "Über uns" },
+  { href: "/ferienwohnungen", label: "Ferienwohnungen" },
   { href: "/galerie", label: "Galerie" },
 ];
 
