@@ -1,4 +1,4 @@
-import type { ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-store";
+import type { ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-utils";
 
 type Props = {
   pricing: ApartmentPricing;

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import FewoPanel from "@/components/admin/FewoPanel";
-import type { Apartment } from "@/lib/fewo-store";
+import type { Apartment } from "@/lib/fewo-utils";
 
 type Kategorie = "wochenkarte" | "kuchenUndGebaeck" | "getraenke";
 type TabKey = Kategorie | "fewo";

@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
-import type { Apartment, ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-store";
+import "react-day-picker/style.css";
+import type { Apartment, ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-utils";
 
 type Props = {
   initialApartments: Apartment[];
@@ -185,7 +185,7 @@ function AvailabilityEditor({
         <DayPicker
           mode="multiple"
           selected={selected}
-          onSelect={(days) => setSelected(days ?? [])}
+          onSelect={(days: Date[] | undefined) => setSelected(days ?? [])}
           fromDate={new Date()}
         />
       </div>

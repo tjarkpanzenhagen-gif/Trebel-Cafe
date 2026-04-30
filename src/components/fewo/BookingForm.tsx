@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-store";
-import { calculatePrice } from "@/lib/fewo-store";
+import type { ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-utils";
+import { calculatePrice } from "@/lib/fewo-utils";
 
 type Props = {
   apartmentName: string;
