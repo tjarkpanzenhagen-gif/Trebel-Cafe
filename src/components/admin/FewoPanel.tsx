@@ -113,55 +113,71 @@ function PricingEditor({
 
 // ─── Availability Editor ──────────────────────────────────────────────────────
 
-function AvailabilityEditor({
-  apt,
-  onSaved,
-}: {
-  apt: Apartment;
-  onSaved: (dates: string[]) => void;
-}) {
-  const [selected, setSelected] = useState<Date[]>(
-    apt.blockedDates.map((d) => new Date(d + "T00:00:00"))
-  );
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+function AvailabilityEditor({ apartmentId }: { apartmentId: string }) {
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [freeing, setFreeing] = useState<string | null>(null);
+  const [freed, setFreed] = useState<string | null>(null);
 
-  async function handleSave() {
-    setSaving(true);
-    setError("");
-    setSuccess(false);
-    const blockedDates = selected.map((d) => d.toISOString().slice(0, 10));
+  const load = useCallback(async () => {
+    setLoading(true);
     try {
-      const res = await fetch(`/api/fewo/${apt.id}/availability`, {
+      const res = await fetch("/api/fewo/bookings");
+      if (res.ok) {
+        const data = await res.json();
+        setBookings(data.bookings ?? []);
+      }
+    } finally { setLoading(false); }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const activeBookings = bookings.filter(
+    (b) => b.apartmentId === apartmentId && (b.status === "pending" || b.status === "confirmed")
+  );
+
+  // Build map: ISO date string → booking id
+  const dateToBookingId: Record<string, string> = {};
+  activeBookings.forEach((b) => {
+    const start = new Date(b.checkIn);
+    const end = new Date(b.checkOut);
+    for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+      dateToBookingId[d.toISOString().slice(0, 10)] = b.id;
+    }
+  });
+
+  const occupiedDates = Object.keys(dateToBookingId).map((d) => new Date(d + "T00:00:00"));
+
+  async function freeDate(date: Date) {
+    const key = date.toISOString().slice(0, 10);
+    const bookingId = dateToBookingId[key];
+    if (!bookingId || freeing) return;
+    setFreeing(bookingId);
+    try {
+      const res = await fetch(`/api/fewo/bookings/${bookingId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ blockedDates }),
+        body: JSON.stringify({ status: "cancelled" }),
       });
       if (res.ok) {
-        onSaved(blockedDates);
-        setSuccess(true);
-        setTimeout(() => setSuccess(false), 2500);
-      } else {
-        const e = await res.json().catch(() => ({}));
-        setError(`Fehler: ${(e as { error?: string }).error ?? "Unbekannt"}`);
+        setBookings((prev) => prev.map((b) => b.id === bookingId ? { ...b, status: "cancelled" as const } : b));
+        setFreed(bookingId);
+        setTimeout(() => setFreed(null), 2500);
       }
-    } catch {
-      setError("Netzwerkfehler");
-    } finally {
-      setSaving(false);
-    }
+    } finally { setFreeing(null); }
   }
+
+  if (loading) return <div className="py-16 text-center"><div className="inline-block w-5 h-5 border-2 border-sand border-t-terracotta rounded-full animate-spin" /></div>;
 
   return (
     <div className="space-y-4">
       <p className="font-dm text-xs text-espresso/50">
-        Tage anklicken zum manuellen Blockieren oder Freigeben
+        Belegte Tage anklicken → Buchung wird storniert, Tag wird frei
       </p>
       <style>{`
         .admin-cal .rdp-root {
-          --rdp-accent-color: #2C1810;
-          --rdp-accent-background-color: rgba(44,24,16,0.1);
+          --rdp-accent-color: #C4724A;
+          --rdp-accent-background-color: rgba(196,114,74,0.1);
           --rdp-today-color: #C4724A;
           --rdp-selected-border: 2px solid transparent;
           --rdp-day_button-border-radius: 6px;
@@ -170,39 +186,40 @@ function AvailabilityEditor({
         .admin-cal .rdp-month_caption { font-family: var(--font-playfair, serif); color: #2C1810; }
         .admin-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 13px; }
         .admin-cal .rdp-selected .rdp-day_button {
-          background-color: #2C1810 !important;
-          color: rgba(255,255,255,0.85) !important;
+          background-color: #C4724A !important;
+          color: white !important;
           border: none !important;
           border-radius: 6px;
+          cursor: pointer;
+        }
+        .admin-cal .rdp-selected .rdp-day_button:hover {
+          background-color: #b3623c !important;
         }
       `}</style>
       <div className="admin-cal border border-sand rounded-xl overflow-hidden bg-white">
         <DayPicker
           mode="multiple"
-          selected={selected}
-          onSelect={(days: Date[] | undefined) => setSelected(days ?? [])}
+          selected={occupiedDates}
+          onSelect={(newDays: Date[] | undefined) => {
+            const clicked = occupiedDates.find(
+              (d) => !(newDays ?? []).some((nd) => nd.toDateString() === d.toDateString())
+            );
+            if (clicked) freeDate(clicked);
+          }}
           fromDate={new Date()}
         />
       </div>
       <div className="flex gap-5">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-sm bg-[#6B7C5E]" />
-          <span className="font-dm text-xs text-espresso/50">Frei</span>
+          <span className="font-dm text-xs text-espresso/50">Verfügbar</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-espresso opacity-70" />
-          <span className="font-dm text-xs text-espresso/50">Blockiert</span>
+          <div className="w-3 h-3 rounded-sm bg-terracotta" />
+          <span className="font-dm text-xs text-espresso/50">Belegt — klicken zum Freigeben</span>
         </div>
       </div>
-      {error && <p className="font-dm text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
-      {success && <p className="font-dm text-xs text-sage bg-sage/10 rounded-lg px-3 py-2">✓ Gespeichert — Seite wird aktualisiert</p>}
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="w-full px-4 py-2.5 bg-espresso text-cream font-dm text-sm rounded-lg hover:bg-terracotta transition-colors disabled:opacity-50"
-      >
-        {saving ? "Speichern…" : "Verfügbarkeit speichern"}
-      </button>
+      {freed && <p className="font-dm text-xs text-sage bg-sage/10 rounded-lg px-3 py-2">✓ Buchung storniert — Tage sind wieder frei</p>}
     </div>
   );
 }
@@ -423,10 +440,6 @@ export default function FewoPanel({ initialApartments }: Props) {
     setApartments((prev) => prev.map((a) => (a.id === updated.id ? updated : a)));
   }
 
-  function updateAvailability(id: string, blockedDates: string[]) {
-    setApartments((prev) => prev.map((a) => (a.id === id ? { ...a, blockedDates } : a)));
-  }
-
   if (!apt) return null;
 
   return (
@@ -482,7 +495,7 @@ export default function FewoPanel({ initialApartments }: Props) {
 
         {activeSection === "anfragen" && <BookingsView key={apt.id} apartmentId={apt.id} />}
         {activeSection === "verfuegbarkeit" && (
-          <AvailabilityEditor key={apt.id + "-avail"} apt={apt} onSaved={(dates) => updateAvailability(apt.id, dates)} />
+          <AvailabilityEditor key={apt.id + "-avail"} apartmentId={apt.id} />
         )}
         {activeSection === "preise" && <PricingEditor key={apt.id + "-pricing"} apt={apt} onSaved={updateApartment} />}
       </div>
