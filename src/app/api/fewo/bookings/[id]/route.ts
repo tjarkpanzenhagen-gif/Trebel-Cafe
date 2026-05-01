@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { readBookings, writeBookings } from "@/lib/bookings-store";
 
 function isAuthenticated(request: NextRequest) {
@@ -26,6 +27,7 @@ export async function PUT(
     }
     data.bookings[index].status = "cancelled";
     await writeBookings(data);
+    revalidatePath("/ferienwohnungen", "layout");
     return NextResponse.json(data.bookings[index]);
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { readFewo, writeFewo } from "@/lib/fewo-store";
 
 function isAuthenticated(request: NextRequest) {
@@ -27,6 +28,7 @@ export async function PUT(
     }
     data.apartments[index].blockedDates = blockedDates;
     await writeFewo(data);
+    revalidatePath("/ferienwohnungen", "layout");
     return NextResponse.json({ ok: true, blockedDates });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
