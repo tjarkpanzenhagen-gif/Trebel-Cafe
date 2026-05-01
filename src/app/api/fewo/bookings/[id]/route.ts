@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { readBookings, writeBookings } from "@/lib/bookings-store";
+import type { BookingStatus } from "@/lib/bookings-store";
 
 function isAuthenticated(request: NextRequest) {
   const secret = process.env.ADMIN_SESSION_SECRET || "dev-secret-change-in-production";
@@ -17,7 +18,8 @@ export async function PUT(
   try {
     const { id } = await params;
     const { status } = await request.json();
-    if (status !== "cancelled") {
+    const allowed: BookingStatus[] = ["confirmed", "cancelled"];
+    if (!allowed.includes(status)) {
       return NextResponse.json({ error: "Ungültiger Status" }, { status: 400 });
     }
     const data = await readBookings();
@@ -25,7 +27,7 @@ export async function PUT(
     if (index === -1) {
       return NextResponse.json({ error: "Nicht gefunden" }, { status: 404 });
     }
-    data.bookings[index].status = "cancelled";
+    data.bookings[index].status = status;
     await writeBookings(data);
     revalidatePath("/ferienwohnungen", "layout");
     return NextResponse.json(data.bookings[index]);

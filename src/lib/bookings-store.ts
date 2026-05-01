@@ -1,4 +1,4 @@
-export type BookingStatus = "pending" | "cancelled";
+export type BookingStatus = "pending" | "confirmed" | "cancelled";
 
 export type Booking = {
   id: string;
@@ -75,7 +75,7 @@ export async function writeBookings(data: BookingsData): Promise<void> {
 export function getBookedDatesForApartment(bookings: Booking[], apartmentId: string): string[] {
   const dates = new Set<string>();
   bookings
-    .filter((b) => b.apartmentId === apartmentId && b.status === "pending")
+    .filter((b) => b.apartmentId === apartmentId && (b.status === "pending" || b.status === "confirmed"))
     .forEach((b) => {
       const start = new Date(b.checkIn);
       const end = new Date(b.checkOut);
