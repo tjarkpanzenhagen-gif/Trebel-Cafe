@@ -187,10 +187,22 @@ function AvailabilityEditor({
         Tage anklicken zum Blockieren oder Freigeben
       </p>
       <style>{`
-        .admin-cal .rdp { --rdp-accent-color: #2C1810; margin: 0; }
-        .admin-cal .rdp-day_selected { background-color: #2C1810 !important; color: white !important; border-radius: 6px; opacity: 0.75; }
+        .admin-cal .rdp-root {
+          --rdp-accent-color: #2C1810;
+          --rdp-accent-background-color: rgba(44,24,16,0.1);
+          --rdp-today-color: #C4724A;
+          --rdp-selected-border: 2px solid transparent;
+          --rdp-day_button-border-radius: 6px;
+          margin: 0;
+        }
+        .admin-cal .rdp-month_caption { font-family: var(--font-playfair, serif); color: #2C1810; }
         .admin-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 13px; }
-        .admin-cal .rdp-caption_label { font-family: var(--font-playfair, serif); }
+        .admin-cal .rdp-selected .rdp-day_button {
+          background-color: #2C1810 !important;
+          color: rgba(255,255,255,0.85) !important;
+          border: none !important;
+          border-radius: 6px;
+        }
       `}</style>
       <div className="admin-cal border border-sand rounded-xl overflow-hidden bg-white">
         <DayPicker

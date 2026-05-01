@@ -21,52 +21,71 @@ export default function AvailabilityCalendar({ blockedDates, bookedDates = [] }:
   const allUnavailable = useMemo(() => [...blocked, ...booked], [blocked, booked]);
 
   return (
-    <div className="fewo-calendar">
+    <div className="fewo-cal">
       <style>{`
-        .fewo-calendar .rdp {
+        /* Override accent color (default is blue) */
+        .fewo-cal .rdp-root {
           --rdp-accent-color: #C4724A;
-          --rdp-background-color: #E8D5C0;
+          --rdp-accent-background-color: rgba(196, 114, 74, 0.15);
+          --rdp-today-color: #C4724A;
+          --rdp-selected-border: 2px solid #C4724A;
+          --rdp-day_button-border-radius: 6px;
           margin: 0;
         }
-        .fewo-calendar .rdp-day_blocked {
-          background-color: #2C1810 !important;
-          color: white !important;
-          border-radius: 4px;
-          opacity: 0.7 !important;
+
+        /* Month label */
+        .fewo-cal .rdp-month_caption {
+          font-family: var(--font-playfair, serif);
+          color: #2C1810;
+          font-size: 1rem;
         }
-        .fewo-calendar .rdp-day_blocked:hover {
-          background-color: #2C1810 !important;
-          cursor: default;
-        }
-        .fewo-calendar .rdp-day_booked {
-          background-color: #C4724A !important;
-          color: white !important;
-          border-radius: 4px;
-          opacity: 1 !important;
-        }
-        .fewo-calendar .rdp-day_booked:hover {
-          background-color: #C4724A !important;
-          cursor: default;
-        }
-        .fewo-calendar .rdp-day {
+
+        /* Day cells */
+        .fewo-cal .rdp-day {
           font-family: var(--font-dm-sans, sans-serif);
           font-size: 13px;
         }
-        .fewo-calendar .rdp-caption_label {
-          font-family: var(--font-playfair, serif);
-          color: #2C1810;
+
+        /* Booked days (from booking requests) — terracotta */
+        .fewo-cal .day-booked {
+          opacity: 1 !important;
+        }
+        .fewo-cal .day-booked .rdp-day_button {
+          background-color: #C4724A !important;
+          color: white !important;
+          border: none !important;
+          border-radius: 6px;
+          cursor: default;
+        }
+        .fewo-cal .day-booked .rdp-day_button:hover {
+          background-color: #C4724A !important;
+        }
+
+        /* Blocked days (manually blocked by admin) — espresso */
+        .fewo-cal .day-blocked {
+          opacity: 1 !important;
+        }
+        .fewo-cal .day-blocked .rdp-day_button {
+          background-color: #2C1810 !important;
+          color: rgba(255,255,255,0.7) !important;
+          border: none !important;
+          border-radius: 6px;
+          cursor: default;
+        }
+        .fewo-cal .day-blocked .rdp-day_button:hover {
+          background-color: #2C1810 !important;
         }
       `}</style>
       <DayPicker
         mode="multiple"
-        selected={allUnavailable}
+        selected={[]}
         modifiers={{ blocked, booked }}
-        modifiersClassNames={{ blocked: "rdp-day_blocked", booked: "rdp-day_booked" }}
+        modifiersClassNames={{ blocked: "day-blocked", booked: "day-booked" }}
         disabled={allUnavailable}
         fromDate={new Date()}
         numberOfMonths={1}
       />
-      <div className="flex gap-5 mt-3">
+      <div className="flex gap-5 mt-2">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-sm bg-[#6B7C5E]" />
           <span className="font-dm text-xs text-espresso/60">Frei</span>
