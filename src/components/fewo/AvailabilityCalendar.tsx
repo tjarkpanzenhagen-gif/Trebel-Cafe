@@ -6,13 +6,19 @@ import { useMemo } from "react";
 
 type Props = {
   blockedDates: string[];
+  bookedDates?: string[];
 };
 
-export default function AvailabilityCalendar({ blockedDates }: Props) {
+export default function AvailabilityCalendar({ blockedDates, bookedDates = [] }: Props) {
   const blocked = useMemo(
     () => blockedDates.map((d) => new Date(d + "T00:00:00")),
     [blockedDates]
   );
+  const booked = useMemo(
+    () => bookedDates.map((d) => new Date(d + "T00:00:00")),
+    [bookedDates]
+  );
+  const allUnavailable = useMemo(() => [...blocked, ...booked], [blocked, booked]);
 
   return (
     <div className="fewo-calendar">
@@ -23,12 +29,22 @@ export default function AvailabilityCalendar({ blockedDates }: Props) {
           margin: 0;
         }
         .fewo-calendar .rdp-day_blocked {
+          background-color: #2C1810 !important;
+          color: white !important;
+          border-radius: 4px;
+          opacity: 0.7 !important;
+        }
+        .fewo-calendar .rdp-day_blocked:hover {
+          background-color: #2C1810 !important;
+          cursor: default;
+        }
+        .fewo-calendar .rdp-day_booked {
           background-color: #C4724A !important;
           color: white !important;
           border-radius: 4px;
           opacity: 1 !important;
         }
-        .fewo-calendar .rdp-day_blocked:hover {
+        .fewo-calendar .rdp-day_booked:hover {
           background-color: #C4724A !important;
           cursor: default;
         }
@@ -43,21 +59,25 @@ export default function AvailabilityCalendar({ blockedDates }: Props) {
       `}</style>
       <DayPicker
         mode="multiple"
-        selected={blocked}
-        modifiers={{ blocked }}
-        modifiersClassNames={{ blocked: "rdp-day_blocked" }}
-        disabled={blocked}
+        selected={allUnavailable}
+        modifiers={{ blocked, booked }}
+        modifiersClassNames={{ blocked: "rdp-day_blocked", booked: "rdp-day_booked" }}
+        disabled={allUnavailable}
         fromDate={new Date()}
         numberOfMonths={1}
       />
-      <div className="flex gap-4 mt-3">
+      <div className="flex gap-5 mt-3">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-sm bg-[#6B7C5E]" />
           <span className="font-dm text-xs text-espresso/60">Frei</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-sm bg-terracotta" />
-          <span className="font-dm text-xs text-espresso/60">Belegt</span>
+          <span className="font-dm text-xs text-espresso/60">Gebucht</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm bg-espresso opacity-70" />
+          <span className="font-dm text-xs text-espresso/60">Blockiert</span>
         </div>
       </div>
     </div>

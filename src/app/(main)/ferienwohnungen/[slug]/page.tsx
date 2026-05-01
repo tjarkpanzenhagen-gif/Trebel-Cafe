@@ -1,4 +1,5 @@
 import { readFewo } from "@/lib/fewo-store";
+import { readBookings, getBookedDatesForApartment } from "@/lib/bookings-store";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import PricingTable from "@/components/fewo/PricingTable";
@@ -29,10 +30,11 @@ const PLACEHOLDER_COLORS = ["bg-[#C8B89A]", "bg-[#D4C4AC]", "bg-[#BFB090]", "bg-
 
 export default async function ApartmentDetailPage({ params }: Props) {
   const { slug } = await params;
-  const data = await readFewo();
+  const [data, bookingsData] = await Promise.all([readFewo(), readBookings()]);
   const apt = data.apartments.find((a) => a.slug === slug);
   if (!apt) notFound();
 
+  const bookedDates = getBookedDatesForApartment(bookingsData.bookings, apt.id);
   const hasImages = apt.images.length > 0;
 
   return (
@@ -99,10 +101,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
 
             <AnimatedSection delay={0.15}>
               <h2 className="font-playfair text-2xl text-espresso mb-3">Verfügbarkeit</h2>
-              <p className="font-dm text-xs text-espresso/50 mb-4">
-                Terracotta = belegt · Weiß = frei
-              </p>
-              <AvailabilityCalendar blockedDates={apt.blockedDates} />
+              <AvailabilityCalendar blockedDates={apt.blockedDates} bookedDates={bookedDates} />
             </AnimatedSection>
           </div>
 
@@ -114,6 +113,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
               pricing={apt.pricing}
               discounts={apt.discounts}
               blockedDates={apt.blockedDates}
+              bookedDates={bookedDates}
             />
           </AnimatedSection>
         </div>
