@@ -180,18 +180,18 @@ function AvailabilityEditor({
         <DayPicker
           mode="multiple"
           selected={selected}
-          onSelect={(days: Date[] | undefined) => {
-            const newDays = days ?? [];
-            // only allow removals, not additions
-            if (newDays.length < selected.length) setSelected(newDays);
-          }}
+          onSelect={(days: Date[] | undefined) => setSelected(days ?? [])}
           fromDate={new Date()}
         />
       </div>
       <div className="flex gap-5">
         <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm bg-[#6B7C5E]" />
+          <span className="font-dm text-xs text-espresso/50">Frei</span>
+        </div>
+        <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-sm bg-espresso opacity-70" />
-          <span className="font-dm text-xs text-espresso/50">Blockiert — klicken zum Freigeben</span>
+          <span className="font-dm text-xs text-espresso/50">Blockiert</span>
         </div>
       </div>
       {error && <p className="font-dm text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
