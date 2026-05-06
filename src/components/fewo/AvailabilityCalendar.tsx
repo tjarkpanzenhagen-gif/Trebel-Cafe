@@ -81,10 +81,6 @@ export default function AvailabilityCalendar({ availableDates, bookedDates = [] 
       />
       <div className="flex gap-5 mt-2">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm border border-sand bg-white" />
-          <span className="font-dm text-xs text-espresso/60">Nicht buchbar</span>
-        </div>
-        <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-sm bg-[#6B7C5E]" />
           <span className="font-dm text-xs text-espresso/60">Frei</span>
         </div>

@@ -119,9 +119,11 @@ function AvailabilityEditor({ apt, onSaved }: { apt: Apartment; onSaved: (dates:
   );
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSave() {
     setSaving(true);
+    setError("");
     const availableDates = available.map((d) => d.toISOString().slice(0, 10));
     try {
       const res = await fetch(`/api/fewo/${apt.id}/availability`, {
@@ -133,7 +135,12 @@ function AvailabilityEditor({ apt, onSaved }: { apt: Apartment; onSaved: (dates:
         onSaved(availableDates);
         setSuccess(true);
         setTimeout(() => setSuccess(false), 2000);
+      } else {
+        const e = await res.json().catch(() => ({}));
+        setError(`Fehler beim Speichern: ${(e as { error?: string }).error ?? res.status}`);
       }
+    } catch {
+      setError("Netzwerkfehler — bitte erneut versuchen");
     } finally { setSaving(false); }
   }
 
@@ -165,6 +172,7 @@ function AvailabilityEditor({ apt, onSaved }: { apt: Apartment; onSaved: (dates:
           fromDate={new Date()}
         />
       </div>
+      {error && <p className="font-dm text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
       {success && <p className="font-dm text-xs text-sage bg-sage/10 rounded-lg px-3 py-2">✓ Gespeichert</p>}
       <button
         onClick={handleSave}
