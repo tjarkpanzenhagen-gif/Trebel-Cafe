@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import type { Apartment, ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-utils";
@@ -117,7 +117,6 @@ function AvailabilityEditor({ apartmentId }: { apartmentId: string }) {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [freeing, setFreeing] = useState<string | null>(null);
-  const [freed, setFreed] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -132,26 +131,28 @@ function AvailabilityEditor({ apartmentId }: { apartmentId: string }) {
 
   useEffect(() => { load(); }, [load]);
 
-  const activeBookings = bookings.filter(
-    (b) => b.apartmentId === apartmentId && (b.status === "pending" || b.status === "confirmed")
+  const dateToBookingId = useMemo(() => {
+    const map: Record<string, string> = {};
+    bookings
+      .filter((b) => b.apartmentId === apartmentId && (b.status === "pending" || b.status === "confirmed"))
+      .forEach((b) => {
+        const end = new Date(b.checkOut);
+        for (let d = new Date(b.checkIn); d < end; d.setDate(d.getDate() + 1)) {
+          map[d.toISOString().slice(0, 10)] = b.id;
+        }
+      });
+    return map;
+  }, [bookings, apartmentId]);
+
+  const occupiedDates = useMemo(
+    () => Object.keys(dateToBookingId).map((d) => new Date(d + "T00:00:00")),
+    [dateToBookingId]
   );
 
-  // Build map: ISO date string → booking id
-  const dateToBookingId: Record<string, string> = {};
-  activeBookings.forEach((b) => {
-    const start = new Date(b.checkIn);
-    const end = new Date(b.checkOut);
-    for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
-      dateToBookingId[d.toISOString().slice(0, 10)] = b.id;
-    }
-  });
-
-  const occupiedDates = Object.keys(dateToBookingId).map((d) => new Date(d + "T00:00:00"));
-
-  async function freeDate(date: Date) {
-    const key = date.toISOString().slice(0, 10);
-    const bookingId = dateToBookingId[key];
-    if (!bookingId || freeing) return;
+  async function handleSelect(date: Date | undefined) {
+    if (!date || freeing) return;
+    const bookingId = dateToBookingId[date.toISOString().slice(0, 10)];
+    if (!bookingId) return;
     setFreeing(bookingId);
     try {
       const res = await fetch(`/api/fewo/bookings/${bookingId}`, {
@@ -161,19 +162,18 @@ function AvailabilityEditor({ apartmentId }: { apartmentId: string }) {
       });
       if (res.ok) {
         setBookings((prev) => prev.map((b) => b.id === bookingId ? { ...b, status: "cancelled" as const } : b));
-        setFreed(bookingId);
-        setTimeout(() => setFreed(null), 2500);
       }
     } finally { setFreeing(null); }
   }
 
-  if (loading) return <div className="py-16 text-center"><div className="inline-block w-5 h-5 border-2 border-sand border-t-terracotta rounded-full animate-spin" /></div>;
+  if (loading) return (
+    <div className="py-16 text-center">
+      <div className="inline-block w-5 h-5 border-2 border-sand border-t-terracotta rounded-full animate-spin" />
+    </div>
+  );
 
   return (
-    <div className="space-y-4">
-      <p className="font-dm text-xs text-espresso/50">
-        Belegte Tage anklicken → Buchung wird storniert, Tag wird frei
-      </p>
+    <div>
       <style>{`
         .admin-cal .rdp-root {
           --rdp-accent-color: #C4724A;
@@ -185,41 +185,29 @@ function AvailabilityEditor({ apartmentId }: { apartmentId: string }) {
         }
         .admin-cal .rdp-month_caption { font-family: var(--font-playfair, serif); color: #2C1810; }
         .admin-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 13px; }
-        .admin-cal .rdp-selected .rdp-day_button {
+        .admin-cal .day-occupied .rdp-day_button {
           background-color: #C4724A !important;
           color: white !important;
           border: none !important;
           border-radius: 6px;
           cursor: pointer;
         }
-        .admin-cal .rdp-selected .rdp-day_button:hover {
+        .admin-cal .day-occupied .rdp-day_button:hover {
           background-color: #b3623c !important;
+          opacity: 1 !important;
         }
+        .admin-cal .day-occupied { opacity: 1 !important; }
       `}</style>
       <div className="admin-cal border border-sand rounded-xl overflow-hidden bg-white">
         <DayPicker
-          mode="multiple"
-          selected={occupiedDates}
-          onSelect={(newDays: Date[] | undefined) => {
-            const clicked = occupiedDates.find(
-              (d) => !(newDays ?? []).some((nd) => nd.toDateString() === d.toDateString())
-            );
-            if (clicked) freeDate(clicked);
-          }}
+          mode="single"
+          selected={undefined}
+          onSelect={handleSelect}
+          modifiers={{ occupied: occupiedDates }}
+          modifiersClassNames={{ occupied: "day-occupied" }}
           fromDate={new Date()}
         />
       </div>
-      <div className="flex gap-5">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-[#6B7C5E]" />
-          <span className="font-dm text-xs text-espresso/50">Verfügbar</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-terracotta" />
-          <span className="font-dm text-xs text-espresso/50">Belegt — klicken zum Freigeben</span>
-        </div>
-      </div>
-      {freed && <p className="font-dm text-xs text-sage bg-sage/10 rounded-lg px-3 py-2">✓ Buchung storniert — Tage sind wieder frei</p>}
     </div>
   );
 }
