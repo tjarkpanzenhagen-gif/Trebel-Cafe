@@ -27,6 +27,17 @@ async function getInitialData(): Promise<FewoData> {
   return JSON.parse(readFileSync(join(process.cwd(), "data", "fewo.json"), "utf-8"));
 }
 
+function migrate(data: FewoData): FewoData {
+  return {
+    ...data,
+    apartments: data.apartments.map((apt) => ({
+      ...apt,
+      availableDates: (apt as unknown as Record<string, unknown>)["availableDates"] as string[] ??
+        [],
+    })),
+  };
+}
+
 export async function readFewo(): Promise<FewoData> {
   if (hasKVCredentials()) {
     try {
@@ -37,7 +48,7 @@ export async function readFewo(): Promise<FewoData> {
         await kv.set(KV_KEY, initial);
         return initial;
       }
-      return data;
+      return migrate(data);
     } catch {
       return getInitialData();
     }
@@ -46,12 +57,12 @@ export async function readFewo(): Promise<FewoData> {
     const { readFileSync } = await import("fs");
     const { join } = await import("path");
     try {
-      return JSON.parse(readFileSync(join(process.cwd(), "data", "fewo.json"), "utf-8"));
+      return migrate(JSON.parse(readFileSync(join(process.cwd(), "data", "fewo.json"), "utf-8")));
     } catch {
       return getInitialData();
     }
   }
-  return getInitialData();
+  return migrate(await getInitialData());
 }
 
 export async function writeFewo(data: FewoData): Promise<void> {
