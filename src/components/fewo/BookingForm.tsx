@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
 import type { ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-utils";
 import { calculatePrice } from "@/lib/fewo-utils";
 
@@ -37,10 +39,6 @@ function hasInvalidInRange(
   return false;
 }
 
-function todayString() {
-  return new Date().toISOString().slice(0, 10);
-}
-
 export default function BookingForm({
   apartmentName,
   apartmentId,
@@ -49,29 +47,39 @@ export default function BookingForm({
   availableDates,
   bookedDates,
 }: Props) {
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
+  const [range, setRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: undefined,
+    to: undefined,
+  });
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [persons, setPersons] = useState(1);
   const [extraBeds, setExtraBeds] = useState(0);
   const [message, setMessage] = useState("");
-  const [rangeError, setRangeError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const checkIn = range.from ? range.from.toISOString().slice(0, 10) : "";
+  const checkOut = range.to ? range.to.toISOString().slice(0, 10) : "";
   const nights = getNights(checkIn, checkOut);
 
-  useEffect(() => {
-    if (checkIn && checkOut && hasInvalidInRange(checkIn, checkOut, availableDates, bookedDates)) {
-      setRangeError(
-        "Der gewählte Zeitraum enthält nicht verfügbare Tage. Bitte nur freie (grüne) Tage wählen."
-      );
-    } else {
-      setRangeError("");
-    }
-  }, [checkIn, checkOut, availableDates, bookedDates]);
+  const freeDates = useMemo(() => {
+    const bookedSet = new Set(bookedDates);
+    return availableDates
+      .filter((d) => !bookedSet.has(d))
+      .map((d) => new Date(d + "T00:00:00"));
+  }, [availableDates, bookedDates]);
+
+  const bookedDateObjs = useMemo(
+    () => bookedDates.map((d) => new Date(d + "T00:00:00")),
+    [bookedDates]
+  );
+
+  const rangeError =
+    checkIn && checkOut && hasInvalidInRange(checkIn, checkOut, availableDates, bookedDates)
+      ? "Der gewählte Zeitraum enthält nicht verfügbare Tage. Bitte nur grüne Tage wählen."
+      : "";
 
   const priceCalc = nights > 0 ? calculatePrice(nights, extraBeds, pricing, discounts) : null;
 
@@ -152,18 +160,113 @@ export default function BookingForm({
     <div className="space-y-4">
       <h3 className="font-playfair text-xl text-espresso">Buchungsanfrage</h3>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block font-dm text-xs text-espresso/60 mb-1.5 uppercase tracking-wider">Anreise *</label>
-          <input type="date" min={todayString()} value={checkIn}
-            onChange={(e) => setCheckIn(e.target.value)} className={inputClass} />
-        </div>
-        <div>
-          <label className="block font-dm text-xs text-espresso/60 mb-1.5 uppercase tracking-wider">Abreise *</label>
-          <input type="date" min={checkIn || todayString()} value={checkOut}
-            onChange={(e) => setCheckOut(e.target.value)} className={inputClass} />
+      {/* Range calendar */}
+      <div className="booking-cal border border-sand rounded-xl overflow-hidden bg-white">
+        <style>{`
+          .booking-cal .rdp-root {
+            --rdp-accent-color: #2C1810;
+            --rdp-accent-background-color: rgba(44,24,16,0.08);
+            --rdp-today-color: #C4724A;
+            --rdp-selected-border: none;
+            --rdp-range_start-background: #2C1810;
+            --rdp-range_end-background: #2C1810;
+            --rdp-range_middle-background: rgba(44,24,16,0.08);
+            --rdp-range_middle-color: #2C1810;
+            --rdp-day_button-border-radius: 6px;
+            margin: 0;
+            width: 100%;
+          }
+          .booking-cal .rdp-month { width: 100%; }
+          .booking-cal .rdp-month_caption {
+            font-family: var(--font-playfair, serif);
+            color: #2C1810;
+            font-size: 0.95rem;
+            padding: 10px 12px 4px;
+          }
+          .booking-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 12px; }
+          /* Free days — green */
+          .booking-cal .day-free .rdp-day_button {
+            background-color: #6B7C5E !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 6px;
+          }
+          .booking-cal .day-free { opacity: 1 !important; }
+          /* Booked days — terracotta */
+          .booking-cal .day-booked .rdp-day_button {
+            background-color: #C4724A !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 6px;
+            cursor: not-allowed;
+          }
+          .booking-cal .day-booked { opacity: 1 !important; }
+          /* Range selection overrides free-day style */
+          .booking-cal .rdp-range_start .rdp-day_button,
+          .booking-cal .rdp-range_end .rdp-day_button {
+            background-color: #2C1810 !important;
+            color: #F5EFE6 !important;
+            border-radius: 6px !important;
+          }
+          .booking-cal .rdp-range_middle .rdp-day_button {
+            background-color: rgba(44,24,16,0.12) !important;
+            color: #2C1810 !important;
+            border-radius: 0 !important;
+          }
+          .booking-cal .rdp-range_start { border-radius: 6px 0 0 6px; }
+          .booking-cal .rdp-range_end { border-radius: 0 6px 6px 0; }
+        `}</style>
+        <DayPicker
+          mode="range"
+          selected={range.from ? { from: range.from, to: range.to } : undefined}
+          onSelect={(r) => setRange({ from: r?.from, to: r?.to })}
+          modifiers={{ free: freeDates, booked: bookedDateObjs }}
+          modifiersClassNames={{ free: "day-free", booked: "day-booked" }}
+          disabled={(date) => {
+            const key = date.toISOString().slice(0, 10);
+            const bookedSet = new Set(bookedDates);
+            const availSet = new Set(availableDates);
+            return !availSet.has(key) || bookedSet.has(key);
+          }}
+          fromDate={new Date()}
+          numberOfMonths={1}
+        />
+        <div className="flex gap-4 px-4 pb-3 pt-1 border-t border-sand/50">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm bg-[#6B7C5E]" />
+            <span className="font-dm text-xs text-espresso/50">Frei</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm bg-terracotta" />
+            <span className="font-dm text-xs text-espresso/50">Gebucht</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm bg-espresso" />
+            <span className="font-dm text-xs text-espresso/50">Ausgewählt</span>
+          </div>
         </div>
       </div>
+
+      {/* Selected range display */}
+      {(range.from || range.to) && (
+        <div className="flex items-center gap-2 bg-espresso/5 rounded-lg px-3 py-2">
+          <span className="font-dm text-xs text-espresso/50 uppercase tracking-wider">Zeitraum</span>
+          <span className="font-dm text-sm text-espresso ml-auto">
+            {range.from ? range.from.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" }) : "–"}
+            {" → "}
+            {range.to ? range.to.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" }) : "?"}
+          </span>
+          {nights > 0 && (
+            <span className="font-dm text-xs text-espresso/40">{nights} Nacht{nights !== 1 ? "e" : ""}</span>
+          )}
+          <button
+            onClick={() => setRange({ from: undefined, to: undefined })}
+            className="font-dm text-xs text-espresso/30 hover:text-espresso/60 transition-colors ml-1"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {rangeError && (
         <p className="font-dm text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{rangeError}</p>

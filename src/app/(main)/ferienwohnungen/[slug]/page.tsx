@@ -1,6 +1,8 @@
 import { readFewo } from "@/lib/fewo-store";
 import { readBookings, getBookedDatesForApartment } from "@/lib/bookings-store";
 import { notFound } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import PricingTable from "@/components/fewo/PricingTable";
 import AvailabilityCalendar from "@/components/fewo/AvailabilityCalendar";
