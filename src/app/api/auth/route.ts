@@ -6,8 +6,8 @@ function getEnv(key: string, fallback: string) {
 
 export async function POST(request: Request) {
   const { username, password } = await request.json();
-  const validUser = getEnv("ADMIN_USERNAME", "admin");
-  const validPass = getEnv("ADMIN_PASSWORD", "changeme");
+  const validUser = getEnv("ADMIN_USERNAME", "1");
+  const validPass = getEnv("ADMIN_PASSWORD", "1");
   const sessionSecret = getEnv("ADMIN_SESSION_SECRET", "dev-secret-change-in-production");
 
   if (username !== validUser || password !== validPass) {
