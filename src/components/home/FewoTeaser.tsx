@@ -4,10 +4,12 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
 import { readFewo } from "@/lib/fewo-store";
 
-const PLACEHOLDER_COLORS = [
-  ["bg-[#C8B89A]", "bg-[#BFB090]"],
-  ["bg-[#D4C4AC]", "bg-[#C0AD95]"],
-];
+const PLACEHOLDER_IMAGES: Record<string, string> = {
+  "wohnung-1":
+    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&auto=format&fit=crop&q=80",
+  "wohnung-2":
+    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&auto=format&fit=crop&q=80",
+};
 
 export default async function FewoTeaser() {
   const data = await readFewo();
@@ -21,44 +23,54 @@ export default async function FewoTeaser() {
           <h2 className="font-playfair text-3xl md:text-4xl mb-4">
             Schlafen direkt am Café
           </h2>
-          <p className="font-dm text-cream/60 max-w-sm mx-auto text-sm leading-relaxed">
+          <p className="font-dm text-cream/55 max-w-sm mx-auto text-sm leading-relaxed">
             Zwei gemütliche Ferienwohnungen — wachen Sie auf und genießen Sie unser Frühstück.
           </p>
         </AnimatedSection>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          {apartments.map((apt, i) => (
-            <AnimatedSection key={apt.id} delay={i * 0.15}>
-              <Link href={`/ferienwohnungen/${apt.slug}`} className="group block">
-                <div className="rounded-2xl overflow-hidden border border-cream/10 hover:border-terracotta/40 transition-colors duration-300">
-                  {/* Image placeholder */}
-                  <div className="grid grid-cols-3 gap-0.5 h-44">
-                    <div className={`${PLACEHOLDER_COLORS[i % 2][0]} col-span-2 flex items-center justify-center`}>
-                      <span className="font-dm text-xs text-espresso/30">Fotos folgen</span>
-                    </div>
-                    <div className={`${PLACEHOLDER_COLORS[i % 2][1]}`} />
-                  </div>
-                  {/* Info */}
-                  <div className="p-5 bg-espresso/60">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <h3 className="font-playfair text-xl text-cream group-hover:text-terracotta transition-colors">
-                        {apt.name}
-                      </h3>
-                      <span className="font-dm text-sm text-terracotta font-medium whitespace-nowrap mt-0.5">
-                        ab {apt.pricing.perNight} €<span className="text-cream/40 text-xs font-normal"> /Nacht</span>
+          {apartments.map((apt, i) => {
+            const imgSrc =
+              apt.images[0] ?? PLACEHOLDER_IMAGES[apt.id] ?? PLACEHOLDER_IMAGES["wohnung-1"];
+
+            return (
+              <AnimatedSection key={apt.id} delay={i * 0.15}>
+                <Link href={`/ferienwohnungen/${apt.slug}`} className="group block">
+                  <div className="rounded-2xl overflow-hidden border border-cream/10 hover:border-terracotta/40 transition-colors duration-300">
+                    {/* Image with overlay */}
+                    <div className="relative h-52 overflow-hidden">
+                      <img
+                        src={imgSrc}
+                        alt={apt.name}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-espresso/60 via-transparent to-transparent" />
+                      <span className="absolute top-3 left-3 font-dm text-xs text-sage bg-espresso/80 backdrop-blur-sm border border-sage/30 px-2.5 py-1 rounded-full">
+                        ✓ Frühstück inklusive
                       </span>
                     </div>
-                    <p className="font-dm text-sm text-cream/55 leading-relaxed line-clamp-2">
-                      {apt.description}
-                    </p>
-                    <p className="font-dm text-xs text-cream/30 mt-3 group-hover:text-terracotta/60 transition-colors">
-                      Verfügbarkeit & Buchung →
-                    </p>
+                    {/* Info */}
+                    <div className="p-5 bg-espresso/60">
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <h3 className="font-playfair text-xl text-cream group-hover:text-terracotta transition-colors">
+                          {apt.name}
+                        </h3>
+                        <span className="font-dm text-sm text-terracotta font-medium whitespace-nowrap mt-0.5">
+                          ab {apt.pricing.perNight} €<span className="text-cream/35 text-xs font-normal"> /Nacht</span>
+                        </span>
+                      </div>
+                      <p className="font-dm text-sm text-cream/50 leading-relaxed line-clamp-2">
+                        {apt.description}
+                      </p>
+                      <p className="font-dm text-xs text-cream/30 mt-3 group-hover:text-terracotta/60 transition-colors">
+                        Verfügbarkeit & Buchung →
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </AnimatedSection>
-          ))}
+                </Link>
+              </AnimatedSection>
+            );
+          })}
         </div>
 
         <AnimatedSection className="text-center">

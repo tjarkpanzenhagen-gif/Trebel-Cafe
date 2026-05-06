@@ -24,7 +24,7 @@ export default async function WeeklyMenuTeaser() {
         <div className="text-center mb-10">
           <SectionLabel>Inklusive für Gäste</SectionLabel>
           <h2 className="font-playfair text-3xl text-espresso mt-2">
-            🍳 Essen im Trebelcafé
+            Essen im Trebelcafé
           </h2>
           <p className="font-dm text-sm text-espresso/60 mt-3 max-w-md mx-auto">
             Als Feriengast genießen Sie unsere aktuellen Wochenangebote direkt vor Ort.

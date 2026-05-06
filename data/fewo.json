@@ -4,8 +4,8 @@
       "id": "wohnung-1",
       "slug": "wohnung-1",
       "name": "Wohnung 1",
-      "description": "Gemütliche Ferienwohnung direkt am Trebelcafé.",
-      "details": "Unsere erste Ferienwohnung bietet alles was Sie für einen erholsamen Aufenthalt brauchen. Genießen Sie die ruhige Lage und das besondere Ambiente des Trebelcafés direkt vor der Tür.",
+      "description": "Ruhig gelegen, warm eingerichtet — das Trebelcafé liegt direkt vor der Tür.",
+      "details": "Auf rund 45 m² wartet ein volleingerichtetes Apartment mit separatem Schlafzimmer, hellem Wohnbereich und kompakter Küchenzeile. Morgens wartet frisches Gebäck, selbstgemachte Marmelade und starker Kaffee nur wenige Schritte entfernt — der perfekte Start in den Tag.",
       "maxPersons": 3,
       "images": [],
       "pricing": {
@@ -23,8 +23,8 @@
       "id": "wohnung-2",
       "slug": "wohnung-2",
       "name": "Wohnung 2",
-      "description": "Helle Ferienwohnung mit besonderem Charme.",
-      "details": "Unsere zweite Ferienwohnung überzeugt durch ihre helle und freundliche Atmosphäre. Ein idealer Rückzugsort nach einem Tag voller Erlebnisse in der Region.",
+      "description": "Hell, geräumig und familienfähig — Platz für bis zu vier Personen.",
+      "details": "Mit rund 55 m², zwei Schlafbereichen und einem hellen Wohnzimmer ist unsere zweite Wohnung der ideale Ausgangspunkt für Ausflüge in den Trebeltal-Naturpark. Vollständig ausgestattet — Frühstück im Café direkt vor der Tür inklusive.",
       "maxPersons": 4,
       "images": [],
       "pricing": {

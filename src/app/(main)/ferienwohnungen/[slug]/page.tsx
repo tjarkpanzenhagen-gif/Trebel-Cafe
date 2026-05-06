@@ -1,8 +1,6 @@
 import { readFewo } from "@/lib/fewo-store";
 import { readBookings, getBookedDatesForApartment } from "@/lib/bookings-store";
 import { notFound } from "next/navigation";
-
-export const dynamic = "force-dynamic";
 import Link from "next/link";
 import PricingTable from "@/components/fewo/PricingTable";
 import AvailabilityCalendar from "@/components/fewo/AvailabilityCalendar";
@@ -11,12 +9,22 @@ import WeeklyMenuTeaser from "@/components/fewo/WeeklyMenuTeaser";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  const data = await readFewo();
-  return data.apartments.map((a) => ({ slug: a.slug }));
-}
+const PLACEHOLDER_IMAGES: Record<string, string[]> = {
+  "wohnung-1": [
+    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=450&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=450&auto=format&fit=crop&q=80",
+  ],
+  "wohnung-2": [
+    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=450&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=450&auto=format&fit=crop&q=80",
+  ],
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -28,8 +36,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const PLACEHOLDER_COLORS = ["bg-[#C8B89A]", "bg-[#D4C4AC]", "bg-[#BFB090]", "bg-[#C0AD95]"];
-
 export default async function ApartmentDetailPage({ params }: Props) {
   const { slug } = await params;
   const [data, bookingsData] = await Promise.all([readFewo(), readBookings()]);
@@ -37,49 +43,80 @@ export default async function ApartmentDetailPage({ params }: Props) {
   if (!apt) notFound();
 
   const bookedDates = getBookedDatesForApartment(bookingsData.bookings, apt.id);
-  const hasImages = apt.images.length > 0;
+  const images =
+    apt.images.length > 0
+      ? apt.images
+      : (PLACEHOLDER_IMAGES[apt.id] ?? PLACEHOLDER_IMAGES["wohnung-1"]);
 
   return (
     <main>
       {/* Header */}
-      <section className="bg-espresso text-cream py-20 px-6">
-        <div className="max-w-4xl mx-auto">
+      <section className="bg-espresso text-cream py-20 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-terracotta/8 via-transparent to-transparent pointer-events-none" />
+        <div className="max-w-4xl mx-auto relative">
           <Link
             href="/ferienwohnungen"
-            className="font-dm text-xs text-cream/50 hover:text-cream transition-colors mb-6 inline-block"
+            className="font-dm text-xs text-cream/45 hover:text-cream transition-colors mb-6 inline-block"
           >
             ← Zurück zur Übersicht
           </Link>
-          <h1 className="font-playfair text-4xl md:text-5xl">{apt.name}</h1>
-          <p className="font-dm text-cream/70 mt-3 max-w-lg leading-relaxed">
-            {apt.description}
-          </p>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <span className="font-dm text-xs text-cream/35 uppercase tracking-widest">
+                Ferienwohnung · Tribsees
+              </span>
+              <h1 className="font-playfair text-4xl md:text-5xl mt-1">{apt.name}</h1>
+              <p className="font-dm text-cream/65 mt-3 max-w-lg leading-relaxed text-sm">
+                {apt.description}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="font-playfair text-3xl text-terracotta">{apt.pricing.perNight} €</p>
+              <p className="font-dm text-xs text-cream/35 mt-0.5">pro Nacht</p>
+            </div>
+          </div>
+
+          {/* Amenity badges */}
+          <div className="flex flex-wrap gap-2 mt-6">
+            <span className="font-dm text-xs text-terracotta/90 bg-terracotta/15 border border-terracotta/25 px-3 py-1.5 rounded-full">
+              ✓ Frühstück inklusive
+            </span>
+            <span className="font-dm text-xs text-cream/50 bg-cream/8 border border-cream/15 px-3 py-1.5 rounded-full">
+              WLAN
+            </span>
+            <span className="font-dm text-xs text-cream/50 bg-cream/8 border border-cream/15 px-3 py-1.5 rounded-full">
+              Ruhige Lage
+            </span>
+            <span className="font-dm text-xs text-cream/50 bg-cream/8 border border-cream/15 px-3 py-1.5 rounded-full">
+              bis zu {apt.maxPersons} Personen
+            </span>
+          </div>
         </div>
       </section>
 
       {/* Gallery */}
       <section className="bg-cream px-6 py-10">
         <div className="max-w-4xl mx-auto">
-          {hasImages ? (
-            <div className="grid grid-cols-3 gap-3 rounded-2xl overflow-hidden h-72">
-              {apt.images.slice(0, 4).map((src, i) => (
-                <div key={i} className={i === 0 ? "col-span-2" : ""}>
-                  <img src={src} alt="" className="w-full h-full object-cover" />
+          <div className="grid grid-cols-3 gap-3 rounded-2xl overflow-hidden h-72">
+            <div className="col-span-2 relative overflow-hidden">
+              <img
+                src={images[0]}
+                alt={apt.name}
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+              />
+            </div>
+            <div className="grid grid-rows-2 gap-3">
+              {images.slice(1, 3).map((src, i) => (
+                <div key={i} className="relative overflow-hidden">
+                  <img
+                    src={src}
+                    alt=""
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                  />
                 </div>
               ))}
             </div>
-          ) : (
-            <div className="grid grid-cols-3 gap-3 rounded-2xl overflow-hidden h-64">
-              <div
-                className={`${PLACEHOLDER_COLORS[0]} col-span-2 flex items-center justify-center`}
-              >
-                <span className="font-dm text-xs text-espresso/40">Fotos folgen</span>
-              </div>
-              {PLACEHOLDER_COLORS.slice(1, 3).map((cls, i) => (
-                <div key={i} className={cls} />
-              ))}
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
@@ -91,9 +128,6 @@ export default async function ApartmentDetailPage({ params }: Props) {
             <AnimatedSection>
               <h2 className="font-playfair text-2xl text-espresso mb-3">Über die Wohnung</h2>
               <p className="font-dm text-sm text-espresso/70 leading-relaxed">{apt.details}</p>
-              <p className="font-dm text-xs text-espresso/50 mt-4">
-                Bis zu {apt.maxPersons} Personen
-              </p>
             </AnimatedSection>
 
             <AnimatedSection delay={0.1}>

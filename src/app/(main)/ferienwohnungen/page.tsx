@@ -16,15 +16,36 @@ export default async function FerienwohnungenPage() {
   return (
     <main>
       {/* Hero */}
-      <section className="bg-terracotta text-cream py-24 px-6 text-center">
-        <SectionLabel light>Übernachten</SectionLabel>
-        <h1 className="font-playfair text-4xl md:text-5xl mt-2 mb-4">
-          Ferienwohnungen im Trebelcafé
-        </h1>
-        <p className="font-dm text-cream/80 max-w-md mx-auto text-sm leading-relaxed">
-          Zwei gemütliche Wohnungen direkt am Café — wachen Sie auf und genießen Sie unser
-          Frühstück.
-        </p>
+      <section className="bg-espresso text-cream py-24 px-6 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-terracotta/10 via-transparent to-transparent pointer-events-none" />
+        <div className="relative">
+          <SectionLabel light>Übernachten in Tribsees</SectionLabel>
+          <h1 className="font-playfair text-4xl md:text-5xl mt-2 mb-4">
+            Ferienwohnungen<br className="hidden md:block" /> im Trebelcafé
+          </h1>
+          <p className="font-dm text-cream/65 max-w-md mx-auto text-sm leading-relaxed">
+            Wachen Sie auf und genießen Sie frisches Gebäck, selbstgemachte Marmelade und
+            starken Kaffee — direkt vor Ihrer Tür.
+          </p>
+
+          {/* Stats row */}
+          <div className="flex items-center justify-center gap-6 md:gap-10 mt-10">
+            <div className="text-center">
+              <p className="font-playfair text-3xl text-terracotta">2</p>
+              <p className="font-dm text-xs text-cream/40 uppercase tracking-widest mt-1">Wohnungen</p>
+            </div>
+            <div className="w-px h-10 bg-cream/15" />
+            <div className="text-center">
+              <p className="font-playfair text-3xl text-terracotta">ab 80 €</p>
+              <p className="font-dm text-xs text-cream/40 uppercase tracking-widest mt-1">pro Nacht</p>
+            </div>
+            <div className="w-px h-10 bg-cream/15" />
+            <div className="text-center">
+              <p className="font-playfair text-3xl text-terracotta">inkl.</p>
+              <p className="font-dm text-xs text-cream/40 uppercase tracking-widest mt-1">Frühstück</p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Apartments */}
