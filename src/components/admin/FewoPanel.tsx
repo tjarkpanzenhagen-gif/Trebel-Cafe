@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import type { Apartment, ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-utils";
@@ -113,71 +113,36 @@ function PricingEditor({
 
 // ─── Availability Editor ──────────────────────────────────────────────────────
 
-function AvailabilityEditor({ apartmentId }: { apartmentId: string }) {
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [freeing, setFreeing] = useState<string | null>(null);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/fewo/bookings");
-      if (res.ok) {
-        const data = await res.json();
-        setBookings(data.bookings ?? []);
-      }
-    } finally { setLoading(false); }
-  }, []);
-
-  useEffect(() => { load(); }, [load]);
-
-  const dateToBookingId = useMemo(() => {
-    const map: Record<string, string> = {};
-    bookings
-      .filter((b) => b.apartmentId === apartmentId && (b.status === "pending" || b.status === "confirmed"))
-      .forEach((b) => {
-        const end = new Date(b.checkOut);
-        for (let d = new Date(b.checkIn); d < end; d.setDate(d.getDate() + 1)) {
-          map[d.toISOString().slice(0, 10)] = b.id;
-        }
-      });
-    return map;
-  }, [bookings, apartmentId]);
-
-  const occupiedDates = useMemo(
-    () => Object.keys(dateToBookingId).map((d) => new Date(d + "T00:00:00")),
-    [dateToBookingId]
+function AvailabilityEditor({ apt, onSaved }: { apt: Apartment; onSaved: (dates: string[]) => void }) {
+  const [blocked, setBlocked] = useState<Date[]>(
+    apt.blockedDates.map((d) => new Date(d + "T00:00:00"))
   );
+  const [saving, setSaving] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  async function handleSelect(date: Date | undefined) {
-    if (!date || freeing) return;
-    const bookingId = dateToBookingId[date.toISOString().slice(0, 10)];
-    if (!bookingId) return;
-    setFreeing(bookingId);
+  async function handleSave() {
+    setSaving(true);
+    const blockedDates = blocked.map((d) => d.toISOString().slice(0, 10));
     try {
-      const res = await fetch(`/api/fewo/bookings/${bookingId}`, {
+      const res = await fetch(`/api/fewo/${apt.id}/availability`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "cancelled" }),
+        body: JSON.stringify({ blockedDates }),
       });
       if (res.ok) {
-        setBookings((prev) => prev.map((b) => b.id === bookingId ? { ...b, status: "cancelled" as const } : b));
+        onSaved(blockedDates);
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 2000);
       }
-    } finally { setFreeing(null); }
+    } finally { setSaving(false); }
   }
 
-  if (loading) return (
-    <div className="py-16 text-center">
-      <div className="inline-block w-5 h-5 border-2 border-sand border-t-terracotta rounded-full animate-spin" />
-    </div>
-  );
-
   return (
-    <div>
+    <div className="space-y-4">
       <style>{`
         .admin-cal .rdp-root {
-          --rdp-accent-color: #C4724A;
-          --rdp-accent-background-color: rgba(196,114,74,0.1);
+          --rdp-accent-color: #2C1810;
+          --rdp-accent-background-color: rgba(44,24,16,0.1);
           --rdp-today-color: #C4724A;
           --rdp-selected-border: 2px solid transparent;
           --rdp-day_button-border-radius: 6px;
@@ -185,29 +150,29 @@ function AvailabilityEditor({ apartmentId }: { apartmentId: string }) {
         }
         .admin-cal .rdp-month_caption { font-family: var(--font-playfair, serif); color: #2C1810; }
         .admin-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 13px; }
-        .admin-cal .day-occupied .rdp-day_button {
-          background-color: #C4724A !important;
-          color: white !important;
+        .admin-cal .rdp-selected .rdp-day_button {
+          background-color: #2C1810 !important;
+          color: rgba(255,255,255,0.85) !important;
           border: none !important;
           border-radius: 6px;
-          cursor: pointer;
         }
-        .admin-cal .day-occupied .rdp-day_button:hover {
-          background-color: #b3623c !important;
-          opacity: 1 !important;
-        }
-        .admin-cal .day-occupied { opacity: 1 !important; }
       `}</style>
       <div className="admin-cal border border-sand rounded-xl overflow-hidden bg-white">
         <DayPicker
-          mode="single"
-          selected={undefined}
-          onSelect={handleSelect}
-          modifiers={{ occupied: occupiedDates }}
-          modifiersClassNames={{ occupied: "day-occupied" }}
+          mode="multiple"
+          selected={blocked}
+          onSelect={(days: Date[] | undefined) => setBlocked(days ?? [])}
           fromDate={new Date()}
         />
       </div>
+      {success && <p className="font-dm text-xs text-sage bg-sage/10 rounded-lg px-3 py-2">✓ Gespeichert</p>}
+      <button
+        onClick={handleSave}
+        disabled={saving}
+        className="w-full px-4 py-2.5 bg-espresso text-cream font-dm text-sm rounded-lg hover:bg-terracotta transition-colors disabled:opacity-50"
+      >
+        {saving ? "Speichern…" : "Speichern"}
+      </button>
     </div>
   );
 }
@@ -428,6 +393,10 @@ export default function FewoPanel({ initialApartments }: Props) {
     setApartments((prev) => prev.map((a) => (a.id === updated.id ? updated : a)));
   }
 
+  function updateAvailability(id: string, blockedDates: string[]) {
+    setApartments((prev) => prev.map((a) => (a.id === id ? { ...a, blockedDates } : a)));
+  }
+
   if (!apt) return null;
 
   return (
@@ -483,7 +452,7 @@ export default function FewoPanel({ initialApartments }: Props) {
 
         {activeSection === "anfragen" && <BookingsView key={apt.id} apartmentId={apt.id} />}
         {activeSection === "verfuegbarkeit" && (
-          <AvailabilityEditor key={apt.id + "-avail"} apartmentId={apt.id} />
+          <AvailabilityEditor key={apt.id + "-avail"} apt={apt} onSaved={(dates) => updateAvailability(apt.id, dates)} />
         )}
         {activeSection === "preise" && <PricingEditor key={apt.id + "-pricing"} apt={apt} onSaved={updateApartment} />}
       </div>
