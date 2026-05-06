@@ -17,7 +17,7 @@
         "threeNights": 5,
         "sevenNights": 10
       },
-      "blockedDates": []
+      "availableDates": []
     },
     {
       "id": "wohnung-2",
@@ -36,7 +36,7 @@
         "threeNights": 5,
         "sevenNights": 10
       },
-      "blockedDates": []
+      "availableDates": []
     }
   ]
 }

@@ -19,7 +19,7 @@ export type Apartment = {
   images: string[];
   pricing: ApartmentPricing;
   discounts: ApartmentDiscounts;
-  blockedDates: string[];
+  availableDates: string[];
 };
 
 export type FewoData = {

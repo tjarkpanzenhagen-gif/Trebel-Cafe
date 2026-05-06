@@ -101,7 +101,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
 
             <AnimatedSection delay={0.15}>
               <h2 className="font-playfair text-2xl text-espresso mb-3">Verfügbarkeit</h2>
-              <AvailabilityCalendar blockedDates={apt.blockedDates} bookedDates={bookedDates} />
+              <AvailabilityCalendar availableDates={apt.availableDates} bookedDates={bookedDates} />
             </AnimatedSection>
           </div>
 
@@ -112,7 +112,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
               apartmentId={apt.id}
               pricing={apt.pricing}
               discounts={apt.discounts}
-              blockedDates={apt.blockedDates}
+              availableDates={apt.availableDates}
               bookedDates={bookedDates}
             />
           </AnimatedSection>

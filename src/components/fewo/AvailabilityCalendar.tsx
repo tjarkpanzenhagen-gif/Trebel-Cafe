@@ -5,51 +5,55 @@ import "react-day-picker/style.css";
 import { useMemo } from "react";
 
 type Props = {
-  blockedDates: string[];
+  availableDates: string[];
   bookedDates?: string[];
 };
 
-export default function AvailabilityCalendar({ blockedDates, bookedDates = [] }: Props) {
-  const blocked = useMemo(
-    () => blockedDates.map((d) => new Date(d + "T00:00:00")),
-    [blockedDates]
+export default function AvailabilityCalendar({ availableDates, bookedDates = [] }: Props) {
+  const available = useMemo(
+    () => availableDates.map((d) => new Date(d + "T00:00:00")),
+    [availableDates]
   );
   const booked = useMemo(
     () => bookedDates.map((d) => new Date(d + "T00:00:00")),
     [bookedDates]
   );
-  const allUnavailable = useMemo(() => [...blocked, ...booked], [blocked, booked]);
+  // Free = available but not booked
+  const free = useMemo(
+    () => available.filter((d) => !booked.some((b) => b.toDateString() === d.toDateString())),
+    [available, booked]
+  );
 
   return (
     <div className="fewo-cal">
       <style>{`
-        /* Override accent color (default is blue) */
         .fewo-cal .rdp-root {
-          --rdp-accent-color: #C4724A;
-          --rdp-accent-background-color: rgba(196, 114, 74, 0.15);
+          --rdp-accent-color: #6B7C5E;
+          --rdp-accent-background-color: rgba(107,124,94,0.15);
           --rdp-today-color: #C4724A;
-          --rdp-selected-border: 2px solid #C4724A;
+          --rdp-selected-border: 2px solid transparent;
           --rdp-day_button-border-radius: 6px;
           margin: 0;
         }
-
-        /* Month label */
         .fewo-cal .rdp-month_caption {
           font-family: var(--font-playfair, serif);
           color: #2C1810;
           font-size: 1rem;
         }
-
-        /* Day cells */
         .fewo-cal .rdp-day {
           font-family: var(--font-dm-sans, sans-serif);
           font-size: 13px;
         }
-
-        /* Booked days (from booking requests) — terracotta */
-        .fewo-cal .day-booked {
-          opacity: 1 !important;
+        /* Frei — grün */
+        .fewo-cal .day-free .rdp-day_button {
+          background-color: #6B7C5E !important;
+          color: white !important;
+          border: none !important;
+          border-radius: 6px;
+          cursor: pointer;
         }
+        .fewo-cal .day-free { opacity: 1 !important; }
+        /* Gebucht — terracotta */
         .fewo-cal .day-booked .rdp-day_button {
           background-color: #C4724A !important;
           color: white !important;
@@ -57,35 +61,29 @@ export default function AvailabilityCalendar({ blockedDates, bookedDates = [] }:
           border-radius: 6px;
           cursor: default;
         }
-        .fewo-cal .day-booked .rdp-day_button:hover {
-          background-color: #C4724A !important;
-        }
-
-        /* Blocked days (manually blocked by admin) — espresso */
-        .fewo-cal .day-blocked {
-          opacity: 1 !important;
-        }
-        .fewo-cal .day-blocked .rdp-day_button {
-          background-color: #2C1810 !important;
-          color: rgba(255,255,255,0.7) !important;
-          border: none !important;
-          border-radius: 6px;
-          cursor: default;
-        }
-        .fewo-cal .day-blocked .rdp-day_button:hover {
-          background-color: #2C1810 !important;
+        .fewo-cal .day-booked { opacity: 1 !important; }
+        /* Nicht buchbar — grau/weiß, dezent ausgegraut */
+        .fewo-cal .rdp-disabled:not(.day-free):not(.day-booked) .rdp-day_button {
+          color: #ccc !important;
         }
       `}</style>
       <DayPicker
         mode="multiple"
         selected={[]}
-        modifiers={{ blocked, booked }}
-        modifiersClassNames={{ blocked: "day-blocked", booked: "day-booked" }}
-        disabled={allUnavailable}
+        modifiers={{ free, booked }}
+        modifiersClassNames={{ free: "day-free", booked: "day-booked" }}
+        disabled={(date) => {
+          const key = date.toDateString();
+          return !free.some((d) => d.toDateString() === key);
+        }}
         fromDate={new Date()}
         numberOfMonths={1}
       />
       <div className="flex gap-5 mt-2">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm border border-sand bg-white" />
+          <span className="font-dm text-xs text-espresso/60">Nicht buchbar</span>
+        </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-sm bg-[#6B7C5E]" />
           <span className="font-dm text-xs text-espresso/60">Frei</span>
@@ -93,10 +91,6 @@ export default function AvailabilityCalendar({ blockedDates, bookedDates = [] }:
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-sm bg-terracotta" />
           <span className="font-dm text-xs text-espresso/60">Gebucht</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-espresso opacity-70" />
-          <span className="font-dm text-xs text-espresso/60">Blockiert</span>
         </div>
       </div>
     </div>

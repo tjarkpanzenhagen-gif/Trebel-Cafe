@@ -17,19 +17,19 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { blockedDates } = body;
-    if (!Array.isArray(blockedDates)) {
-      return NextResponse.json({ error: "blockedDates muss ein Array sein" }, { status: 400 });
+    const { availableDates } = body;
+    if (!Array.isArray(availableDates)) {
+      return NextResponse.json({ error: "availableDates muss ein Array sein" }, { status: 400 });
     }
     const data = await readFewo();
     const index = data.apartments.findIndex((a) => a.id === id);
     if (index === -1) {
       return NextResponse.json({ error: "Nicht gefunden" }, { status: 404 });
     }
-    data.apartments[index].blockedDates = blockedDates;
+    data.apartments[index].availableDates = availableDates;
     await writeFewo(data);
     revalidatePath("/ferienwohnungen", "layout");
-    return NextResponse.json({ ok: true, blockedDates });
+    return NextResponse.json({ ok: true, availableDates });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }

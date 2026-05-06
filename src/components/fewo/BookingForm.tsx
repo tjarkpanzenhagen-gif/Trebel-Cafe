@@ -9,7 +9,7 @@ type Props = {
   apartmentId: string;
   pricing: ApartmentPricing;
   discounts: ApartmentDiscounts;
-  blockedDates: string[];
+  availableDates: string[];
   bookedDates: string[];
 };
 
@@ -19,18 +19,20 @@ function getNights(checkIn: string, checkOut: string): number {
   return Math.max(0, Math.round(diff / (1000 * 60 * 60 * 24)));
 }
 
-function hasUnavailableInRange(
+function hasInvalidInRange(
   checkIn: string,
   checkOut: string,
-  blockedDates: string[],
+  availableDates: string[],
   bookedDates: string[]
 ): boolean {
   if (!checkIn || !checkOut) return false;
-  const unavailable = new Set([...blockedDates, ...bookedDates]);
+  const available = new Set(availableDates);
+  const booked = new Set(bookedDates);
   const start = new Date(checkIn);
   const end = new Date(checkOut);
   for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
-    if (unavailable.has(d.toISOString().slice(0, 10))) return true;
+    const key = d.toISOString().slice(0, 10);
+    if (!available.has(key) || booked.has(key)) return true;
   }
   return false;
 }
@@ -44,7 +46,7 @@ export default function BookingForm({
   apartmentId,
   pricing,
   discounts,
-  blockedDates,
+  availableDates,
   bookedDates,
 }: Props) {
   const [checkIn, setCheckIn] = useState("");
@@ -62,14 +64,14 @@ export default function BookingForm({
   const nights = getNights(checkIn, checkOut);
 
   useEffect(() => {
-    if (checkIn && checkOut && hasUnavailableInRange(checkIn, checkOut, blockedDates, bookedDates)) {
+    if (checkIn && checkOut && hasInvalidInRange(checkIn, checkOut, availableDates, bookedDates)) {
       setRangeError(
-        "Der gewählte Zeitraum enthält bereits belegte Tage. Bitte wählen Sie einen anderen Zeitraum."
+        "Der gewählte Zeitraum enthält nicht verfügbare Tage. Bitte nur freie (grüne) Tage wählen."
       );
     } else {
       setRangeError("");
     }
-  }, [checkIn, checkOut, blockedDates, bookedDates]);
+  }, [checkIn, checkOut, availableDates, bookedDates]);
 
   const priceCalc = nights > 0 ? calculatePrice(nights, extraBeds, pricing, discounts) : null;
 

@@ -114,23 +114,23 @@ function PricingEditor({
 // ─── Availability Editor ──────────────────────────────────────────────────────
 
 function AvailabilityEditor({ apt, onSaved }: { apt: Apartment; onSaved: (dates: string[]) => void }) {
-  const [blocked, setBlocked] = useState<Date[]>(
-    apt.blockedDates.map((d) => new Date(d + "T00:00:00"))
+  const [available, setAvailable] = useState<Date[]>(
+    apt.availableDates.map((d) => new Date(d + "T00:00:00"))
   );
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
 
   async function handleSave() {
     setSaving(true);
-    const blockedDates = blocked.map((d) => d.toISOString().slice(0, 10));
+    const availableDates = available.map((d) => d.toISOString().slice(0, 10));
     try {
       const res = await fetch(`/api/fewo/${apt.id}/availability`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ blockedDates }),
+        body: JSON.stringify({ availableDates }),
       });
       if (res.ok) {
-        onSaved(blockedDates);
+        onSaved(availableDates);
         setSuccess(true);
         setTimeout(() => setSuccess(false), 2000);
       }
@@ -141,8 +141,8 @@ function AvailabilityEditor({ apt, onSaved }: { apt: Apartment; onSaved: (dates:
     <div className="space-y-4">
       <style>{`
         .admin-cal .rdp-root {
-          --rdp-accent-color: #2C1810;
-          --rdp-accent-background-color: rgba(44,24,16,0.1);
+          --rdp-accent-color: #6B7C5E;
+          --rdp-accent-background-color: rgba(107,124,94,0.15);
           --rdp-today-color: #C4724A;
           --rdp-selected-border: 2px solid transparent;
           --rdp-day_button-border-radius: 6px;
@@ -151,8 +151,8 @@ function AvailabilityEditor({ apt, onSaved }: { apt: Apartment; onSaved: (dates:
         .admin-cal .rdp-month_caption { font-family: var(--font-playfair, serif); color: #2C1810; }
         .admin-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 13px; }
         .admin-cal .rdp-selected .rdp-day_button {
-          background-color: #2C1810 !important;
-          color: rgba(255,255,255,0.85) !important;
+          background-color: #6B7C5E !important;
+          color: white !important;
           border: none !important;
           border-radius: 6px;
         }
@@ -160,8 +160,8 @@ function AvailabilityEditor({ apt, onSaved }: { apt: Apartment; onSaved: (dates:
       <div className="admin-cal border border-sand rounded-xl overflow-hidden bg-white">
         <DayPicker
           mode="multiple"
-          selected={blocked}
-          onSelect={(days: Date[] | undefined) => setBlocked(days ?? [])}
+          selected={available}
+          onSelect={(days: Date[] | undefined) => setAvailable(days ?? [])}
           fromDate={new Date()}
         />
       </div>
@@ -393,8 +393,8 @@ export default function FewoPanel({ initialApartments }: Props) {
     setApartments((prev) => prev.map((a) => (a.id === updated.id ? updated : a)));
   }
 
-  function updateAvailability(id: string, blockedDates: string[]) {
-    setApartments((prev) => prev.map((a) => (a.id === id ? { ...a, blockedDates } : a)));
+  function updateAvailability(id: string, availableDates: string[]) {
+    setApartments((prev) => prev.map((a) => (a.id === id ? { ...a, availableDates } : a)));
   }
 
   if (!apt) return null;
