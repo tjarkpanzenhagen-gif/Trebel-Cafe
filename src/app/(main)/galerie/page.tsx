@@ -9,15 +9,15 @@ export const metadata: Metadata = {
 };
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=800&q=80", alt: "Gemütliche Café-Atmosphäre", tall: true },
-  { src: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&q=80", alt: "Frisch gebackene Croissants", tall: false },
-  { src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=80", alt: "Cappuccino mit Latte Art", tall: false },
-  { src: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80", alt: "Café-Innenraum mit warmem Licht", tall: true },
-  { src: "https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=800&q=80", alt: "Selbstgebackene Brötchen", tall: false },
-  { src: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80", alt: "Kaffeespezialitäten", tall: false },
-  { src: "https://images.unsplash.com/photo-1481931098730-318b6f776db0?w=800&q=80", alt: "Frühstückstisch", tall: true },
-  { src: "https://images.unsplash.com/photo-1442975631134-d6106c90a05e?w=800&q=80", alt: "Tischgedeck im Café", tall: false },
-  { src: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=800&q=80", alt: "Kaffeebohnen und Tasse", tall: false },
+  { src: "/images/Cafe/cafe-01.jpg", alt: "Trebelcafé Atmosphäre", tall: true },
+  { src: "/images/Cafe/cafe-02.jpg", alt: "Trebelcafé Einblick", tall: false },
+  { src: "/images/Cafe/cafe-03.jpg", alt: "Gemütliche Momente", tall: false },
+  { src: "/images/Cafe/cafe-04.jpg", alt: "Trebelcafé Innenraum", tall: true },
+  { src: "/images/Cafe/cafe-05.jpg", alt: "Selbstgebackenes", tall: false },
+  { src: "/images/Cafe/cafe-06.jpg", alt: "Kaffee und Kuchen", tall: false },
+  { src: "/images/Cafe/cafe-07.jpg", alt: "Trebelcafé Tribsees", tall: true },
+  { src: "/images/Cafe/cafe-08.jpg", alt: "Herzlich willkommen", tall: false },
+  { src: "/images/Cafe/cafe-09.jpg", alt: "Familie Wendel-Bigalke", tall: false },
 ];
 
 export default function GaleriePage() {
