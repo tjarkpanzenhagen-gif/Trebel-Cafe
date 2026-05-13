@@ -15,25 +15,30 @@ type Props = {
   bookedDates: string[];
 };
 
-function getNights(checkIn: string, checkOut: string): number {
-  if (!checkIn || !checkOut) return 0;
-  const diff = new Date(checkOut).getTime() - new Date(checkIn).getTime();
+function localDateKey(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function getNights(from: Date | undefined, to: Date | undefined): number {
+  if (!from || !to) return 0;
+  const diff = to.getTime() - from.getTime();
   return Math.max(0, Math.round(diff / (1000 * 60 * 60 * 24)));
 }
 
 function hasInvalidInRange(
-  checkIn: string,
-  checkOut: string,
+  from: Date | undefined,
+  to: Date | undefined,
   availableDates: string[],
   bookedDates: string[]
 ): boolean {
-  if (!checkIn || !checkOut) return false;
+  if (!from || !to) return false;
   const available = new Set(availableDates);
   const booked = new Set(bookedDates);
-  const start = new Date(checkIn);
-  const end = new Date(checkOut);
-  for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
-    const key = d.toISOString().slice(0, 10);
+  for (let d = new Date(from); d < to; d.setDate(d.getDate() + 1)) {
+    const key = localDateKey(d);
     if (!available.has(key) || booked.has(key)) return true;
   }
   return false;
@@ -60,9 +65,9 @@ export default function BookingForm({
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const checkIn = range.from ? range.from.toISOString().slice(0, 10) : "";
-  const checkOut = range.to ? range.to.toISOString().slice(0, 10) : "";
-  const nights = getNights(checkIn, checkOut);
+  const checkIn = range.from ? localDateKey(range.from) : "";
+  const checkOut = range.to ? localDateKey(range.to) : "";
+  const nights = getNights(range.from, range.to);
 
   const freeDates = useMemo(() => {
     const bookedSet = new Set(bookedDates);
@@ -77,7 +82,7 @@ export default function BookingForm({
   );
 
   const rangeError =
-    checkIn && checkOut && hasInvalidInRange(checkIn, checkOut, availableDates, bookedDates)
+    checkIn && checkOut && hasInvalidInRange(range.from, range.to, availableDates, bookedDates)
       ? "Der gewählte Zeitraum enthält nicht verfügbare Tage. Bitte nur grüne Tage wählen."
       : "";
 
@@ -224,7 +229,7 @@ export default function BookingForm({
           modifiers={{ free: freeDates, booked: bookedDateObjs }}
           modifiersClassNames={{ free: "day-free", booked: "day-booked" }}
           disabled={(date) => {
-            const key = date.toISOString().slice(0, 10);
+            const key = localDateKey(date);
             const bookedSet = new Set(bookedDates);
             const availSet = new Set(availableDates);
             return !availSet.has(key) || bookedSet.has(key);
