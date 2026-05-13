@@ -36,7 +36,9 @@ export default async function FerienwohnungenPage() {
             </div>
             <div className="w-px h-10 bg-cream/15" />
             <div className="text-center">
-              <p className="font-playfair text-3xl text-terracotta">ab 80 €</p>
+              <p className="font-playfair text-3xl text-terracotta">
+                ab {Math.min(...data.apartments.map((a) => a.pricing.perNight))} €
+              </p>
               <p className="font-dm text-xs text-cream/40 uppercase tracking-widest mt-1">pro Nacht</p>
             </div>
             <div className="w-px h-10 bg-cream/15" />
