@@ -9,20 +9,12 @@ type Props = {
   bookedDates?: string[];
 };
 
-export default function AvailabilityCalendar({ availableDates, bookedDates = [] }: Props) {
-  const available = useMemo(
-    () => availableDates.map((d) => new Date(d + "T00:00:00")),
-    [availableDates]
-  );
+export default function AvailabilityCalendar({ bookedDates = [] }: Props) {
   const booked = useMemo(
     () => bookedDates.map((d) => new Date(d + "T00:00:00")),
     [bookedDates]
   );
-  // Free = available but not booked
-  const free = useMemo(
-    () => available.filter((d) => !booked.some((b) => b.toDateString() === d.toDateString())),
-    [available, booked]
-  );
+  const free = useMemo(() => [] as Date[], []);
 
   return (
     <div className="fewo-cal">
@@ -74,7 +66,7 @@ export default function AvailabilityCalendar({ availableDates, bookedDates = [] 
         modifiersClassNames={{ free: "day-free", booked: "day-booked" }}
         disabled={(date) => {
           const key = date.toDateString();
-          return !free.some((d) => d.toDateString() === key);
+          return booked.some((d) => d.toDateString() === key);
         }}
         fromDate={new Date()}
         numberOfMonths={1}

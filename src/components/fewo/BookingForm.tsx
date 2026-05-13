@@ -24,17 +24,15 @@ function getNights(checkIn: string, checkOut: string): number {
 function hasInvalidInRange(
   checkIn: string,
   checkOut: string,
-  availableDates: string[],
   bookedDates: string[]
 ): boolean {
   if (!checkIn || !checkOut) return false;
-  const available = new Set(availableDates);
   const booked = new Set(bookedDates);
   const start = new Date(checkIn);
   const end = new Date(checkOut);
   for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
     const key = d.toISOString().slice(0, 10);
-    if (!available.has(key) || booked.has(key)) return true;
+    if (booked.has(key)) return true;
   }
   return false;
 }
@@ -64,12 +62,7 @@ export default function BookingForm({
   const checkOut = range.to ? range.to.toISOString().slice(0, 10) : "";
   const nights = getNights(checkIn, checkOut);
 
-  const freeDates = useMemo(() => {
-    const bookedSet = new Set(bookedDates);
-    return availableDates
-      .filter((d) => !bookedSet.has(d))
-      .map((d) => new Date(d + "T00:00:00"));
-  }, [availableDates, bookedDates]);
+  const freeDates = useMemo(() => [] as Date[], []);
 
   const bookedDateObjs = useMemo(
     () => bookedDates.map((d) => new Date(d + "T00:00:00")),
@@ -77,8 +70,8 @@ export default function BookingForm({
   );
 
   const rangeError =
-    checkIn && checkOut && hasInvalidInRange(checkIn, checkOut, availableDates, bookedDates)
-      ? "Der gewählte Zeitraum enthält nicht verfügbare Tage. Bitte nur grüne Tage wählen."
+    checkIn && checkOut && hasInvalidInRange(checkIn, checkOut, bookedDates)
+      ? "Der gewählte Zeitraum enthält bereits gebuchte Tage. Bitte einen anderen Zeitraum wählen."
       : "";
 
   const priceCalc = nights > 0 ? calculatePrice(nights, extraBeds, pricing, discounts) : null;
@@ -225,8 +218,7 @@ export default function BookingForm({
           disabled={(date) => {
             const key = date.toISOString().slice(0, 10);
             const bookedSet = new Set(bookedDates);
-            const availSet = new Set(availableDates);
-            return !availSet.has(key) || bookedSet.has(key);
+            return bookedSet.has(key);
           }}
           fromDate={new Date()}
           numberOfMonths={1}
