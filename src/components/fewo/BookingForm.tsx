@@ -161,7 +161,7 @@ export default function BookingForm({
       <h3 className="font-playfair text-xl text-espresso">Buchungsanfrage</h3>
 
       {/* Range calendar */}
-      <div className="booking-cal border border-sand rounded-xl overflow-hidden bg-white">
+      <div className="booking-cal border border-sand rounded-xl bg-white">
         <style>{`
           .booking-cal .rdp-root {
             --rdp-accent-color: #2C1810;
@@ -175,13 +175,14 @@ export default function BookingForm({
             --rdp-day_button-border-radius: 6px;
             margin: 0;
             width: 100%;
+            padding: 0 8px;
           }
           .booking-cal .rdp-month { width: 100%; }
           .booking-cal .rdp-month_caption {
             font-family: var(--font-playfair, serif);
             color: #2C1810;
             font-size: 0.95rem;
-            padding: 10px 12px 4px;
+            padding: 10px 4px 4px;
           }
           .booking-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 12px; }
           /* Free days — green */
