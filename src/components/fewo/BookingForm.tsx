@@ -24,15 +24,17 @@ function getNights(checkIn: string, checkOut: string): number {
 function hasInvalidInRange(
   checkIn: string,
   checkOut: string,
+  availableDates: string[],
   bookedDates: string[]
 ): boolean {
   if (!checkIn || !checkOut) return false;
+  const available = new Set(availableDates);
   const booked = new Set(bookedDates);
   const start = new Date(checkIn);
   const end = new Date(checkOut);
   for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
     const key = d.toISOString().slice(0, 10);
-    if (booked.has(key)) return true;
+    if (!available.has(key) || booked.has(key)) return true;
   }
   return false;
 }
@@ -62,18 +64,21 @@ export default function BookingForm({
   const checkOut = range.to ? range.to.toISOString().slice(0, 10) : "";
   const nights = getNights(checkIn, checkOut);
 
-  const bookedSet = useMemo(() => new Set(bookedDates), [bookedDates]);
+  const freeDates = useMemo(() => {
+    const bookedSet = new Set(bookedDates);
+    return availableDates
+      .filter((d) => !bookedSet.has(d))
+      .map((d) => new Date(d + "T00:00:00"));
+  }, [availableDates, bookedDates]);
 
   const bookedDateObjs = useMemo(
     () => bookedDates.map((d) => new Date(d + "T00:00:00")),
     [bookedDates]
   );
 
-  const isFree = (date: Date) => !bookedSet.has(date.toISOString().slice(0, 10));
-
   const rangeError =
-    checkIn && checkOut && hasInvalidInRange(checkIn, checkOut, bookedDates)
-      ? "Der gewählte Zeitraum enthält bereits gebuchte Tage. Bitte einen anderen Zeitraum wählen."
+    checkIn && checkOut && hasInvalidInRange(checkIn, checkOut, availableDates, bookedDates)
+      ? "Der gewählte Zeitraum enthält nicht verfügbare Tage. Bitte nur grüne Tage wählen."
       : "";
 
   const priceCalc = nights > 0 ? calculatePrice(nights, extraBeds, pricing, discounts) : null;
@@ -215,12 +220,13 @@ export default function BookingForm({
           mode="range"
           selected={range.from ? { from: range.from, to: range.to } : undefined}
           onSelect={(r) => setRange({ from: r?.from, to: r?.to })}
-          modifiers={{ free: isFree, booked: bookedDateObjs }}
+          modifiers={{ free: freeDates, booked: bookedDateObjs }}
           modifiersClassNames={{ free: "day-free", booked: "day-booked" }}
           disabled={(date) => {
             const key = date.toISOString().slice(0, 10);
             const bookedSet = new Set(bookedDates);
-            return bookedSet.has(key);
+            const availSet = new Set(availableDates);
+            return !availSet.has(key) || bookedSet.has(key);
           }}
           fromDate={new Date()}
           numberOfMonths={1}
