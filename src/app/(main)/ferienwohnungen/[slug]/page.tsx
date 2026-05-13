@@ -3,7 +3,6 @@ import { readBookings, getBookedDatesForApartment } from "@/lib/bookings-store";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import PricingTable from "@/components/fewo/PricingTable";
-import AvailabilityCalendar from "@/components/fewo/AvailabilityCalendar";
 import BookingForm from "@/components/fewo/BookingForm";
 import WeeklyMenuTeaser from "@/components/fewo/WeeklyMenuTeaser";
 import AnimatedSection from "@/components/ui/AnimatedSection";
@@ -135,10 +134,6 @@ export default async function ApartmentDetailPage({ params }: Props) {
               <PricingTable pricing={apt.pricing} discounts={apt.discounts} />
             </AnimatedSection>
 
-            <AnimatedSection delay={0.15}>
-              <h2 className="font-playfair text-2xl text-espresso mb-3">Verfügbarkeit</h2>
-              <AvailabilityCalendar availableDates={apt.availableDates} bookedDates={bookedDates} />
-            </AnimatedSection>
           </div>
 
           {/* Right column — booking form */}

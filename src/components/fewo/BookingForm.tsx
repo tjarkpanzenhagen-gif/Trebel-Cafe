@@ -62,12 +62,14 @@ export default function BookingForm({
   const checkOut = range.to ? range.to.toISOString().slice(0, 10) : "";
   const nights = getNights(checkIn, checkOut);
 
-  const freeDates = useMemo(() => [] as Date[], []);
+  const bookedSet = useMemo(() => new Set(bookedDates), [bookedDates]);
 
   const bookedDateObjs = useMemo(
     () => bookedDates.map((d) => new Date(d + "T00:00:00")),
     [bookedDates]
   );
+
+  const isFree = (date: Date) => !bookedSet.has(date.toISOString().slice(0, 10));
 
   const rangeError =
     checkIn && checkOut && hasInvalidInRange(checkIn, checkOut, bookedDates)
@@ -213,7 +215,7 @@ export default function BookingForm({
           mode="range"
           selected={range.from ? { from: range.from, to: range.to } : undefined}
           onSelect={(r) => setRange({ from: r?.from, to: r?.to })}
-          modifiers={{ free: freeDates, booked: bookedDateObjs }}
+          modifiers={{ free: isFree, booked: bookedDateObjs }}
           modifiersClassNames={{ free: "day-free", booked: "day-booked" }}
           disabled={(date) => {
             const key = date.toISOString().slice(0, 10);
