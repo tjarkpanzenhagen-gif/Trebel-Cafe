@@ -408,49 +408,44 @@ export default function FewoPanel({ initialApartments }: Props) {
   if (!apt) return null;
 
   return (
-    <div className="grid grid-cols-[220px_1fr] gap-0 min-h-[520px] rounded-2xl border border-sand overflow-hidden bg-white">
-      {/* Sidebar */}
-      <aside className="border-r border-sand bg-cream/60 flex flex-col">
-        <div className="p-4 border-b border-sand">
-          <p className="font-dm text-xs text-espresso/40 uppercase tracking-widest mb-3">Wohnung</p>
-          <div className="space-y-1">
-            {apartments.map((a) => (
-              <button
-                key={a.id}
-                onClick={() => setActiveApt(a.id)}
-                className={`w-full text-left px-3 py-2 rounded-lg font-dm text-sm transition-colors ${
-                  activeApt === a.id ? "bg-espresso text-cream" : "text-espresso/60 hover:bg-sand/60 hover:text-espresso"
-                }`}
-              >
-                {a.name}
-              </button>
-            ))}
-          </div>
+    <div className="rounded-2xl border border-sand overflow-hidden bg-white">
+      {/* Mobile + Desktop top bar */}
+      <div className="border-b border-sand bg-cream/60">
+        {/* Apartment selector */}
+        <div className="flex gap-1 p-3 border-b border-sand/60">
+          {apartments.map((a) => (
+            <button
+              key={a.id}
+              onClick={() => setActiveApt(a.id)}
+              className={`px-3 py-1.5 rounded-lg font-dm text-sm transition-colors ${
+                activeApt === a.id ? "bg-espresso text-cream" : "text-espresso/60 hover:bg-sand/60 hover:text-espresso"
+              }`}
+            >
+              {a.name}
+            </button>
+          ))}
         </div>
-
-        <nav className="p-4 flex-1">
-          <p className="font-dm text-xs text-espresso/40 uppercase tracking-widest mb-3">Bereich</p>
-          <div className="space-y-1">
-            {SECTIONS.map((s) => (
-              <button
-                key={s.key}
-                onClick={() => setActiveSection(s.key)}
-                className={`w-full text-left px-3 py-2 rounded-lg font-dm text-sm transition-colors flex items-center gap-2.5 ${
-                  activeSection === s.key
-                    ? "bg-terracotta/10 text-terracotta font-medium"
-                    : "text-espresso/55 hover:bg-sand/50 hover:text-espresso"
-                }`}
-              >
-                <span className="text-base leading-none">{s.icon}</span>
-                {s.label}
-              </button>
-            ))}
-          </div>
-        </nav>
-      </aside>
+        {/* Section tabs */}
+        <div className="flex gap-1 p-3">
+          {SECTIONS.map((s) => (
+            <button
+              key={s.key}
+              onClick={() => setActiveSection(s.key)}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-dm text-sm transition-colors ${
+                activeSection === s.key
+                  ? "bg-terracotta/10 text-terracotta font-medium"
+                  : "text-espresso/55 hover:bg-sand/50 hover:text-espresso"
+              }`}
+            >
+              <span className="text-base leading-none">{s.icon}</span>
+              <span className="hidden sm:inline">{s.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Content */}
-      <div className="p-6 overflow-y-auto">
+      <div className="p-4 md:p-6 overflow-y-auto">
         <div className="mb-5">
           <h3 className="font-playfair text-lg text-espresso">
             {SECTIONS.find((s) => s.key === activeSection)?.label}

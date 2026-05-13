@@ -20,8 +20,9 @@ export async function POST(request: Request) {
   response.cookies.set("admin_session", sessionSecret, {
     httpOnly: true,
     path: "/",
-    maxAge: 60 * 60 * 24,
-    sameSite: "lax",
+    maxAge: 60 * 60 * 8,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
   });
   return response;
 }

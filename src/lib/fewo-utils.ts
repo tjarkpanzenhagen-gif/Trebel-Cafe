@@ -41,7 +41,7 @@ export function calculatePrice(
   const nightsTotal = nights * pricing.perNight;
   const discountPercent =
     nights >= 7 ? discounts.sevenNights : nights >= 3 ? discounts.threeNights : 0;
-  const discountAmount = Math.round((nightsTotal * discountPercent) / 100 * 100) / 100;
+  const discountAmount = Math.round((nightsTotal * discountPercent / 100) * 100) / 100;
   const discountedNights = nightsTotal - discountAmount;
   const extraBedTotal = extraBeds * pricing.extraBed;
   const total = Math.round((discountedNights + extraBedTotal + pricing.cleaningFee) * 100) / 100;

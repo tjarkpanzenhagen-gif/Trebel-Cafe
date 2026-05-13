@@ -19,8 +19,8 @@ export default function UeberUnsPage() {
       {/* Hero image */}
       <div className="relative h-64 md:h-96 overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1442975631134-d6106c90a05e?w=1400&q=80"
-          alt="Gemütliche Café-Atmosphäre"
+          src="/images/Cafe/cafe-03.jpg"
+          alt="Trebelcafé Atmosphäre"
           fill
           className="object-cover"
           priority
@@ -62,8 +62,8 @@ export default function UeberUnsPage() {
           <AnimatedSection delay={0.2}>
             <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&q=80"
-                alt="Frisch gebackener Kuchen aus unserer Backstube"
+                src="/images/Cafe/cafe-06.jpg"
+                alt="Frisch gebackenes aus der Trebelcafé-Küche"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"

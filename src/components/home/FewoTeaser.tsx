@@ -1,14 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
 import { readFewo } from "@/lib/fewo-store";
 
 const PLACEHOLDER_IMAGES: Record<string, string> = {
-  "wohnung-1":
-    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&auto=format&fit=crop&q=80",
-  "wohnung-2":
-    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&auto=format&fit=crop&q=80",
+  "wohnung-1": "/images/wohnungen/wohnung-01.jpg",
+  "wohnung-2": "/images/wohnungen/wohnung-04.jpg",
 };
 
 export default async function FewoTeaser() {
@@ -39,10 +38,12 @@ export default async function FewoTeaser() {
                   <div className="rounded-2xl overflow-hidden border border-cream/10 hover:border-terracotta/40 transition-colors duration-300">
                     {/* Image with overlay */}
                     <div className="relative h-52 overflow-hidden">
-                      <img
+                      <Image
                         src={imgSrc}
                         alt={apt.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-espresso/60 via-transparent to-transparent" />
                       <span className="absolute top-3 left-3 font-dm text-xs text-sage bg-espresso/80 backdrop-blur-sm border border-sage/30 px-2.5 py-1 rounded-full">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Apartment } from "@/lib/fewo-store";
 import PricingTable from "@/components/fewo/PricingTable";
 import AnimatedSection from "@/components/ui/AnimatedSection";
@@ -10,14 +11,14 @@ type Props = {
 
 const PLACEHOLDER_IMAGES: Record<string, string[]> = {
   "wohnung-1": [
-    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=450&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=450&auto=format&fit=crop&q=80",
+    "/images/wohnungen/wohnung-01.jpg",
+    "/images/wohnungen/wohnung-02.jpg",
+    "/images/wohnungen/wohnung-03.jpg",
   ],
   "wohnung-2": [
-    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=450&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=450&auto=format&fit=crop&q=80",
+    "/images/wohnungen/wohnung-04.jpg",
+    "/images/wohnungen/wohnung-05.jpg",
+    "/images/wohnungen/wohnung-01.jpg",
   ],
 };
 
@@ -39,19 +40,23 @@ export default function ApartmentCard({ apartment, delay = 0 }: Props) {
         {/* Image grid */}
         <div className="grid grid-cols-3 gap-2 rounded-2xl overflow-hidden mb-10 h-72">
           <div className="col-span-2 relative overflow-hidden">
-            <img
+            <Image
               src={images[0]}
               alt={apartment.name}
-              className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+              fill
+              className="object-cover transition-transform duration-700 hover:scale-105"
+              sizes="(max-width: 768px) 100vw, 60vw"
             />
           </div>
           <div className="grid grid-rows-2 gap-2">
             {images.slice(1, 3).map((src, i) => (
               <div key={i} className="relative overflow-hidden">
-                <img
+                <Image
                   src={src}
                   alt=""
-                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                  fill
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                  sizes="(max-width: 768px) 50vw, 20vw"
                 />
               </div>
             ))}
