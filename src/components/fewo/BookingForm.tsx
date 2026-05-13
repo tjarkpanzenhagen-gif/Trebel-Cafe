@@ -320,10 +320,22 @@ export default function BookingForm({
             <span className="font-dm text-sm text-espresso">{nights} Nacht{nights !== 1 ? "e" : ""} × {pricing.perNight} €</span>
             <span className="font-dm text-sm text-espresso">{priceCalc.nightsTotal.toFixed(2)} €</span>
           </div>
-          {priceCalc.discountPercent > 0 && (
+          {priceCalc.discountPercent > 0 ? (
             <div className="flex justify-between">
               <span className="font-dm text-sm text-sage">Rabatt ({priceCalc.discountPercent}%)</span>
               <span className="font-dm text-sm text-sage">−{priceCalc.discountAmount.toFixed(2)} €</span>
+            </div>
+          ) : (
+            <div className="flex justify-between">
+              <span className="font-dm text-sm text-espresso/40">
+                Rabatt
+                {nights < 3
+                  ? ` (ab 3 Nächten: ${discounts.threeNights}%)`
+                  : nights < 7
+                  ? ` (ab 7 Nächten: ${discounts.sevenNights}%)`
+                  : ""}
+              </span>
+              <span className="font-dm text-sm text-espresso/40">–</span>
             </div>
           )}
           {extraBeds > 0 && (
