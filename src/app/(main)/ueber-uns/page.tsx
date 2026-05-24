@@ -51,25 +51,14 @@ export default function UeberUnsPage() {
           </AnimatedSection>
 
           <AnimatedSection delay={0.2}>
-            <div className="flex gap-3 h-96">
-              <div className="relative flex-1 rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="/images/Cafe/wir.jpg"
-                  alt="Familie Wendel-Bigalke im Trebel Café"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
-              </div>
-              <div className="relative flex-1 rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="/images/Cafe/wir1.jpg"
-                  alt="Trebel Café Team"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
-              </div>
+            <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
+              <Image
+                src="/images/Cafe/wir1.jpg"
+                alt="Familie Wendel-Bigalke im Trebel Café"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
             </div>
           </AnimatedSection>
         </div>
