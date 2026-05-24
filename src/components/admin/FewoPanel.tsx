@@ -473,6 +473,7 @@ function BookingsView({ apartmentId }: { apartmentId: string }) {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [acting, setActing] = useState<string | null>(null);
+  const [actError, setActError] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -497,6 +498,7 @@ function BookingsView({ apartmentId }: { apartmentId: string }) {
 
   async function updateStatus(id: string, status: "confirmed" | "cancelled") {
     setActing(id);
+    setActError("");
     try {
       const res = await fetch(`/api/fewo/bookings/${id}`, {
         method: "PUT",
@@ -505,13 +507,19 @@ function BookingsView({ apartmentId }: { apartmentId: string }) {
       });
       if (res.ok) {
         setBookings((prev) => prev.map((b) => b.id === id ? { ...b, status } : b));
+      } else {
+        const e = await res.json().catch(() => ({}));
+        setActError(`Fehler: ${(e as { error?: string }).error ?? "Unbekannt"}`);
       }
+    } catch {
+      setActError("Netzwerkfehler");
     } finally {
       setActing(null);
     }
   }
 
   if (loading) return <div className="py-16 text-center"><div className="inline-block w-5 h-5 border-2 border-sand border-t-terracotta rounded-full animate-spin" /></div>;
+
   if (loadError) return (
     <div className="py-10 text-center space-y-3">
       <p className="font-dm text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3">{loadError}</p>
@@ -526,6 +534,9 @@ function BookingsView({ apartmentId }: { apartmentId: string }) {
 
   return (
     <div className="space-y-4">
+      {actError && (
+        <p className="font-dm text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{actError}</p>
+      )}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {pending.length > 0 && (

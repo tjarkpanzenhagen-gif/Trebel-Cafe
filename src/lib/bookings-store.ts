@@ -88,9 +88,9 @@ export function getBookedDatesForApartment(bookings: Booking[], apartmentId: str
   bookings
     .filter((b) => b.apartmentId === apartmentId && (b.status === "pending" || b.status === "confirmed"))
     .forEach((b) => {
-      const start = new Date(b.checkIn);
-      const end = new Date(b.checkOut);
-      for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+      const start = new Date(b.checkIn + "T00:00:00Z");
+      const end = new Date(b.checkOut + "T00:00:00Z");
+      for (let d = new Date(start); d < end; d.setUTCDate(d.getUTCDate() + 1)) {
         dates.add(d.toISOString().slice(0, 10));
       }
     });
