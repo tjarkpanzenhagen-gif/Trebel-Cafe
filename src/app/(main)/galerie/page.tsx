@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import SectionLabel from "@/components/ui/SectionLabel";
+import GalerieGrid from "@/components/galerie/GalerieGrid";
 
 export const metadata: Metadata = {
   title: "Galerie — Trebel Café Tribsees",
   description: "Bilder aus dem Trebel Café — Atmosphäre, Kuchen und gemütliche Momente.",
 };
+
+const galleryImages = [
+  { src: "/images/Cafe/cafe-01.jpg", alt: "Trebel Café Atmosphäre", tall: true },
+  { src: "/images/Cafe/cafe-02.jpg", alt: "Trebel Café Einblick", tall: false },
+  { src: "/images/Cafe/cafe-03.jpg", alt: "Gemütliche Momente", tall: false },
+  { src: "/images/Cafe/cafe-04.jpg", alt: "Trebel Café Tribsees", tall: true },
+];
 
 export default function GaleriePage() {
   return (
@@ -19,10 +27,7 @@ export default function GaleriePage() {
           </p>
         </AnimatedSection>
 
-        <div className="py-20 text-center">
-          <p className="font-playfair text-2xl text-espresso/20 mb-2">Bilder folgen</p>
-          <p className="font-dm text-sm text-espresso/30">Wir füllen die Galerie demnächst mit Leben.</p>
-        </div>
+        <GalerieGrid images={galleryImages} />
       </div>
     </div>
   );

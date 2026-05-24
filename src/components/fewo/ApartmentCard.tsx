@@ -79,7 +79,7 @@ export default function ApartmentCard({ apartment, delay = 0 }: Props) {
             {/* Amenity badges */}
             <div className="flex flex-wrap gap-2 mb-4">
               <span className="font-dm text-xs text-sage bg-sage/10 border border-sage/20 px-3 py-1.5 rounded-full">
-                ✓ Frühstück inklusive
+                ✓ Bettwäsche & Handtücher inklusive
               </span>
               <span className="font-dm text-xs text-espresso/55 bg-sand/50 px-3 py-1.5 rounded-full">
                 WLAN

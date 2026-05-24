@@ -23,7 +23,7 @@ export default async function FewoTeaser() {
             Schlafen direkt am Café
           </h2>
           <p className="font-dm text-cream/55 max-w-sm mx-auto text-sm leading-relaxed">
-            Zwei gemütliche Ferienwohnungen — wachen Sie auf und genießen Sie unser Frühstück.
+            Zwei gemütliche Ferienwohnungen — direkt am Café, mit Bettwäsche und Handtüchern inklusive.
           </p>
         </AnimatedSection>
 
@@ -47,7 +47,7 @@ export default async function FewoTeaser() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-espresso/60 via-transparent to-transparent" />
                       <span className="absolute top-3 left-3 font-dm text-xs text-sage bg-espresso/80 backdrop-blur-sm border border-sage/30 px-2.5 py-1 rounded-full">
-                        ✓ Frühstück inklusive
+                        ✓ Bettwäsche & Handtücher inklusive
                       </span>
                     </div>
                     {/* Info */}
