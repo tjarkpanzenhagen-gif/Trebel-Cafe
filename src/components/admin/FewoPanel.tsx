@@ -471,16 +471,23 @@ function BookingCard({
 function BookingsView({ apartmentId }: { apartmentId: string }) {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [acting, setActing] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
+    setLoadError("");
     try {
       const res = await fetch("/api/fewo/bookings");
       if (res.ok) {
         const data = await res.json();
         setBookings(data.bookings ?? []);
+      } else {
+        const e = await res.json().catch(() => ({}));
+        setLoadError(`Fehler ${res.status}: ${(e as { error?: string }).error ?? "Unbekannt"}`);
       }
+    } catch {
+      setLoadError("Netzwerkfehler beim Laden der Anfragen.");
     } finally {
       setLoading(false);
     }
@@ -505,6 +512,12 @@ function BookingsView({ apartmentId }: { apartmentId: string }) {
   }
 
   if (loading) return <div className="py-16 text-center"><div className="inline-block w-5 h-5 border-2 border-sand border-t-terracotta rounded-full animate-spin" /></div>;
+  if (loadError) return (
+    <div className="py-10 text-center space-y-3">
+      <p className="font-dm text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3">{loadError}</p>
+      <button onClick={load} className="font-dm text-xs text-terracotta hover:text-[#b3623c] transition-colors">↻ Erneut versuchen</button>
+    </div>
+  );
 
   const aptBookings = bookings.filter((b) => b.apartmentId === apartmentId);
   const pending = aptBookings.filter((b) => b.status === "pending");

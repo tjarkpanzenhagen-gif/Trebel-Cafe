@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { readBookings, writeBookings } from "@/lib/bookings-store";
 import { readFewo } from "@/lib/fewo-store";
+import { sendBookingNotification } from "@/lib/email";
 
 function isAuthenticated(request: NextRequest) {
   const secret = process.env.ADMIN_SESSION_SECRET || "dev-secret-change-in-production";
@@ -52,6 +53,10 @@ export async function POST(request: NextRequest) {
     }
     if (String(checkIn) >= String(checkOut)) {
       return NextResponse.json({ error: "Abreisedatum muss nach Anreisedatum liegen" }, { status: 400 });
+    }
+    const today = new Date().toISOString().slice(0, 10);
+    if (String(checkIn) < today) {
+      return NextResponse.json({ error: "Anreisedatum liegt in der Vergangenheit" }, { status: 400 });
     }
     if (String(name).length > 100 || String(phone).length > 50 || String(message ?? "").length > 1000) {
       return NextResponse.json({ error: "Eingabe zu lang" }, { status: 400 });
@@ -113,6 +118,7 @@ export async function POST(request: NextRequest) {
     };
     data.bookings.push(booking);
     await writeBookings(data);
+    sendBookingNotification(booking); // fire-and-forget, never blocks response
     return NextResponse.json(booking, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Buchung konnte nicht gespeichert werden" }, { status: 500 });
