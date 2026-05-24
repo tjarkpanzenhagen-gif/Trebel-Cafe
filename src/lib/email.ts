@@ -37,6 +37,11 @@ export async function sendBookingNotification(booking: Booking): Promise<void> {
     "",
     `Buchungs-ID: ${booking.id}`,
     `Eingegangen: ${new Date(booking.createdAt).toLocaleString("de-DE")}`,
+    "",
+    "─────────────────────────────────────",
+    "Bitte Anfrage im Admin-Panel bestätigen oder ablehnen:",
+    "https://trebel-cafe.vercel.app/admin",
+    "─────────────────────────────────────",
   ].filter((l) => l !== undefined).join("\n");
 
   try {
