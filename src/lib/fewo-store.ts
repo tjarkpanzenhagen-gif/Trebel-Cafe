@@ -93,6 +93,10 @@ export async function readFewo(): Promise<FewoData> {
           apt.pricing.aufbettungFee = shouldHave ? def.pricing.aufbettungFee : 0;
           healed = true;
         }
+        if (apt.maxPersons !== def.maxPersons) {
+          apt.maxPersons = def.maxPersons;
+          healed = true;
+        }
       }
       if (healed) await kv.set(KV_KEY, migrated);
       return migrated;
