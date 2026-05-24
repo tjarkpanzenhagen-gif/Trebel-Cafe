@@ -1,23 +1,13 @@
-import Image from "next/image";
 import Button from "@/components/ui/Button";
 
 export default function Hero() {
   return (
     <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
-      {/* Background image with Ken-Burns */}
-      <div className="absolute inset-0 overflow-hidden">
-        <Image
-          src="/images/Cafe/cafe-01.jpg"
-          alt="Gemütliches Café-Interieur mit warmem Licht"
-          fill
-          priority
-          className="object-cover animate-ken-burns"
-          sizes="100vw"
-        />
-      </div>
+      {/* Background */}
+      <div className="absolute inset-0 bg-espresso" />
 
       {/* Warm overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-espresso/50 via-espresso/40 to-espresso/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-espresso/60 via-espresso/50 to-espresso/70" />
 
       {/* Grain overlay */}
       <div
