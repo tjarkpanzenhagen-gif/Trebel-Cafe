@@ -67,6 +67,7 @@ export default function BookingForm({
     available: boolean;
     nextAvailableDate?: string;
   } | null>(null);
+  const [kinderbettLoading, setKinderbettLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -78,16 +79,19 @@ export default function BookingForm({
   useEffect(() => {
     if (!extras.kinderbett || !checkIn || !checkOut) {
       setKinderbettStatus(null);
+      setKinderbettLoading(false);
       return;
     }
     let cancelled = false;
+    setKinderbettLoading(true);
+    setKinderbettStatus(null);
     fetch(`/api/fewo/kinderbett-availability?checkIn=${checkIn}&checkOut=${checkOut}`)
       .then((r) => r.json())
       .then((data) => {
-        if (!cancelled) setKinderbettStatus(data);
+        if (!cancelled) { setKinderbettStatus(data); setKinderbettLoading(false); }
       })
       .catch(() => {
-        if (!cancelled) setKinderbettStatus(null);
+        if (!cancelled) { setKinderbettStatus(null); setKinderbettLoading(false); }
       });
     return () => { cancelled = true; };
   }, [extras.kinderbett, checkIn, checkOut]);
@@ -121,6 +125,7 @@ export default function BookingForm({
     phone.trim() &&
     !rangeError &&
     !kinderbettError &&
+    !kinderbettLoading &&
     !submitting;
 
   async function handleSubmit(e: React.MouseEvent) {
@@ -375,7 +380,10 @@ export default function BookingForm({
             Kinderbett (+{pricing.kinderbettFee} €)
           </span>
         </label>
-        {kinderbettError && (
+        {kinderbettLoading && (
+          <p className="font-dm text-xs text-espresso/40 ml-7">Verfügbarkeit wird geprüft…</p>
+        )}
+        {kinderbettError && !kinderbettLoading && (
           <p className="font-dm text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 ml-7">
             {kinderbettError}
           </p>

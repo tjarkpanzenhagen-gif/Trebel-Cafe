@@ -171,6 +171,7 @@ function BlockedDatesEditor({
   );
   const [rangeFrom, setRangeFrom] = useState("");
   const [rangeTo, setRangeTo] = useState("");
+  const [clearConfirm, setClearConfirm] = useState(false);
 
   const globalDateObjs = isGlobal
     ? []
@@ -331,21 +332,45 @@ function BlockedDatesEditor({
       {error && <p className="font-dm text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
       {success && <p className="font-dm text-xs text-sage bg-sage/10 rounded-lg px-3 py-2">✓ Gespeichert</p>}
 
-      <div className="flex gap-2">
-        <button
-          onClick={() => setBlocked([])}
-          className="px-3 py-2.5 border border-sand font-dm text-sm text-espresso/50 rounded-lg hover:border-red-300 hover:text-red-500 transition-colors"
-        >
-          Alle entsperren
-        </button>
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="flex-1 px-4 py-2.5 bg-espresso text-cream font-dm text-sm rounded-lg hover:bg-terracotta transition-colors disabled:opacity-50"
-        >
-          {saving ? "Speichern…" : "Gesperrte Tage speichern"}
-        </button>
-      </div>
+      {clearConfirm ? (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 space-y-3">
+          <p className="font-dm text-sm text-red-700">
+            {isGlobal
+              ? "Alle globalen Sperren löschen? Das entsperrt diese Tage für beide Wohnungen."
+              : `Alle Sperren für ${apt.name} löschen?`}
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setClearConfirm(false)}
+              className="flex-1 px-3 py-2 border border-sand font-dm text-sm text-espresso/60 rounded-lg hover:text-espresso transition-colors"
+            >
+              Abbrechen
+            </button>
+            <button
+              onClick={() => { setBlocked([]); setClearConfirm(false); }}
+              className="flex-1 px-3 py-2 bg-red-500 text-white font-dm text-sm rounded-lg hover:bg-red-600 transition-colors"
+            >
+              Ja, alle entsperren
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex gap-2">
+          <button
+            onClick={() => setClearConfirm(true)}
+            className="px-3 py-2.5 border border-sand font-dm text-sm text-espresso/50 rounded-lg hover:border-red-300 hover:text-red-500 transition-colors"
+          >
+            {isGlobal ? "Alle globalen entsperren" : `Nur ${apt.name} entsperren`}
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex-1 px-4 py-2.5 bg-espresso text-cream font-dm text-sm rounded-lg hover:bg-terracotta transition-colors disabled:opacity-50"
+          >
+            {saving ? "Speichern…" : "Gesperrte Tage speichern"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
