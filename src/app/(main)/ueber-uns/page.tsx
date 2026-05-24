@@ -19,7 +19,7 @@ export default function UeberUnsPage() {
       {/* Hero image */}
       <div className="relative h-64 md:h-96 overflow-hidden">
         <Image
-          src="/images/Cafe/wir.jpg"
+          src="/images/Cafe/cafe-04.jpg"
           alt="Trebel Café Atmosphäre"
           fill
           className="object-cover"
