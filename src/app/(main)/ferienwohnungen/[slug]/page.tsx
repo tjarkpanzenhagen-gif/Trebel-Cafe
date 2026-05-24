@@ -83,7 +83,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
               Ruhige Lage
             </span>
             <span className="font-dm text-xs text-cream/50 bg-cream/8 border border-cream/15 px-3 py-1.5 rounded-full">
-              bis zu {apt.maxPersons} Personen
+              {apt.maxPersons} Personen (opt. {apt.maxPersons + 1})
             </span>
           </div>
         </div>
@@ -118,6 +118,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
             <BookingForm
               apartmentName={apt.name}
               apartmentId={apt.id}
+              maxPersons={apt.maxPersons}
               pricing={apt.pricing}
               discounts={apt.discounts}
               blockedDates={blockedDates}

@@ -9,6 +9,7 @@ import { calculatePrice } from "@/lib/fewo-utils";
 type Props = {
   apartmentName: string;
   apartmentId: string;
+  maxPersons: number;
   pricing: ApartmentPricing;
   discounts: ApartmentDiscounts;
   blockedDates: string[];
@@ -47,6 +48,7 @@ function hasInvalidInRange(
 export default function BookingForm({
   apartmentName,
   apartmentId,
+  maxPersons,
   pricing,
   discounts,
   blockedDates,
@@ -355,11 +357,16 @@ export default function BookingForm({
       </div>
 
       <div>
-        <label className="block font-dm text-xs text-espresso/60 mb-1.5 uppercase tracking-wider">Personen</label>
+        <label className="block font-dm text-xs text-espresso/60 mb-1.5 uppercase tracking-wider">
+          Personen
+          <span className="ml-1 normal-case font-dm text-espresso/35">
+            (max. {extras.kinderbett || extras.aufbettung ? maxPersons + 1 : maxPersons})
+          </span>
+        </label>
         <input
           type="number"
           min={1}
-          max={showAufbettung ? 4 : 2}
+          max={extras.kinderbett || extras.aufbettung ? maxPersons + 1 : maxPersons}
           value={persons}
           onChange={(e) => setPersons(Number(e.target.value))}
           className={inputClass}

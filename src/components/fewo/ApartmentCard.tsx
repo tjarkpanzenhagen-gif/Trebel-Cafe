@@ -83,7 +83,7 @@ export default function ApartmentCard({ apartment, delay = 0 }: Props) {
                 Ruhige Lage
               </span>
               <span className="font-dm text-xs text-espresso/55 bg-sand/50 px-3 py-1.5 rounded-full">
-                bis zu {apartment.maxPersons} Personen
+                {apartment.maxPersons} Personen (opt. {apartment.maxPersons + 1})
               </span>
             </div>
           </div>
