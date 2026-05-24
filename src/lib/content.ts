@@ -79,15 +79,15 @@ export const buffetDates = [
 
 export const promises = [
   {
-    title: "Alles selbst gebacken",
-    text: "Jeder Kuchen, jedes Brot und jedes Brötchen entsteht in unserer eigenen Küche — mit Liebe und ohne Kompromisse.",
+    title: "Frisch vor Ort",
+    text: "Unsere Kuchen, Torten und Eintöpfe werden täglich frisch in unserer eigenen Küche zubereitet.",
   },
   {
     title: "Familienbetrieb",
-    text: "Das Trebel Café wird von Familie Wendel-Bigalke geführt. Persönlich, herzlich und mit echtem Engagement.",
+    text: "Das Trebel Café wird von Familie Wendel-Bigalke geführt — Do bis Mo von 9 bis 17 Uhr für euch geöffnet.",
   },
   {
-    title: "Gemütliche Atmosphäre",
-    text: "Ein Ort zum Ankommen, Verweilen und Genießen — ob allein, zu zweit oder mit der ganzen Familie.",
+    title: "Aus der Region",
+    text: "Eis und Brot beziehen wir von regionalen Anbietern aus der Umgebung.",
   },
 ];

@@ -27,15 +27,10 @@ export default function AboutTeaser() {
             Ein Café mit Seele — geführt von Familie Wendel-Bigalke.
           </h2>
           <p className="font-dm text-espresso/70 leading-relaxed mb-4">
-            Im Herzen von Tribsees liegt unser kleines, gemütliches Café. Wir empfangen euch
-            mit frisch gebackenem Kuchen, hausgemachten Gerichten und der Wärme, die man nur
-            in einem echten Familienbetrieb findet.
+            Das Trebel Café liegt im Herzen von Tribsees und wird von Familie Wendel-Bigalke geführt.
+            Kuchen, Torten und Eintöpfe bereiten wir täglich frisch vor Ort zu — Eis und Brot
+            kommen von regionalen Anbietern aus der Umgebung.
           </p>
-          <blockquote className="border-l-2 border-terracotta pl-4 mb-6">
-            <p className="font-cormorant italic text-xl text-espresso/80">
-              &quot;Wir backen alles selbst — das ist kein Versprechen, das ist unser Alltag.&quot;
-            </p>
-          </blockquote>
           <Button href="/ueber-uns" variant="filled">
             Mehr über uns →
           </Button>

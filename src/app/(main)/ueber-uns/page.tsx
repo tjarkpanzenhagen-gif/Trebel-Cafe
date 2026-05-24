@@ -10,7 +10,7 @@ const promiseIcons = [CroissantIcon, HouseHeartIcon, Coffee01Icon];
 
 export const metadata: Metadata = {
   title: "Über uns — Trebel Café Tribsees",
-  description: "Familie Wendel-Bigalke und die Geschichte des Trebel Cafés. Wir backen alles selbst — seit dem ersten Tag.",
+  description: "Das Trebel Café in Tribsees — geführt von Familie Wendel-Bigalke. Kuchen, Torten und Eintöpfe frisch aus eigener Küche, Eis und Brot aus der Region.",
 };
 
 export default function UeberUnsPage() {
@@ -41,22 +41,13 @@ export default function UeberUnsPage() {
             <SectionLabel>Unsere Geschichte</SectionLabel>
             <h2 className="font-playfair text-3xl text-espresso mb-6">Familie Wendel-Bigalke</h2>
             <p className="font-dm text-espresso/70 leading-relaxed mb-4">
-              Im Herzen von Tribsees, unweit der ruhigen Trebel, öffneten wir einst die Türen
-              unseres kleinen Cafés. Was als Herzensprojekt begann, ist heute ein Ort, an dem
-              Menschen zusammenkommen, verweilen und Gutes genießen.
+              Das Trebel Café liegt im Herzen von Tribsees und wird von Familie Wendel-Bigalke geführt.
+              Donnerstag bis Montag öffnen wir unsere Türen — für alle, die einen gemütlichen Moment suchen.
             </p>
-            <p className="font-dm text-espresso/70 leading-relaxed mb-6">
-              Unser Grundsatz war von Anfang an simpel: Wir backen alles selbst. Kein Tiefkühlkuchen,
-              keine Fertigmischungen — nur ehrliche Zutaten, Erfahrung und Liebe zum Handwerk.
+            <p className="font-dm text-espresso/70 leading-relaxed mb-4">
+              Unsere Kuchen, Torten und Eintöpfe werden täglich frisch vor Ort zubereitet.
+              Eis und Brot beziehen wir von regionalen Anbietern.
             </p>
-            <blockquote className="border-l-2 border-terracotta pl-6 py-2">
-              <p className="font-cormorant italic text-2xl text-espresso leading-relaxed">
-                &quot;Ein Café ist für uns kein Geschäft — es ist eine Einladung.&quot;
-              </p>
-              <footer className="font-dm text-sm text-espresso/50 mt-2">
-                — Familie Wendel-Bigalke
-              </footer>
-            </blockquote>
           </AnimatedSection>
 
           <AnimatedSection delay={0.2}>
