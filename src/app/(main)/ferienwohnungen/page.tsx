@@ -23,11 +23,11 @@ export default async function FerienwohnungenPage() {
         <div className="relative">
           <SectionLabel light>Übernachten in Tribsees</SectionLabel>
           <h1 className="font-playfair text-4xl md:text-5xl mt-2 mb-4">
-            Ferienwohnungen<br className="hidden md:block" /> im Trebel Café
+            Ferienwohnungen<br className="hidden md:block" /> am Trebel Café
           </h1>
           <p className="font-dm text-cream/65 max-w-md mx-auto text-sm leading-relaxed">
             Zwei Ferienwohnungen direkt am Trebel Café in Tribsees —
-            Bettwäsche und Handtücher sind inklusive.
+            Bettwäsche und Handtücher inbegriffen.
           </p>
 
           {/* Stats row */}
