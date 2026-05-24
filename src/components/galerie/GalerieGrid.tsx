@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import AnimatedSection from "@/components/ui/AnimatedSection";
+// Image in grid uses next/image; lightbox uses <img> to avoid fill-container sizing constraints
 
 type GalleryImage = { src: string; alt: string; tall: boolean };
 
@@ -81,19 +82,13 @@ export default function GalerieGrid({ images }: { images: GalleryImage[] }) {
           >
             ‹
           </button>
-          <div
-            className="relative max-h-[85vh] max-w-[90vw]"
-            style={{ aspectRatio: images[lightbox].tall ? "3/4" : "4/3" }}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={images[lightbox].src}
+            alt={images[lightbox].alt}
+            className="max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
             onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={images[lightbox].src}
-              alt={images[lightbox].alt}
-              fill
-              className="object-contain rounded-xl"
-              sizes="90vw"
-            />
-          </div>
+          />
           <button
             onClick={(e) => { e.stopPropagation(); next(); }}
             className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors text-lg"
