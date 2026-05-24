@@ -369,13 +369,13 @@ export default function BookingForm({
         <label className="block font-dm text-xs text-espresso/60 mb-1.5 uppercase tracking-wider">
           Personen
           <span className="ml-1 normal-case font-dm text-espresso/35">
-            (max. {extras.kinderbett || extras.aufbettung ? maxPersons + 1 : maxPersons})
+            (max. {maxPersons + (extras.kinderbett ? 1 : 0) + (extras.aufbettung ? 1 : 0)})
           </span>
         </label>
         <input
           type="number"
           min={1}
-          max={extras.kinderbett || extras.aufbettung ? maxPersons + 1 : maxPersons}
+          max={maxPersons + (extras.kinderbett ? 1 : 0) + (extras.aufbettung ? 1 : 0)}
           value={persons}
           onChange={(e) => setPersons(Number(e.target.value))}
           className={inputClass}
