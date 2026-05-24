@@ -40,11 +40,11 @@ export default function ImageGallery({ images, alt }: { images: string[]; alt: s
           />
           <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors" />
         </div>
-        <div className="grid grid-rows-2 gap-3">
+        <div className="grid grid-rows-2 gap-3 h-full">
           {images.slice(1, 3).map((src, i) => (
             <div
               key={i}
-              className="relative overflow-hidden cursor-pointer"
+              className="relative overflow-hidden cursor-pointer h-full"
               onClick={() => setLightbox(i + 1)}
             >
               <img
