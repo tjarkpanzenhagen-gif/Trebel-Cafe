@@ -22,11 +22,6 @@ const PLACEHOLDER_IMAGES: Record<string, string[]> = {
   ],
 };
 
-const AMENITIES = [
-  { label: "Frühstück inklusive", highlight: true },
-  { label: "WLAN", highlight: false },
-  { label: "Ruhige Lage", highlight: false },
-];
 
 export default function ApartmentCard({ apartment, delay = 0 }: Props) {
   const images =

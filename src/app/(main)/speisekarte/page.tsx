@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Speisekarte | Trebel Café",
-  description: "Unsere Wochenkarte, Kuchen & Gebäck und Getränke — alles frisch und selbst gemacht.",
+  description: "Unsere Wochenkarte, Kuchen & Gebäck und Getränke im Trebel Café Tribsees.",
 };
 
 export default async function SpeisekartePage() {
