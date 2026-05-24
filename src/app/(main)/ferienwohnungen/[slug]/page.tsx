@@ -6,6 +6,7 @@ import PricingTable from "@/components/fewo/PricingTable";
 import BookingForm from "@/components/fewo/BookingForm";
 import WeeklyMenuTeaser from "@/components/fewo/WeeklyMenuTeaser";
 import AnimatedSection from "@/components/ui/AnimatedSection";
+import ImageGallery from "@/components/fewo/ImageGallery";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -96,26 +97,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
       {/* Gallery */}
       <section className="bg-cream px-6 py-10">
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-3 gap-3 rounded-2xl overflow-hidden h-72">
-            <div className="col-span-2 relative overflow-hidden">
-              <img
-                src={images[0]}
-                alt={apt.name}
-                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-              />
-            </div>
-            <div className="grid grid-rows-2 gap-3">
-              {images.slice(1, 3).map((src, i) => (
-                <div key={i} className="relative overflow-hidden">
-                  <img
-                    src={src}
-                    alt=""
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+          <ImageGallery images={images} alt={apt.name} />
         </div>
       </section>
 
