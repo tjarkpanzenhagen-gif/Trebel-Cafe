@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import SectionLabel from "@/components/ui/SectionLabel";
+import GalerieGrid from "@/components/galerie/GalerieGrid";
 
 export const metadata: Metadata = {
   title: "Galerie — Trebelcafé Tribsees",
@@ -32,32 +32,7 @@ export default function GaleriePage() {
           </p>
         </AnimatedSection>
 
-        {/* Masonry-style grid using CSS columns */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 py-8">
-          {galleryImages.map((img, i) => (
-            <AnimatedSection key={img.src} delay={i * 0.06} className="break-inside-avoid mb-4">
-              <div
-                className={`relative overflow-hidden rounded-2xl group cursor-pointer ${
-                  img.tall ? "h-80" : "h-56"
-                }`}
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-espresso/0 group-hover:bg-espresso/30 transition-colors duration-300 flex items-end p-4">
-                  <p className="font-cormorant italic text-white text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0 transition-transform">
-                    {img.alt}
-                  </p>
-                </div>
-              </div>
-            </AnimatedSection>
-          ))}
-        </div>
+        <GalerieGrid images={galleryImages} />
       </div>
     </div>
   );

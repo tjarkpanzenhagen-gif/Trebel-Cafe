@@ -38,8 +38,8 @@ export default function ApartmentCard({ apartment, delay = 0 }: Props) {
     <AnimatedSection delay={delay} className="border-b border-sand last:border-b-0">
       <div className="py-16 px-6 max-w-4xl mx-auto">
         {/* Image grid */}
-        <div className="grid grid-cols-3 gap-2 rounded-2xl overflow-hidden mb-10 h-72">
-          <div className="col-span-2 relative overflow-hidden">
+        <div className="flex gap-2 rounded-2xl overflow-hidden mb-10" style={{ height: "288px" }}>
+          <div className="relative overflow-hidden flex-[2]">
             <Image
               src={images[0]}
               alt={apartment.name}
@@ -48,9 +48,9 @@ export default function ApartmentCard({ apartment, delay = 0 }: Props) {
               sizes="(max-width: 768px) 100vw, 60vw"
             />
           </div>
-          <div className="grid grid-rows-2 gap-2">
+          <div className="flex flex-col gap-2 flex-1">
             {images.slice(1, 3).map((src, i) => (
-              <div key={i} className="relative overflow-hidden">
+              <div key={i} className="relative overflow-hidden flex-1">
                 <Image
                   src={src}
                   alt=""

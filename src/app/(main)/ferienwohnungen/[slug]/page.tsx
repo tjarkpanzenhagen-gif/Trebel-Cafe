@@ -15,14 +15,14 @@ type Props = { params: Promise<{ slug: string }> };
 
 const PLACEHOLDER_IMAGES: Record<string, string[]> = {
   "wohnung-1": [
-    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=450&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=450&auto=format&fit=crop&q=80",
+    "/images/wohnungen/wohnung-01.jpg",
+    "/images/wohnungen/wohnung-02.jpg",
+    "/images/wohnungen/wohnung-03.jpg",
   ],
   "wohnung-2": [
-    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=450&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=450&auto=format&fit=crop&q=80",
+    "/images/wohnungen/wohnung-04.jpg",
+    "/images/wohnungen/wohnung-05.jpg",
+    "/images/wohnungen/wohnung-01.jpg",
   ],
 };
 

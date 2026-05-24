@@ -161,6 +161,27 @@ export default function BookingForm({
   const inputClass =
     "w-full border border-sand rounded-lg px-3 py-2.5 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors bg-white/60";
 
+  if (availableDates.length === 0) {
+    return (
+      <div className="space-y-4">
+        <h3 className="font-playfair text-xl text-espresso">Buchungsanfrage</h3>
+        <div className="bg-sand/40 border border-sand rounded-xl p-6 text-center space-y-2">
+          <p className="font-playfair text-lg text-espresso">Aktuell keine Verfügbarkeit</p>
+          <p className="font-dm text-sm text-espresso/60 leading-relaxed">
+            Für diese Wohnung sind noch keine freien Termine eingetragen.
+            Melden Sie sich gerne direkt bei uns.
+          </p>
+          <a
+            href="mailto:trebelcafe@gmx.de"
+            className="inline-block mt-3 px-5 py-2.5 rounded-full bg-terracotta text-white font-dm text-sm hover:bg-[#b3623c] transition-colors"
+          >
+            Direkt anfragen →
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <h3 className="font-playfair text-xl text-espresso">Buchungsanfrage</h3>

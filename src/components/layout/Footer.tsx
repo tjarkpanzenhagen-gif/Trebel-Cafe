@@ -62,7 +62,18 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-cream/10 py-6 px-6 max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-cream/40">
         <p>© {new Date().getFullYear()} Trebelcafé Tribsees — Familie Wendel-Bigalke</p>
-        <div className="flex gap-6">
+        <div className="flex items-center gap-6">
+          <a
+            href={contact.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-cream transition-colors flex items-center gap-1.5"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+            Instagram
+          </a>
           <Link href="/impressum" className="hover:text-cream transition-colors">Impressum</Link>
           <Link href="/datenschutz" className="hover:text-cream transition-colors">Datenschutz</Link>
         </div>
