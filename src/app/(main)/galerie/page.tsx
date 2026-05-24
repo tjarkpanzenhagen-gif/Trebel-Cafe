@@ -11,8 +11,7 @@ export const metadata: Metadata = {
 const galleryImages = [
   { src: "/images/Cafe/cafe-01.jpg", alt: "Trebel Café Atmosphäre", tall: true },
   { src: "/images/Cafe/cafe-02.jpg", alt: "Trebel Café Einblick", tall: false },
-  { src: "/images/Cafe/cafe-03.jpg", alt: "Gemütliche Momente", tall: false },
-  { src: "/images/Cafe/cafe-04.jpg", alt: "Trebel Café Tribsees", tall: true },
+  { src: "/images/Cafe/cafe-05.jpg", alt: "Trebel Café Tribsees", tall: false },
 ];
 
 export default function GaleriePage() {

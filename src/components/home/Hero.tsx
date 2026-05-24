@@ -7,7 +7,7 @@ export default function Hero() {
       {/* Background image with Ken-Burns */}
       <div className="absolute inset-0 overflow-hidden">
         <Image
-          src="/images/Cafe/cafe-01.jpg"
+          src="/images/Cafe/cafe-03.jpg"
           alt="Gemütliches Café-Interieur mit warmem Licht"
           fill
           priority

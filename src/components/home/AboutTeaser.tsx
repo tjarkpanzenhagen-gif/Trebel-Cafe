@@ -11,7 +11,7 @@ export default function AboutTeaser() {
         <AnimatedSection>
           <div className="relative h-80 md:h-[460px] rounded-2xl overflow-hidden shadow-lg">
             <Image
-              src="/images/Cafe/cafe-02.jpg"
+              src="/images/Cafe/cafe-04.jpg"
               alt="Gemütliches Café-Ambiente im Trebel Café"
               fill
               className="object-cover hover:scale-105 transition-transform duration-700"

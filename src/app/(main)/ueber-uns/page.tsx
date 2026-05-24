@@ -19,7 +19,7 @@ export default function UeberUnsPage() {
       {/* Hero image */}
       <div className="relative h-64 md:h-96 overflow-hidden">
         <Image
-          src="/images/Cafe/cafe-03.jpg"
+          src="/images/Cafe/wir.jpg"
           alt="Trebel Café Atmosphäre"
           fill
           className="object-cover"
@@ -62,7 +62,7 @@ export default function UeberUnsPage() {
           <AnimatedSection delay={0.2}>
             <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src="/images/Cafe/cafe-04.jpg"
+                src="/images/Cafe/wir1.jpg"
                 alt="Frisch gebackenes aus der Trebel Café-Küche"
                 fill
                 className="object-cover"
