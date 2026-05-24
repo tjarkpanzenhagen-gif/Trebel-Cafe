@@ -73,6 +73,7 @@ export default function BookingForm({
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const checkIn = range.from ? localDateKey(range.from) : "";
   const checkOut = range.to ? localDateKey(range.to) : "";
@@ -134,8 +135,9 @@ export default function BookingForm({
     e.preventDefault();
     if (!canSubmit || !priceCalc) return;
     setSubmitting(true);
+    setSubmitError("");
     try {
-      await fetch("/api/fewo/bookings", {
+      const res = await fetch("/api/fewo/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -153,12 +155,19 @@ export default function BookingForm({
           estimatedTotal: priceCalc.total,
         }),
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setSubmitError((err as { error?: string }).error ?? "Anfrage konnte nicht gespeichert werden.");
+        setSubmitting(false);
+        return;
+      }
     } catch {
-      // silently continue — mailto still opens
-    } finally {
+      setSubmitError("Netzwerkfehler — bitte versuche es erneut.");
       setSubmitting(false);
-      setSubmitted(true);
+      return;
     }
+    setSubmitting(false);
+    setSubmitted(true);
 
     const extraLines = [
       extras.kinderbett ? "Kinderbett: Ja" : "",
@@ -464,6 +473,9 @@ export default function BookingForm({
         </div>
       )}
 
+      {submitError && (
+        <p className="font-dm text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{submitError}</p>
+      )}
       <button
         onClick={handleSubmit}
         disabled={!canSubmit}
