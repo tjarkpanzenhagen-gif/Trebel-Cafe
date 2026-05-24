@@ -131,6 +131,29 @@ const CAL_STYLE = `
     border: none !important;
     border-radius: 6px;
   }
+  .admin-cal .day-global { opacity: 1 !important; }
+  .admin-cal .day-global .rdp-day_button {
+    background-color: #f0ebe4 !important;
+    color: #9c8880 !important;
+    border: none !important;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  .admin-cal .day-global .rdp-day_button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 3px,
+      rgba(196,114,74,0.4) 3px,
+      rgba(196,114,74,0.4) 4px
+    );
+    border-radius: 6px;
+  }
 `;
 
 function BlockedDatesEditor({
@@ -148,6 +171,10 @@ function BlockedDatesEditor({
   );
   const [rangeFrom, setRangeFrom] = useState("");
   const [rangeTo, setRangeTo] = useState("");
+
+  const globalDateObjs = isGlobal
+    ? []
+    : globalBlockedDates.map((d) => new Date(d + "T00:00:00"));
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -254,19 +281,51 @@ function BlockedDatesEditor({
 
       {/* Calendar */}
       <div>
-        <p className="font-dm text-xs text-espresso/50 uppercase tracking-wider mb-2">Tage einzeln auswählen</p>
+        <div className="flex items-center justify-between mb-2">
+          <p className="font-dm text-xs text-espresso/50 uppercase tracking-wider">Tage einzeln auswählen</p>
+          {!isGlobal && globalBlockedDates.length > 0 && (
+            <div className="flex items-center gap-1.5">
+              <div
+                className="w-3 h-3 rounded-sm flex-shrink-0"
+                style={{
+                  background: "repeating-linear-gradient(135deg, #f0ebe4, #f0ebe4 3px, rgba(196,114,74,0.5) 3px, rgba(196,114,74,0.5) 4px)",
+                }}
+              />
+              <span className="font-dm text-xs text-espresso/40">Beide gesperrt</span>
+            </div>
+          )}
+        </div>
         <style>{CAL_STYLE}</style>
         <div className="admin-cal border border-sand rounded-xl overflow-hidden bg-white">
           <DayPicker
             mode="multiple"
             selected={blocked}
-            onSelect={(days: Date[] | undefined) => setBlocked(days ?? [])}
+            onSelect={(days: Date[] | undefined) => {
+              if (!isGlobal) {
+                const globalKeys = new Set(globalBlockedDates);
+                setBlocked((days ?? []).filter((d) => !globalKeys.has(d.toISOString().slice(0, 10))));
+              } else {
+                setBlocked(days ?? []);
+              }
+            }}
+            modifiers={{ global: globalDateObjs }}
+            modifiersClassNames={{ global: "day-global" }}
+            disabled={(date) =>
+              !isGlobal && globalBlockedDates.includes(date.toISOString().slice(0, 10))
+            }
           />
         </div>
-        <p className="font-dm text-xs text-espresso/40 mt-1.5">
-          {blocked.length} {blocked.length === 1 ? "Tag" : "Tage"} gesperrt
-          {isGlobal ? " (beide Apartments)" : ` (nur ${apt.name})`}
-        </p>
+        <div className="flex items-center justify-between mt-1.5">
+          <p className="font-dm text-xs text-espresso/40">
+            {blocked.length} {blocked.length === 1 ? "Tag" : "Tage"} gesperrt
+            {isGlobal ? " (beide Apartments)" : ` (nur ${apt.name})`}
+          </p>
+          {!isGlobal && globalBlockedDates.length > 0 && (
+            <p className="font-dm text-xs text-terracotta/70">
+              + {globalBlockedDates.length} global gesperrt
+            </p>
+          )}
+        </div>
       </div>
 
       {error && <p className="font-dm text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
