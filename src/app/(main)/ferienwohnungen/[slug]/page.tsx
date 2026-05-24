@@ -60,19 +60,22 @@ export default async function ApartmentDetailPage({ params }: Props) {
           >
             ← Zurück zur Übersicht
           </Link>
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
+          <div className="grid grid-cols-[1fr_auto] items-start gap-8">
+            <div className="min-w-0">
               <span className="font-dm text-xs text-cream/35 uppercase tracking-widest">
                 Ferienwohnung · Tribsees
               </span>
               <h1 className="font-playfair text-4xl md:text-5xl mt-1">{apt.name}</h1>
-              <p className="font-dm text-cream/65 mt-3 max-w-lg leading-relaxed text-sm">
+              <p className="font-dm text-cream/65 mt-3 leading-relaxed text-sm">
                 {apt.description}
               </p>
             </div>
-            <div className="text-right">
-              <p className="font-playfair text-3xl text-terracotta">{apt.pricing.perNight} €</p>
-              <p className="font-dm text-xs text-cream/35 mt-0.5">pro Nacht</p>
+            <div className="text-right shrink-0 pt-1">
+              <p className="font-playfair text-terracotta leading-none">
+                <span className="text-4xl">{apt.pricing.perNight}</span>
+                <span className="text-2xl ml-1">€</span>
+              </p>
+              <p className="font-dm text-xs text-cream/35 mt-1.5">pro Nacht</p>
             </div>
           </div>
 
