@@ -35,11 +35,23 @@ function migrate(data: FewoData): FewoData {
       : [],
     apartments: data.apartments.map((apt) => {
       const rawApt = apt as unknown as Record<string, unknown>;
+      const rawPricing = (rawApt["pricing"] ?? {}) as Record<string, unknown>;
+      const rawDiscounts = (rawApt["discounts"] ?? {}) as Record<string, unknown>;
       return {
         ...apt,
         blockedDates: Array.isArray(rawApt["blockedDates"])
           ? (rawApt["blockedDates"] as string[])
           : [],
+        pricing: {
+          perNight: Number(rawPricing["perNight"]) || 0,
+          kinderbettFee: Number(rawPricing["kinderbettFee"] ?? rawPricing["extraBed"]) || 0,
+          aufbettungFee: Number(rawPricing["aufbettungFee"]) || 0,
+          cleaningFee: Number(rawPricing["cleaningFee"]) || 0,
+        },
+        discounts: {
+          threeNights: Number(rawDiscounts["threeNights"]) || 0,
+          sevenNights: Number(rawDiscounts["sevenNights"]) || 0,
+        },
       };
     }),
   };

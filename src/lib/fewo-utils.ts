@@ -40,14 +40,21 @@ export function calculatePrice(
   extrasTotal: number;
   total: number;
 } {
-  const nightsTotal = nights * pricing.perNight;
+  const perNight = Number(pricing.perNight) || 0;
+  const kinderbettFee = Number(pricing.kinderbettFee) || 0;
+  const aufbettungFee = Number(pricing.aufbettungFee) || 0;
+  const cleaningFee = Number(pricing.cleaningFee) || 0;
+  const threeNightsDiscount = Number(discounts.threeNights) || 0;
+  const sevenNightsDiscount = Number(discounts.sevenNights) || 0;
+
+  const nightsTotal = nights * perNight;
   const discountPercent =
-    nights >= 7 ? discounts.sevenNights : nights >= 3 ? discounts.threeNights : 0;
+    nights >= 7 ? sevenNightsDiscount : nights >= 3 ? threeNightsDiscount : 0;
   const discountAmount = Math.round((nightsTotal * discountPercent / 100) * 100) / 100;
   const discountedNights = nightsTotal - discountAmount;
   const extrasTotal =
-    (extras.kinderbett ? pricing.kinderbettFee : 0) +
-    (extras.aufbettung ? pricing.aufbettungFee : 0);
-  const total = Math.round((discountedNights + extrasTotal + pricing.cleaningFee) * 100) / 100;
+    (extras.kinderbett ? kinderbettFee : 0) +
+    (extras.aufbettung ? aufbettungFee : 0);
+  const total = Math.round((discountedNights + extrasTotal + cleaningFee) * 100) / 100;
   return { nightsTotal, discountPercent, discountAmount, extrasTotal, total };
 }
