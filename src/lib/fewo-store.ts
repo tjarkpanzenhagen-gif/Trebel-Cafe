@@ -27,6 +27,13 @@ async function getInitialData(): Promise<FewoData> {
   return JSON.parse(readFileSync(join(process.cwd(), "data", "fewo.json"), "utf-8"));
 }
 
+// Aufbettung defaults per apartment — only applied when migrating from old schema
+// that had no aufbettungFee field (only extraBed). Once admin saves pricing via
+// the panel the new values are persisted and these defaults are never used again.
+const AUFBETTUNG_DEFAULTS: Record<string, number> = {
+  "wohnung-2": 15,
+};
+
 function migrate(data: FewoData): FewoData {
   const raw = data as unknown as Record<string, unknown>;
   return {
@@ -37,6 +44,9 @@ function migrate(data: FewoData): FewoData {
       const rawApt = apt as unknown as Record<string, unknown>;
       const rawPricing = (rawApt["pricing"] ?? {}) as Record<string, unknown>;
       const rawDiscounts = (rawApt["discounts"] ?? {}) as Record<string, unknown>;
+      const aptId = String(rawApt["id"] ?? "");
+      // Old schema used "extraBed" and had no aufbettungFee — detect and use defaults
+      const isOldSchema = "extraBed" in rawPricing && !("aufbettungFee" in rawPricing);
       return {
         ...apt,
         blockedDates: Array.isArray(rawApt["blockedDates"])
@@ -45,7 +55,9 @@ function migrate(data: FewoData): FewoData {
         pricing: {
           perNight: Number(rawPricing["perNight"]) || 0,
           kinderbettFee: Number(rawPricing["kinderbettFee"] ?? rawPricing["extraBed"]) || 0,
-          aufbettungFee: Number(rawPricing["aufbettungFee"]) || 0,
+          aufbettungFee: isOldSchema
+            ? (AUFBETTUNG_DEFAULTS[aptId] ?? 0)
+            : Number(rawPricing["aufbettungFee"]) || 0,
           cleaningFee: Number(rawPricing["cleaningFee"]) || 0,
         },
         discounts: {
