@@ -33,8 +33,8 @@ function NumInput({
           type="number"
           min={0}
           step={0.01}
-          value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
+          value={value === 0 ? "" : value}
+          onChange={(e) => onChange(e.target.value === "" ? 0 : Number(e.target.value))}
           className="flex-1 px-3 py-2.5 font-dm text-sm text-espresso focus:outline-none bg-transparent rounded-l-lg"
         />
         <span className="px-3 font-dm text-xs text-espresso/30 border-l border-sand">{unit}</span>

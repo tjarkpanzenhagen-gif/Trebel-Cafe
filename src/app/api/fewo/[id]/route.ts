@@ -18,7 +18,7 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
     const { name, description, details, maxPersons, pricing, discounts } = body;
-    if (!name || !pricing?.perNight || !discounts) {
+    if (!name || pricing?.perNight == null || !discounts) {
       return NextResponse.json({ error: "Fehlende Pflichtfelder" }, { status: 400 });
     }
     const data = await readFewo();

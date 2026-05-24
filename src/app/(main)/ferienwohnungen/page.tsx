@@ -4,6 +4,8 @@ import WeeklyMenuTeaser from "@/components/fewo/WeeklyMenuTeaser";
 import SectionLabel from "@/components/ui/SectionLabel";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Ferienwohnungen | Trebelcafé",
   description:
