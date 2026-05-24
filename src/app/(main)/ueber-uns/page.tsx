@@ -26,8 +26,8 @@ export default function UeberUnsPage() {
           priority
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-espresso/50 flex items-end pb-12 px-6">
-          <div className="max-w-6xl mx-auto w-full">
+        <div className="absolute inset-0 bg-espresso/50 flex items-center justify-center text-center">
+          <div>
             <SectionLabel light>Wer wir sind</SectionLabel>
             <h1 className="font-playfair text-4xl md:text-5xl text-white">Über uns</h1>
           </div>

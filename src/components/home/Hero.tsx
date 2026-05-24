@@ -11,7 +11,7 @@ export default function Hero() {
           alt="Gemütliches Café-Interieur mit warmem Licht"
           fill
           priority
-          className="object-cover animate-ken-burns"
+          className="object-cover object-center animate-ken-burns"
           sizes="100vw"
         />
       </div>
