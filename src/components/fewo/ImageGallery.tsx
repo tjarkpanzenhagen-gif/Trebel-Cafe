@@ -28,9 +28,9 @@ export default function ImageGallery({ images, alt }: { images: string[]; alt: s
   return (
     <>
       {/* Grid */}
-      <div className="grid grid-cols-3 gap-3 rounded-2xl overflow-hidden h-72">
+      <div className="flex gap-3 rounded-2xl overflow-hidden" style={{ height: "320px" }}>
         <div
-          className="col-span-2 relative overflow-hidden cursor-pointer"
+          className="relative overflow-hidden cursor-pointer flex-[2]"
           onClick={() => setLightbox(0)}
         >
           <img
@@ -40,11 +40,11 @@ export default function ImageGallery({ images, alt }: { images: string[]; alt: s
           />
           <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors" />
         </div>
-        <div className="grid grid-rows-2 gap-3 h-full">
+        <div className="flex flex-col gap-3 flex-1">
           {images.slice(1, 3).map((src, i) => (
             <div
               key={i}
-              className="relative overflow-hidden cursor-pointer h-full"
+              className="relative overflow-hidden cursor-pointer flex-1"
               onClick={() => setLightbox(i + 1)}
             >
               <img
