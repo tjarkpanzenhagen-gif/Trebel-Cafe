@@ -79,7 +79,20 @@ export async function readFewo(): Promise<FewoData> {
         await kv.set(KV_KEY, initial);
         return initial;
       }
-      return migrate(data);
+      const migrated = migrate(data);
+      // Self-heal: if aufbettungFee was lost during a previous migration,
+      // restore it from fewo.json defaults and persist back to KV once.
+      const defaults = await getInitialData();
+      let healed = false;
+      for (const apt of migrated.apartments) {
+        const def = defaults.apartments.find((a) => a.id === apt.id);
+        if (def && apt.pricing.aufbettungFee === 0 && def.pricing.aufbettungFee > 0) {
+          apt.pricing.aufbettungFee = def.pricing.aufbettungFee;
+          healed = true;
+        }
+      }
+      if (healed) await kv.set(KV_KEY, migrated);
+      return migrated;
     } catch {
       return getInitialData();
     }
