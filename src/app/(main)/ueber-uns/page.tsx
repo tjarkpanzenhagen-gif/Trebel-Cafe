@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 
 export default function UeberUnsPage() {
   return (
-    <div className="pt-16 bg-cream min-h-screen">
+    <div className="bg-cream min-h-screen">
       {/* Hero image */}
-      <div className="relative h-64 md:h-96 overflow-hidden">
+      <div className="relative h-72 md:h-[28rem] overflow-hidden">
         <Image
           src="/images/Cafe/cafe-04.jpg"
           alt="Trebel Café Atmosphäre"
