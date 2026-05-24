@@ -8,6 +8,7 @@ import type { Booking } from "@/lib/bookings-store";
 
 type Props = {
   initialApartments: Apartment[];
+  initialGlobalBlockedDates: string[];
 };
 
 // ─── Pricing Editor ──────────────────────────────────────────────────────────
@@ -87,7 +88,8 @@ function PricingEditor({
         <p className="font-dm text-xs text-espresso/40 uppercase tracking-widest mb-4">Grundpreise</p>
         <div className="space-y-3">
           <NumInput label="Preis pro Nacht" value={pricing.perNight} onChange={(v) => setPricing({ ...pricing, perNight: v })} />
-          <NumInput label="Aufbettung pro Person" value={pricing.extraBed} onChange={(v) => setPricing({ ...pricing, extraBed: v })} />
+          <NumInput label="Kinderbett (einmalig)" value={pricing.kinderbettFee} onChange={(v) => setPricing({ ...pricing, kinderbettFee: v })} />
+          <NumInput label="Aufbettung (einmalig)" value={pricing.aufbettungFee} onChange={(v) => setPricing({ ...pricing, aufbettungFee: v })} />
           <NumInput label="Endreinigung" value={pricing.cleaningFee} onChange={(v) => setPricing({ ...pricing, cleaningFee: v })} />
         </div>
       </div>
@@ -111,76 +113,180 @@ function PricingEditor({
   );
 }
 
-// ─── Availability Editor ──────────────────────────────────────────────────────
+// ─── Blocked Dates Editor ─────────────────────────────────────────────────────
 
-function AvailabilityEditor({ apt, onSaved }: { apt: Apartment; onSaved: (dates: string[]) => void }) {
-  const [available, setAvailable] = useState<Date[]>(
-    apt.availableDates.map((d) => new Date(d + "T00:00:00"))
+const CAL_STYLE = `
+  .admin-cal .rdp-root {
+    --rdp-accent-color: #C4724A;
+    --rdp-accent-background-color: rgba(196,114,74,0.15);
+    --rdp-today-color: #6B7C5E;
+    --rdp-day_button-border-radius: 6px;
+    margin: 0;
+  }
+  .admin-cal .rdp-month_caption { font-family: var(--font-playfair, serif); color: #2C1810; }
+  .admin-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 13px; }
+  .admin-cal .rdp-selected .rdp-day_button {
+    background-color: #C4724A !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 6px;
+  }
+`;
+
+function BlockedDatesEditor({
+  apt,
+  globalBlockedDates,
+  onSaved,
+}: {
+  apt: Apartment;
+  globalBlockedDates: string[];
+  onSaved: (dates: string[], isGlobal: boolean) => void;
+}) {
+  const [isGlobal, setIsGlobal] = useState(false);
+  const [blocked, setBlocked] = useState<Date[]>(
+    apt.blockedDates.map((d) => new Date(d + "T00:00:00"))
   );
+  const [rangeFrom, setRangeFrom] = useState("");
+  const [rangeTo, setRangeTo] = useState("");
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    const source = isGlobal ? globalBlockedDates : apt.blockedDates;
+    setBlocked(source.map((d) => new Date(d + "T00:00:00")));
+  }, [isGlobal, apt.blockedDates, globalBlockedDates]);
+
+  function addRange() {
+    if (!rangeFrom || !rangeTo) return;
+    const start = new Date(rangeFrom + "T00:00:00");
+    const end = new Date(rangeTo + "T00:00:00");
+    if (start > end) return;
+    const existing = new Set(blocked.map((d) => d.toISOString().slice(0, 10)));
+    const toAdd: Date[] = [];
+    const curr = new Date(start);
+    while (curr <= end) {
+      const key = curr.toISOString().slice(0, 10);
+      if (!existing.has(key)) toAdd.push(new Date(curr));
+      curr.setDate(curr.getDate() + 1);
+    }
+    setBlocked((prev) => [...prev, ...toAdd]);
+    setRangeFrom("");
+    setRangeTo("");
+  }
+
   async function handleSave() {
     setSaving(true);
     setError("");
-    const availableDates = available.map((d) => d.toISOString().slice(0, 10));
+    setSuccess(false);
+    const blockedDates = blocked.map((d) => d.toISOString().slice(0, 10));
     try {
       const res = await fetch(`/api/fewo/${apt.id}/availability`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ availableDates }),
+        body: JSON.stringify({ blockedDates, global: isGlobal }),
       });
       if (res.ok) {
-        onSaved(availableDates);
+        onSaved(blockedDates, isGlobal);
         setSuccess(true);
-        setTimeout(() => setSuccess(false), 2000);
+        setTimeout(() => setSuccess(false), 2500);
       } else {
         const e = await res.json().catch(() => ({}));
-        setError(`Fehler beim Speichern: ${(e as { error?: string }).error ?? res.status}`);
+        setError(`Fehler: ${(e as { error?: string }).error ?? "Unbekannt"}`);
       }
     } catch {
-      setError("Netzwerkfehler — bitte erneut versuchen");
-    } finally { setSaving(false); }
+      setError("Netzwerkfehler");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
-    <div className="space-y-4">
-      <style>{`
-        .admin-cal .rdp-root {
-          --rdp-accent-color: #6B7C5E;
-          --rdp-accent-background-color: rgba(107,124,94,0.15);
-          --rdp-today-color: #C4724A;
-          --rdp-selected-border: 2px solid transparent;
-          --rdp-day_button-border-radius: 6px;
-          margin: 0;
-        }
-        .admin-cal .rdp-month_caption { font-family: var(--font-playfair, serif); color: #2C1810; }
-        .admin-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 13px; }
-        .admin-cal .rdp-selected .rdp-day_button {
-          background-color: #6B7C5E !important;
-          color: white !important;
-          border: none !important;
-          border-radius: 6px;
-        }
-      `}</style>
-      <div className="admin-cal border border-sand rounded-xl overflow-hidden bg-white">
-        <DayPicker
-          mode="multiple"
-          selected={available}
-          onSelect={(days: Date[] | undefined) => setAvailable(days ?? [])}
-          fromDate={new Date()}
-        />
+    <div className="space-y-5">
+      {/* Scope toggle */}
+      <div className="flex gap-1 p-1 bg-sand/40 rounded-xl">
+        <button
+          onClick={() => setIsGlobal(false)}
+          className={`flex-1 py-2 rounded-lg font-dm text-sm transition-colors ${!isGlobal ? "bg-espresso text-cream shadow-sm" : "text-espresso/50 hover:text-espresso"}`}
+        >
+          Nur {apt.name}
+        </button>
+        <button
+          onClick={() => setIsGlobal(true)}
+          className={`flex-1 py-2 rounded-lg font-dm text-sm transition-colors ${isGlobal ? "bg-espresso text-cream shadow-sm" : "text-espresso/50 hover:text-espresso"}`}
+        >
+          Beide Apartments
+        </button>
       </div>
+
+      {/* Range block */}
+      <div className="space-y-2">
+        <p className="font-dm text-xs text-espresso/50 uppercase tracking-wider">Zeitraum sperren</p>
+        <div className="flex gap-2 items-end">
+          <div className="flex-1">
+            <label className="block font-dm text-xs text-espresso/40 mb-1">Von</label>
+            <input
+              type="date"
+              value={rangeFrom}
+              onChange={(e) => setRangeFrom(e.target.value)}
+              className="w-full border border-sand rounded-lg px-3 py-2 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors"
+            />
+          </div>
+          <div className="flex-1">
+            <label className="block font-dm text-xs text-espresso/40 mb-1">Bis</label>
+            <input
+              type="date"
+              value={rangeTo}
+              min={rangeFrom}
+              onChange={(e) => setRangeTo(e.target.value)}
+              className="w-full border border-sand rounded-lg px-3 py-2 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors"
+            />
+          </div>
+          <button
+            onClick={addRange}
+            disabled={!rangeFrom || !rangeTo}
+            className="px-4 py-2 bg-terracotta text-white font-dm text-sm rounded-lg hover:bg-[#b3623c] transition-colors disabled:opacity-40"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      {/* Calendar */}
+      <div>
+        <p className="font-dm text-xs text-espresso/50 uppercase tracking-wider mb-2">Tage einzeln auswählen</p>
+        <style>{CAL_STYLE}</style>
+        <div className="admin-cal border border-sand rounded-xl overflow-hidden bg-white">
+          <DayPicker
+            mode="multiple"
+            selected={blocked}
+            onSelect={(days: Date[] | undefined) => setBlocked(days ?? [])}
+          />
+        </div>
+        <p className="font-dm text-xs text-espresso/40 mt-1.5">
+          {blocked.length} {blocked.length === 1 ? "Tag" : "Tage"} gesperrt
+          {isGlobal ? " (beide Apartments)" : ` (nur ${apt.name})`}
+        </p>
+      </div>
+
       {error && <p className="font-dm text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
       {success && <p className="font-dm text-xs text-sage bg-sage/10 rounded-lg px-3 py-2">✓ Gespeichert</p>}
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="w-full px-4 py-2.5 bg-espresso text-cream font-dm text-sm rounded-lg hover:bg-terracotta transition-colors disabled:opacity-50"
-      >
-        {saving ? "Speichern…" : "Speichern"}
-      </button>
+
+      <div className="flex gap-2">
+        <button
+          onClick={() => setBlocked([])}
+          className="px-3 py-2.5 border border-sand font-dm text-sm text-espresso/50 rounded-lg hover:border-red-300 hover:text-red-500 transition-colors"
+        >
+          Alle entsperren
+        </button>
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="flex-1 px-4 py-2.5 bg-espresso text-cream font-dm text-sm rounded-lg hover:bg-terracotta transition-colors disabled:opacity-50"
+        >
+          {saving ? "Speichern…" : "Gesperrte Tage speichern"}
+        </button>
+      </div>
     </div>
   );
 }
@@ -206,6 +312,10 @@ function BookingCard({
     cancelled: { label: "Abgelehnt", cls: "bg-sand text-espresso/40" },
   }[status];
 
+  const extraLabels: string[] = [];
+  if (booking.extras?.kinderbett) extraLabels.push("Kinderbett");
+  if (booking.extras?.aufbettung) extraLabels.push("Aufbettung");
+
   return (
     <div className={`rounded-xl border p-4 transition-all ${status === "cancelled" ? "border-sand bg-sand/20 opacity-50" : "border-sand bg-white shadow-sm"}`}>
       <div className="flex items-start justify-between gap-3 mb-3">
@@ -228,7 +338,7 @@ function BookingCard({
         <p>{booking.email} · {booking.phone}</p>
         <p>
           {booking.persons} {booking.persons === 1 ? "Person" : "Personen"}
-          {booking.extraBeds > 0 ? ` · ${booking.extraBeds}× Aufbettung` : ""}
+          {extraLabels.length > 0 ? ` · ${extraLabels.join(", ")}` : ""}
         </p>
         {booking.message && <p className="italic text-espresso/40 mt-1">„{booking.message}"</p>}
       </div>
@@ -382,16 +492,17 @@ function BookingsView({ apartmentId }: { apartmentId: string }) {
 
 // ─── Main Panel ───────────────────────────────────────────────────────────────
 
-type Section = "anfragen" | "verfuegbarkeit" | "preise";
+type Section = "anfragen" | "gesperrt" | "preise";
 
 const SECTIONS: { key: Section; label: string; icon: string }[] = [
   { key: "anfragen", label: "Anfragen", icon: "📩" },
-  { key: "verfuegbarkeit", label: "Verfügbarkeit", icon: "📅" },
+  { key: "gesperrt", label: "Gesperrte Tage", icon: "🔒" },
   { key: "preise", label: "Preise", icon: "💶" },
 ];
 
-export default function FewoPanel({ initialApartments }: Props) {
+export default function FewoPanel({ initialApartments, initialGlobalBlockedDates }: Props) {
   const [apartments, setApartments] = useState<Apartment[]>(initialApartments);
+  const [globalBlockedDates, setGlobalBlockedDates] = useState<string[]>(initialGlobalBlockedDates);
   const [activeApt, setActiveApt] = useState<string>(initialApartments[0]?.id ?? "");
   const [activeSection, setActiveSection] = useState<Section>("anfragen");
 
@@ -401,15 +512,21 @@ export default function FewoPanel({ initialApartments }: Props) {
     setApartments((prev) => prev.map((a) => (a.id === updated.id ? updated : a)));
   }
 
-  function updateAvailability(id: string, availableDates: string[]) {
-    setApartments((prev) => prev.map((a) => (a.id === id ? { ...a, availableDates } : a)));
+  function handleBlockedSaved(dates: string[], isGlobal: boolean) {
+    if (isGlobal) {
+      setGlobalBlockedDates(dates);
+    } else {
+      setApartments((prev) =>
+        prev.map((a) => (a.id === activeApt ? { ...a, blockedDates: dates } : a))
+      );
+    }
   }
 
   if (!apt) return null;
 
   return (
     <div className="rounded-2xl border border-sand overflow-hidden bg-white">
-      {/* Mobile + Desktop top bar */}
+      {/* Top bar */}
       <div className="border-b border-sand bg-cream/60">
         {/* Apartment selector */}
         <div className="flex gap-1 p-3 border-b border-sand/60">
@@ -454,10 +571,17 @@ export default function FewoPanel({ initialApartments }: Props) {
         </div>
 
         {activeSection === "anfragen" && <BookingsView key={apt.id} apartmentId={apt.id} />}
-        {activeSection === "verfuegbarkeit" && (
-          <AvailabilityEditor key={apt.id + "-avail"} apt={apt} onSaved={(dates) => updateAvailability(apt.id, dates)} />
+        {activeSection === "gesperrt" && (
+          <BlockedDatesEditor
+            key={apt.id + "-blocked"}
+            apt={apt}
+            globalBlockedDates={globalBlockedDates}
+            onSaved={handleBlockedSaved}
+          />
         )}
-        {activeSection === "preise" && <PricingEditor key={apt.id + "-pricing"} apt={apt} onSaved={updateApartment} />}
+        {activeSection === "preise" && (
+          <PricingEditor key={apt.id + "-pricing"} apt={apt} onSaved={updateApartment} />
+        )}
       </div>
     </div>
   );

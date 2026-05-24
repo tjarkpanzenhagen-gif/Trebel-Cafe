@@ -1,6 +1,7 @@
 export type ApartmentPricing = {
   perNight: number;
-  extraBed: number;
+  kinderbettFee: number;
+  aufbettungFee: number;
   cleaningFee: number;
 };
 
@@ -19,23 +20,24 @@ export type Apartment = {
   images: string[];
   pricing: ApartmentPricing;
   discounts: ApartmentDiscounts;
-  availableDates: string[];
+  blockedDates: string[];
 };
 
 export type FewoData = {
   apartments: Apartment[];
+  globalBlockedDates: string[];
 };
 
 export function calculatePrice(
   nights: number,
-  extraBeds: number,
+  extras: { kinderbett: boolean; aufbettung: boolean },
   pricing: ApartmentPricing,
   discounts: ApartmentDiscounts
 ): {
   nightsTotal: number;
   discountPercent: number;
   discountAmount: number;
-  extraBedTotal: number;
+  extrasTotal: number;
   total: number;
 } {
   const nightsTotal = nights * pricing.perNight;
@@ -43,7 +45,9 @@ export function calculatePrice(
     nights >= 7 ? discounts.sevenNights : nights >= 3 ? discounts.threeNights : 0;
   const discountAmount = Math.round((nightsTotal * discountPercent / 100) * 100) / 100;
   const discountedNights = nightsTotal - discountAmount;
-  const extraBedTotal = extraBeds * pricing.extraBed;
-  const total = Math.round((discountedNights + extraBedTotal + pricing.cleaningFee) * 100) / 100;
-  return { nightsTotal, discountPercent, discountAmount, extraBedTotal, total };
+  const extrasTotal =
+    (extras.kinderbett ? pricing.kinderbettFee : 0) +
+    (extras.aufbettung ? pricing.aufbettungFee : 0);
+  const total = Math.round((discountedNights + extrasTotal + pricing.cleaningFee) * 100) / 100;
+  return { nightsTotal, discountPercent, discountAmount, extrasTotal, total };
 }

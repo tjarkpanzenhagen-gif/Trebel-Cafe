@@ -1,42 +1,45 @@
 {
+  "globalBlockedDates": [],
   "apartments": [
     {
       "id": "wohnung-1",
       "slug": "wohnung-1",
       "name": "Wohnung 1",
-      "description": "Ruhig gelegen, warm eingerichtet — das Trebelcafé liegt direkt vor der Tür.",
-      "details": "Auf rund 45 m² wartet ein volleingerichtetes Apartment mit separatem Schlafzimmer, hellem Wohnbereich und kompakter Küchenzeile. Morgens wartet frisches Gebäck, selbstgemachte Marmelade und starker Kaffee nur wenige Schritte entfernt — der perfekte Start in den Tag.",
-      "maxPersons": 3,
+      "description": "Ruhig gelegen, warm eingerichtet — das Trebel Café liegt direkt vor der Tür.",
+      "details": "Auf rund 45 m² wartet ein volleingerichtetes Apartment mit separatem Schlafzimmer, hellem Wohnbereich und kompakter Küchenzeile. Bettwäsche und Handtücher sind inklusive. Frühstück, selbstgebackene Kuchen und Torten gibt es nur wenige Schritte entfernt im Café.",
+      "maxPersons": 2,
       "images": [],
       "pricing": {
-        "perNight": 80,
-        "extraBed": 15,
+        "perNight": 54,
+        "kinderbettFee": 15,
+        "aufbettungFee": 0,
         "cleaningFee": 40
       },
       "discounts": {
         "threeNights": 5,
         "sevenNights": 10
       },
-      "availableDates": []
+      "blockedDates": []
     },
     {
       "id": "wohnung-2",
       "slug": "wohnung-2",
       "name": "Wohnung 2",
-      "description": "Hell, geräumig und familienfähig — Platz für bis zu vier Personen.",
-      "details": "Mit rund 55 m², zwei Schlafbereichen und einem hellen Wohnzimmer ist unsere zweite Wohnung der ideale Ausgangspunkt für Ausflüge in den Trebeltal-Naturpark. Vollständig ausgestattet — Frühstück im Café direkt vor der Tür inklusive.",
-      "maxPersons": 4,
+      "description": "Hell, geräumig und familienfähig — Platz für bis zu drei Personen.",
+      "details": "Mit rund 55 m², zwei Schlafbereichen und einem hellen Wohnzimmer ist unsere zweite Wohnung der ideale Ausgangspunkt für Ausflüge in den Trebeltal-Naturpark. Vollständig ausgestattet, inkl. Bettwäsche und Handtücher. Das Café mit Frühstück und selbstgebackenen Kuchen befindet sich direkt vor der Tür.",
+      "maxPersons": 3,
       "images": [],
       "pricing": {
-        "perNight": 90,
-        "extraBed": 15,
+        "perNight": 54,
+        "kinderbettFee": 15,
+        "aufbettungFee": 15,
         "cleaningFee": 40
       },
       "discounts": {
         "threeNights": 5,
         "sevenNights": 10
       },
-      "availableDates": []
+      "blockedDates": []
     }
   ]
 }

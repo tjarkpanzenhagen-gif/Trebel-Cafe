@@ -7,7 +7,7 @@ import SpeisekarteClient from "@/components/speisekarte/SpeisekarteClient";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Speisekarte | Trebelcafé",
+  title: "Speisekarte | Trebel Café",
   description: "Unsere Wochenkarte, Kuchen & Gebäck und Getränke — alles frisch und selbst gemacht.",
 };
 

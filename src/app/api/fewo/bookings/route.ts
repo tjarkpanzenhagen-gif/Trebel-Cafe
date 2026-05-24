@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       email,
       phone,
       persons,
-      extraBeds,
+      extras,
       message,
       estimatedTotal,
     } = body;
@@ -53,6 +53,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Eingabe zu lang" }, { status: 400 });
     }
 
+    const safeExtras = {
+      kinderbett: Boolean(extras?.kinderbett),
+      aufbettung: Boolean(extras?.aufbettung),
+    };
+
     const data = await readBookings();
     const booking = {
       id: randomUUID(),
@@ -65,7 +70,7 @@ export async function POST(request: NextRequest) {
       email: String(email).slice(0, 200),
       phone: String(phone).slice(0, 50),
       persons: Math.max(1, Math.min(20, Number(persons))),
-      extraBeds: Math.max(0, Math.min(10, Number(extraBeds))),
+      extras: safeExtras,
       message: String(message ?? "").slice(0, 1000),
       estimatedTotal: Math.max(0, Number(estimatedTotal)),
       status: "pending" as const,

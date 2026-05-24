@@ -84,7 +84,7 @@ export const promises = [
   },
   {
     title: "Familienbetrieb",
-    text: "Das Trebelcafé wird von Familie Wendel-Bigalke geführt. Persönlich, herzlich und mit echtem Engagement.",
+    text: "Das Trebel Café wird von Familie Wendel-Bigalke geführt. Persönlich, herzlich und mit echtem Engagement.",
   },
   {
     title: "Gemütliche Atmosphäre",

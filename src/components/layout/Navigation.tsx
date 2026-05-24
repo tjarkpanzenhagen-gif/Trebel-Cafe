@@ -53,7 +53,7 @@ export default function Navigation() {
             href="/"
             className={`font-playfair text-xl font-semibold ${linkColor} transition-colors duration-300`}
           >
-            Trebelcafé
+            Trebel Café
           </Link>
 
           {/* Desktop links */}

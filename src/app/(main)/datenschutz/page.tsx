@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Datenschutz — Trebelcafé Tribsees" };
+export const metadata: Metadata = { title: "Datenschutz — Trebel Café Tribsees" };
 
 export default function DatenschutzPage() {
   return (

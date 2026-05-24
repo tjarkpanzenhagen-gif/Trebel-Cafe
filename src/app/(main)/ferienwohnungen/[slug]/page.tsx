@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await readFewo();
   const apt = data.apartments.find((a) => a.slug === slug);
   return {
-    title: apt ? `${apt.name} | Trebelcafé` : "Ferienwohnung | Trebelcafé",
+    title: apt ? `${apt.name} | Trebel Café` : "Ferienwohnung | Trebel Café",
     description: apt?.description,
   };
 }
@@ -43,6 +43,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
   if (!apt) notFound();
 
   const bookedDates = getBookedDatesForApartment(bookingsData.bookings, apt.id);
+  const blockedDates = [...(data.globalBlockedDates ?? []), ...(apt.blockedDates ?? [])];
   const images =
     apt.images.length > 0
       ? apt.images
@@ -73,7 +74,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
           {/* Amenity badges */}
           <div className="flex flex-wrap gap-2 mt-6">
             <span className="font-dm text-xs text-terracotta/90 bg-terracotta/15 border border-terracotta/25 px-3 py-1.5 rounded-full">
-              ✓ Frühstück inklusive
+              ✓ Bettwäsche & Handtücher inklusive
             </span>
             <span className="font-dm text-xs text-cream/50 bg-cream/8 border border-cream/15 px-3 py-1.5 rounded-full">
               WLAN
@@ -119,7 +120,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
               apartmentId={apt.id}
               pricing={apt.pricing}
               discounts={apt.discounts}
-              availableDates={apt.availableDates}
+              blockedDates={blockedDates}
               bookedDates={bookedDates}
             />
           </AnimatedSection>

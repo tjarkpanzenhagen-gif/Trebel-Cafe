@@ -23,11 +23,11 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Trebelcafé Tribsees — Selbstgebackenes mit Herz",
+  title: "Trebel Café Tribsees — Selbstgebackenes mit Herz",
   description:
     "Familiäres Café in Tribsees mit selbstgebackenem Kuchen, Frühstück und wechselndem Mittagstisch. Geöffnet Do–Mo 9–17 Uhr.",
   openGraph: {
-    title: "Trebelcafé Tribsees",
+    title: "Trebel Café Tribsees",
     description: "Selbstgebackenes mit Herz — mitten in Tribsees.",
     locale: "de_DE",
     type: "website",

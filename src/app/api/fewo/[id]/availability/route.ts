@@ -17,19 +17,32 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { availableDates } = body;
-    if (!Array.isArray(availableDates)) {
-      return NextResponse.json({ error: "availableDates muss ein Array sein" }, { status: 400 });
+    const { blockedDates, global: isGlobal } = body as {
+      blockedDates: unknown;
+      global?: boolean;
+    };
+    if (!Array.isArray(blockedDates)) {
+      return NextResponse.json({ error: "blockedDates muss ein Array sein" }, { status: 400 });
     }
+    const dates = (blockedDates as unknown[])
+      .filter((d): d is string => typeof d === "string")
+      .map((d) => d.slice(0, 10));
+
     const data = await readFewo();
-    const index = data.apartments.findIndex((a) => a.id === id);
-    if (index === -1) {
-      return NextResponse.json({ error: "Nicht gefunden" }, { status: 404 });
+
+    if (isGlobal) {
+      data.globalBlockedDates = dates;
+    } else {
+      const index = data.apartments.findIndex((a) => a.id === id);
+      if (index === -1) {
+        return NextResponse.json({ error: "Nicht gefunden" }, { status: 404 });
+      }
+      data.apartments[index].blockedDates = dates;
     }
-    data.apartments[index].availableDates = availableDates;
+
     await writeFewo(data);
     revalidatePath("/ferienwohnungen", "layout");
-    return NextResponse.json({ ok: true, availableDates });
+    return NextResponse.json({ ok: true, blockedDates: dates });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }

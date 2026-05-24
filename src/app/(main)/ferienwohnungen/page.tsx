@@ -7,9 +7,9 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Ferienwohnungen | Trebelcafé",
+  title: "Ferienwohnungen | Trebel Café",
   description:
-    "Übernachten Sie direkt am Trebelcafé. Zwei gemütliche Ferienwohnungen mit Frühstück inklusive.",
+    "Übernachten Sie direkt am Trebel Café in Tribsees. Zwei gemütliche Ferienwohnungen, inkl. Bettwäsche und Handtücher.",
 };
 
 export default async function FerienwohnungenPage() {
@@ -23,7 +23,7 @@ export default async function FerienwohnungenPage() {
         <div className="relative">
           <SectionLabel light>Übernachten in Tribsees</SectionLabel>
           <h1 className="font-playfair text-4xl md:text-5xl mt-2 mb-4">
-            Ferienwohnungen<br className="hidden md:block" /> im Trebelcafé
+            Ferienwohnungen<br className="hidden md:block" /> im Trebel Café
           </h1>
           <p className="font-dm text-cream/65 max-w-md mx-auto text-sm leading-relaxed">
             Wachen Sie auf und genießen Sie frisches Gebäck, selbstgemachte Marmelade und

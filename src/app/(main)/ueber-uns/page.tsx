@@ -9,8 +9,8 @@ import { promises } from "@/lib/content";
 const promiseIcons = [CroissantIcon, HouseHeartIcon, Coffee01Icon];
 
 export const metadata: Metadata = {
-  title: "Über uns — Trebelcafé Tribsees",
-  description: "Familie Wendel-Bigalke und die Geschichte des Trebelcafés. Wir backen alles selbst — seit dem ersten Tag.",
+  title: "Über uns — Trebel Café Tribsees",
+  description: "Familie Wendel-Bigalke und die Geschichte des Trebel Cafés. Wir backen alles selbst — seit dem ersten Tag.",
 };
 
 export default function UeberUnsPage() {
@@ -20,7 +20,7 @@ export default function UeberUnsPage() {
       <div className="relative h-64 md:h-96 overflow-hidden">
         <Image
           src="/images/Cafe/cafe-03.jpg"
-          alt="Trebelcafé Atmosphäre"
+          alt="Trebel Café Atmosphäre"
           fill
           className="object-cover"
           priority
@@ -62,8 +62,8 @@ export default function UeberUnsPage() {
           <AnimatedSection delay={0.2}>
             <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src="/images/Cafe/cafe-06.jpg"
-                alt="Frisch gebackenes aus der Trebelcafé-Küche"
+                src="/images/Cafe/cafe-04.jpg"
+                alt="Frisch gebackenes aus der Trebel Café-Küche"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -75,7 +75,7 @@ export default function UeberUnsPage() {
         {/* Promises */}
         <AnimatedSection className="text-center mb-12">
           <div className="w-16 h-px bg-terracotta mx-auto mb-8" />
-          <h2 className="font-playfair text-3xl text-espresso">Warum das Trebelcafé?</h2>
+          <h2 className="font-playfair text-3xl text-espresso">Warum das Trebel Café?</h2>
         </AnimatedSection>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

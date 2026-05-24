@@ -4,20 +4,15 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import GalerieGrid from "@/components/galerie/GalerieGrid";
 
 export const metadata: Metadata = {
-  title: "Galerie — Trebelcafé Tribsees",
-  description: "Bilder aus dem Trebelcafé — Atmosphäre, Kuchen und gemütliche Momente.",
+  title: "Galerie — Trebel Café Tribsees",
+  description: "Bilder aus dem Trebel Café — Atmosphäre, Kuchen und gemütliche Momente.",
 };
 
 const galleryImages = [
-  { src: "/images/Cafe/cafe-01.jpg", alt: "Trebelcafé Atmosphäre", tall: true },
-  { src: "/images/Cafe/cafe-02.jpg", alt: "Trebelcafé Einblick", tall: false },
+  { src: "/images/Cafe/cafe-01.jpg", alt: "Trebel Café Atmosphäre", tall: true },
+  { src: "/images/Cafe/cafe-02.jpg", alt: "Trebel Café Einblick", tall: false },
   { src: "/images/Cafe/cafe-03.jpg", alt: "Gemütliche Momente", tall: false },
-  { src: "/images/Cafe/cafe-04.jpg", alt: "Trebelcafé Innenraum", tall: true },
-  { src: "/images/Cafe/cafe-05.jpg", alt: "Selbstgebackenes", tall: false },
-  { src: "/images/Cafe/cafe-06.jpg", alt: "Kaffee und Kuchen", tall: false },
-  { src: "/images/Cafe/cafe-07.jpg", alt: "Trebelcafé Tribsees", tall: true },
-  { src: "/images/Cafe/cafe-08.jpg", alt: "Herzlich willkommen", tall: false },
-  { src: "/images/Cafe/cafe-09.jpg", alt: "Familie Wendel-Bigalke", tall: false },
+  { src: "/images/Cafe/cafe-04.jpg", alt: "Trebel Café Innenraum", tall: true },
 ];
 
 export default function GaleriePage() {
@@ -28,7 +23,7 @@ export default function GaleriePage() {
           <SectionLabel>Einblicke</SectionLabel>
           <h1 className="font-playfair text-5xl text-espresso mb-4">Galerie</h1>
           <p className="font-dm text-espresso/60 max-w-sm mx-auto">
-            Atmosphäre, Kuchen und gemütliche Momente aus dem Trebelcafé.
+            Atmosphäre, Kuchen und gemütliche Momente aus dem Trebel Café.
           </p>
         </AnimatedSection>
 

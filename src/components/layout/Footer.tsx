@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Brand */}
         <div>
-          <h3 className="font-playfair text-cream text-2xl mb-3">Trebelcafé</h3>
+          <h3 className="font-playfair text-cream text-2xl mb-3">Trebel Café</h3>
           <p className="text-sm leading-relaxed italic font-cormorant text-sand text-lg">
             Selbstgebackenes mit Herz — mitten in Tribsees.
           </p>
@@ -61,7 +61,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-cream/10 py-6 px-6 max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-cream/40">
-        <p>© {new Date().getFullYear()} Trebelcafé Tribsees — Familie Wendel-Bigalke</p>
+        <p>© {new Date().getFullYear()} Trebel Café Tribsees — Familie Wendel-Bigalke</p>
         <div className="flex items-center gap-6">
           <a
             href={contact.instagramUrl}

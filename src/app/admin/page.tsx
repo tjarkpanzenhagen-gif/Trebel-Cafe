@@ -36,7 +36,7 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-cream flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="font-playfair text-3xl text-espresso">Trebelcafé</h1>
+          <h1 className="font-playfair text-3xl text-espresso">Trebel Café</h1>
           <p className="font-dm text-sm text-espresso/50 mt-1">Admin-Bereich</p>
         </div>
         <div className="bg-white border border-sand rounded-2xl p-8 shadow-sm">

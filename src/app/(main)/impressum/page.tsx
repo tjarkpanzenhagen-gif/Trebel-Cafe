@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Impressum — Trebelcafé Tribsees" };
+export const metadata: Metadata = { title: "Impressum — Trebel Café Tribsees" };
 
 export default function ImpressumPage() {
   return (
@@ -9,7 +9,7 @@ export default function ImpressumPage() {
         <h1 className="font-playfair text-4xl text-espresso mb-8">Impressum</h1>
         <div className="font-dm text-espresso/70 space-y-4 text-sm leading-relaxed">
           <p><strong className="text-espresso">Angaben gemäß § 5 TMG</strong></p>
-          <p>Familie Wendel-Bigalke<br />Trebelcafé Tribsees<br />Tribsees, Mecklenburg-Vorpommern</p>
+          <p>Familie Wendel-Bigalke<br />Trebel Café Tribsees<br />Tribsees, Mecklenburg-Vorpommern</p>
           <p><strong className="text-espresso">Kontakt</strong><br />
             Telefon: 038320 649921<br />
             E-Mail: trebelcafe@gmx.de

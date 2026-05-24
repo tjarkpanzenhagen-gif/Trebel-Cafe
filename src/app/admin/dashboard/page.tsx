@@ -5,5 +5,10 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
   const fewoData = await readFewo();
-  return <AdminDashboardClient initialFewoApartments={fewoData.apartments} />;
+  return (
+    <AdminDashboardClient
+      initialFewoApartments={fewoData.apartments}
+      initialGlobalBlockedDates={fewoData.globalBlockedDates ?? []}
+    />
+  );
 }

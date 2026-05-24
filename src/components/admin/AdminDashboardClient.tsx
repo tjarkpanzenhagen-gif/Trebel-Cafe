@@ -207,8 +207,10 @@ function Modal({
 
 export default function AdminDashboardClient({
   initialFewoApartments,
+  initialGlobalBlockedDates,
 }: {
   initialFewoApartments: Apartment[];
+  initialGlobalBlockedDates: string[];
 }) {
   const [items, setItems] = useState<MenuItem[]>([]);
   const [activeTab, setActiveTab] = useState<TabKey>("wochenkarte");
@@ -322,7 +324,7 @@ export default function AdminDashboardClient({
           >
             ← Zur Website
           </Link>
-          <h1 className="font-playfair text-xl text-espresso">Trebelcafé Admin</h1>
+          <h1 className="font-playfair text-xl text-espresso">Trebel Café Admin</h1>
         </div>
         <button
           onClick={handleLogout}
@@ -352,7 +354,7 @@ export default function AdminDashboardClient({
 
         {/* FeWo Panel */}
         {activeTab === "fewo" && (
-          <FewoPanel initialApartments={initialFewoApartments} />
+          <FewoPanel initialApartments={initialFewoApartments} initialGlobalBlockedDates={initialGlobalBlockedDates} />
         )}
 
         {/* Menu tab content */}

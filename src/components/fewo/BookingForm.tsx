@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import type { ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-utils";
@@ -11,7 +11,7 @@ type Props = {
   apartmentId: string;
   pricing: ApartmentPricing;
   discounts: ApartmentDiscounts;
-  availableDates: string[];
+  blockedDates: string[];
   bookedDates: string[];
 };
 
@@ -31,15 +31,15 @@ function getNights(from: Date | undefined, to: Date | undefined): number {
 function hasInvalidInRange(
   from: Date | undefined,
   to: Date | undefined,
-  availableDates: string[],
+  blockedDates: string[],
   bookedDates: string[]
 ): boolean {
   if (!from || !to) return false;
-  const available = new Set(availableDates);
+  const blocked = new Set(blockedDates);
   const booked = new Set(bookedDates);
   for (let d = new Date(from); d < to; d.setDate(d.getDate() + 1)) {
     const key = localDateKey(d);
-    if (!available.has(key) || booked.has(key)) return true;
+    if (blocked.has(key) || booked.has(key)) return true;
   }
   return false;
 }
@@ -49,9 +49,11 @@ export default function BookingForm({
   apartmentId,
   pricing,
   discounts,
-  availableDates,
+  blockedDates,
   bookedDates,
 }: Props) {
+  const showAufbettung = pricing.aufbettungFee > 0;
+
   const [range, setRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
     from: undefined,
     to: undefined,
@@ -60,7 +62,11 @@ export default function BookingForm({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [persons, setPersons] = useState(1);
-  const [extraBeds, setExtraBeds] = useState(0);
+  const [extras, setExtras] = useState({ kinderbett: false, aufbettung: false });
+  const [kinderbettStatus, setKinderbettStatus] = useState<{
+    available: boolean;
+    nextAvailableDate?: string;
+  } | null>(null);
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -69,27 +75,53 @@ export default function BookingForm({
   const checkOut = range.to ? localDateKey(range.to) : "";
   const nights = getNights(range.from, range.to);
 
-  const freeDates = useMemo(() => {
-    const bookedSet = new Set(bookedDates);
-    return availableDates
-      .filter((d) => !bookedSet.has(d))
-      .map((d) => new Date(d + "T00:00:00"));
-  }, [availableDates, bookedDates]);
+  useEffect(() => {
+    if (!extras.kinderbett || !checkIn || !checkOut) {
+      setKinderbettStatus(null);
+      return;
+    }
+    let cancelled = false;
+    fetch(`/api/fewo/kinderbett-availability?checkIn=${checkIn}&checkOut=${checkOut}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancelled) setKinderbettStatus(data);
+      })
+      .catch(() => {
+        if (!cancelled) setKinderbettStatus(null);
+      });
+    return () => { cancelled = true; };
+  }, [extras.kinderbett, checkIn, checkOut]);
 
   const bookedDateObjs = useMemo(
     () => bookedDates.map((d) => new Date(d + "T00:00:00")),
     [bookedDates]
   );
 
+  const blockedDateObjs = useMemo(
+    () => blockedDates.map((d) => new Date(d + "T00:00:00")),
+    [blockedDates]
+  );
+
   const rangeError =
-    checkIn && checkOut && hasInvalidInRange(range.from, range.to, availableDates, bookedDates)
-      ? "Der gewählte Zeitraum enthält nicht verfügbare Tage. Bitte nur grüne Tage wählen."
+    checkIn && checkOut && hasInvalidInRange(range.from, range.to, blockedDates, bookedDates)
+      ? "Der gewählte Zeitraum enthält gesperrte oder gebuchte Tage."
       : "";
 
-  const priceCalc = nights > 0 ? calculatePrice(nights, extraBeds, pricing, discounts) : null;
+  const kinderbettError =
+    extras.kinderbett && kinderbettStatus && !kinderbettStatus.available
+      ? `Kinderbett bereits vergeben${kinderbettStatus.nextAvailableDate ? `, wieder verfügbar ab ${kinderbettStatus.nextAvailableDate}` : ""}.`
+      : "";
+
+  const priceCalc = nights > 0 ? calculatePrice(nights, extras, pricing, discounts) : null;
 
   const canSubmit =
-    nights > 0 && name.trim() && email.trim() && phone.trim() && !rangeError && !submitting;
+    nights > 0 &&
+    name.trim() &&
+    email.trim() &&
+    phone.trim() &&
+    !rangeError &&
+    !kinderbettError &&
+    !submitting;
 
   async function handleSubmit(e: React.MouseEvent) {
     e.preventDefault();
@@ -109,7 +141,7 @@ export default function BookingForm({
           email,
           phone,
           persons,
-          extraBeds,
+          extras,
           message,
           estimatedTotal: priceCalc.total,
         }),
@@ -121,6 +153,11 @@ export default function BookingForm({
       setSubmitted(true);
     }
 
+    const extraLines = [
+      extras.kinderbett ? "Kinderbett: Ja" : "",
+      extras.aufbettung ? "Aufbettung: Ja" : "",
+    ].filter(Boolean).join("\n");
+
     const body = [
       `Ferienwohnung: ${apartmentName} (${apartmentId})`,
       `Anreise: ${checkIn}`,
@@ -131,7 +168,7 @@ export default function BookingForm({
       `E-Mail: ${email}`,
       `Telefon: ${phone}`,
       `Personen: ${persons}`,
-      `Aufbettung: ${extraBeds}`,
+      extraLines,
       ``,
       `Geschätzter Gesamtpreis: ${priceCalc.total.toFixed(2)} €`,
       priceCalc.discountPercent > 0
@@ -139,7 +176,7 @@ export default function BookingForm({
         : "",
       ``,
       `Nachricht: ${message || "–"}`,
-    ].join("\n");
+    ].filter((l) => l !== undefined).join("\n");
 
     window.location.href = `mailto:trebelcafe@gmx.de?subject=Buchungsanfrage: ${encodeURIComponent(apartmentName)}&body=${encodeURIComponent(body)}`;
   }
@@ -160,27 +197,6 @@ export default function BookingForm({
 
   const inputClass =
     "w-full border border-sand rounded-lg px-3 py-2.5 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors bg-white/60";
-
-  if (availableDates.length === 0) {
-    return (
-      <div className="space-y-4">
-        <h3 className="font-playfair text-xl text-espresso">Buchungsanfrage</h3>
-        <div className="bg-sand/40 border border-sand rounded-xl p-6 text-center space-y-2">
-          <p className="font-playfair text-lg text-espresso">Aktuell keine Verfügbarkeit</p>
-          <p className="font-dm text-sm text-espresso/60 leading-relaxed">
-            Für diese Wohnung sind noch keine freien Termine eingetragen.
-            Melden Sie sich gerne direkt bei uns.
-          </p>
-          <a
-            href="mailto:trebelcafe@gmx.de"
-            className="inline-block mt-3 px-5 py-2.5 rounded-full bg-terracotta text-white font-dm text-sm hover:bg-[#b3623c] transition-colors"
-          >
-            Direkt anfragen →
-          </a>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">
@@ -211,15 +227,6 @@ export default function BookingForm({
             padding: 10px 4px 4px;
           }
           .booking-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 12px; }
-          /* Free days — green */
-          .booking-cal .day-free .rdp-day_button {
-            background-color: #6B7C5E !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 6px;
-          }
-          .booking-cal .day-free { opacity: 1 !important; }
-          /* Booked days — terracotta */
           .booking-cal .day-booked .rdp-day_button {
             background-color: #C4724A !important;
             color: white !important;
@@ -228,7 +235,6 @@ export default function BookingForm({
             cursor: not-allowed;
           }
           .booking-cal .day-booked { opacity: 1 !important; }
-          /* Range selection overrides free-day style */
           .booking-cal .rdp-range_start .rdp-day_button,
           .booking-cal .rdp-range_end .rdp-day_button {
             background-color: #2C1810 !important;
@@ -247,22 +253,18 @@ export default function BookingForm({
           mode="range"
           selected={range.from ? { from: range.from, to: range.to } : undefined}
           onSelect={(r) => setRange({ from: r?.from, to: r?.to })}
-          modifiers={{ free: freeDates, booked: bookedDateObjs }}
-          modifiersClassNames={{ free: "day-free", booked: "day-booked" }}
+          modifiers={{ booked: bookedDateObjs, blocked: blockedDateObjs }}
+          modifiersClassNames={{ booked: "day-booked" }}
           disabled={(date) => {
             const key = localDateKey(date);
+            const blockedSet = new Set(blockedDates);
             const bookedSet = new Set(bookedDates);
-            const availSet = new Set(availableDates);
-            return !availSet.has(key) || bookedSet.has(key);
+            return blockedSet.has(key) || bookedSet.has(key);
           }}
           fromDate={new Date()}
           numberOfMonths={1}
         />
         <div className="flex gap-4 px-4 pb-3 pt-1 border-t border-sand/50">
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-sm bg-[#6B7C5E]" />
-            <span className="font-dm text-xs text-espresso/50">Frei</span>
-          </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-sm bg-terracotta" />
             <span className="font-dm text-xs text-espresso/50">Gebucht</span>
@@ -315,23 +317,60 @@ export default function BookingForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block font-dm text-xs text-espresso/60 mb-1.5 uppercase tracking-wider">Personen</label>
-          <input type="number" min={1} max={10} value={persons}
-            onChange={(e) => setPersons(Number(e.target.value))} className={inputClass} />
-        </div>
-        <div>
-          <label className="block font-dm text-xs text-espresso/60 mb-1.5 uppercase tracking-wider">Aufbettung</label>
-          <input type="number" min={0} max={5} value={extraBeds}
-            onChange={(e) => setExtraBeds(Number(e.target.value))} className={inputClass} />
-        </div>
+      <div>
+        <label className="block font-dm text-xs text-espresso/60 mb-1.5 uppercase tracking-wider">Personen</label>
+        <input
+          type="number"
+          min={1}
+          max={showAufbettung ? 4 : 2}
+          value={persons}
+          onChange={(e) => setPersons(Number(e.target.value))}
+          className={inputClass}
+        />
+      </div>
+
+      {/* Extras */}
+      <div className="space-y-2">
+        <p className="font-dm text-xs text-espresso/60 uppercase tracking-wider">Extras (optional)</p>
+        <label className="flex items-center gap-3 cursor-pointer group">
+          <input
+            type="checkbox"
+            checked={extras.kinderbett}
+            onChange={(e) => setExtras((prev) => ({ ...prev, kinderbett: e.target.checked }))}
+            className="w-4 h-4 accent-terracotta"
+          />
+          <span className="font-dm text-sm text-espresso group-hover:text-terracotta transition-colors">
+            Kinderbett (+{pricing.kinderbettFee} €)
+          </span>
+        </label>
+        {kinderbettError && (
+          <p className="font-dm text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 ml-7">
+            {kinderbettError}
+          </p>
+        )}
+        {showAufbettung && (
+          <label className="flex items-center gap-3 cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={extras.aufbettung}
+              onChange={(e) => setExtras((prev) => ({ ...prev, aufbettung: e.target.checked }))}
+              className="w-4 h-4 accent-terracotta"
+            />
+            <span className="font-dm text-sm text-espresso group-hover:text-terracotta transition-colors">
+              Aufbettung (+{pricing.aufbettungFee} €)
+            </span>
+          </label>
+        )}
       </div>
 
       <div>
         <label className="block font-dm text-xs text-espresso/60 mb-1.5 uppercase tracking-wider">Nachricht</label>
-        <textarea rows={3} value={message} onChange={(e) => setMessage(e.target.value)}
-          className="w-full border border-sand rounded-lg px-3 py-2.5 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors resize-none bg-white/60" />
+        <textarea
+          rows={3}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="w-full border border-sand rounded-lg px-3 py-2.5 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors resize-none bg-white/60"
+        />
       </div>
 
       {priceCalc && !rangeError && (
@@ -359,10 +398,12 @@ export default function BookingForm({
               <span className="font-dm text-sm text-espresso/40">–</span>
             </div>
           )}
-          {extraBeds > 0 && (
+          {priceCalc.extrasTotal > 0 && (
             <div className="flex justify-between">
-              <span className="font-dm text-sm text-espresso/60">Aufbettung ({extraBeds}×)</span>
-              <span className="font-dm text-sm text-espresso">{priceCalc.extraBedTotal.toFixed(2)} €</span>
+              <span className="font-dm text-sm text-espresso/60">
+                Extras ({[extras.kinderbett && "Kinderbett", extras.aufbettung && "Aufbettung"].filter(Boolean).join(", ")})
+              </span>
+              <span className="font-dm text-sm text-espresso">{priceCalc.extrasTotal.toFixed(2)} €</span>
             </div>
           )}
           <div className="flex justify-between">

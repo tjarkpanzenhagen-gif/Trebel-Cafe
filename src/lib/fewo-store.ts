@@ -28,13 +28,20 @@ async function getInitialData(): Promise<FewoData> {
 }
 
 function migrate(data: FewoData): FewoData {
+  const raw = data as unknown as Record<string, unknown>;
   return {
-    ...data,
-    apartments: data.apartments.map((apt) => ({
-      ...apt,
-      availableDates: (apt as unknown as Record<string, unknown>)["availableDates"] as string[] ??
-        [],
-    })),
+    globalBlockedDates: Array.isArray(raw["globalBlockedDates"])
+      ? (raw["globalBlockedDates"] as string[])
+      : [],
+    apartments: data.apartments.map((apt) => {
+      const rawApt = apt as unknown as Record<string, unknown>;
+      return {
+        ...apt,
+        blockedDates: Array.isArray(rawApt["blockedDates"])
+          ? (rawApt["blockedDates"] as string[])
+          : [],
+      };
+    }),
   };
 }
 

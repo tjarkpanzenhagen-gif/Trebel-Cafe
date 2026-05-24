@@ -11,7 +11,7 @@ export type Booking = {
   email: string;
   phone: string;
   persons: number;
-  extraBeds: number;
+  extras: { kinderbett: boolean; aufbettung: boolean };
   message: string;
   estimatedTotal: number;
   status: BookingStatus;
@@ -35,12 +35,20 @@ async function getKV() {
   return createClient({ url: KV_URL!, token: KV_TOKEN! });
 }
 
+function normalizeBooking(b: Booking): Booking {
+  return {
+    ...b,
+    extras: b.extras ?? { kinderbett: false, aufbettung: false },
+  };
+}
+
 export async function readBookings(): Promise<BookingsData> {
   if (hasKVCredentials()) {
     try {
       const kv = await getKV();
       const data = await kv.get<BookingsData>(KV_KEY);
-      return data ?? { bookings: [] };
+      const result = data ?? { bookings: [] };
+      return { bookings: result.bookings.map(normalizeBooking) };
     } catch {
       return { bookings: [] };
     }
@@ -49,7 +57,10 @@ export async function readBookings(): Promise<BookingsData> {
     const { readFileSync } = await import("fs");
     const { join } = await import("path");
     try {
-      return JSON.parse(readFileSync(join(process.cwd(), "data", "bookings.json"), "utf-8"));
+      const data: BookingsData = JSON.parse(
+        readFileSync(join(process.cwd(), "data", "bookings.json"), "utf-8")
+      );
+      return { bookings: data.bookings.map(normalizeBooking) };
     } catch {
       return { bookings: [] };
     }
@@ -84,4 +95,16 @@ export function getBookedDatesForApartment(bookings: Booking[], apartmentId: str
       }
     });
   return Array.from(dates);
+}
+
+export function getKinderbettBookedPeriods(
+  bookings: Booking[]
+): Array<{ checkIn: string; checkOut: string }> {
+  return bookings
+    .filter(
+      (b) =>
+        (b.status === "pending" || b.status === "confirmed") &&
+        b.extras.kinderbett
+    )
+    .map((b) => ({ checkIn: b.checkIn, checkOut: b.checkOut }));
 }

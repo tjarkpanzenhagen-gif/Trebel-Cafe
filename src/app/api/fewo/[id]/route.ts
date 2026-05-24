@@ -34,7 +34,8 @@ export async function PUT(
       maxPersons: Number(maxPersons),
       pricing: {
         perNight: Number(pricing.perNight),
-        extraBed: Number(pricing.extraBed),
+        kinderbettFee: Number(pricing.kinderbettFee ?? 15),
+        aufbettungFee: Number(pricing.aufbettungFee ?? 0),
         cleaningFee: Number(pricing.cleaningFee),
       },
       discounts: {
