@@ -235,6 +235,29 @@ export default function BookingForm({
             cursor: not-allowed;
           }
           .booking-cal .day-booked { opacity: 1 !important; }
+          .booking-cal .day-blocked { opacity: 1 !important; position: relative; }
+          .booking-cal .day-blocked .rdp-day_button {
+            background-color: #f0ebe4 !important;
+            color: #9c8880 !important;
+            border: none !important;
+            border-radius: 6px;
+            cursor: not-allowed;
+            position: relative;
+            overflow: hidden;
+          }
+          .booking-cal .day-blocked .rdp-day_button::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+              135deg,
+              transparent,
+              transparent 3px,
+              rgba(156,136,128,0.35) 3px,
+              rgba(156,136,128,0.35) 4px
+            );
+            border-radius: 6px;
+          }
           .booking-cal .rdp-range_start .rdp-day_button,
           .booking-cal .rdp-range_end .rdp-day_button {
             background-color: #2C1810 !important;
@@ -254,7 +277,7 @@ export default function BookingForm({
           selected={range.from ? { from: range.from, to: range.to } : undefined}
           onSelect={(r) => setRange({ from: r?.from, to: r?.to })}
           modifiers={{ booked: bookedDateObjs, blocked: blockedDateObjs }}
-          modifiersClassNames={{ booked: "day-booked" }}
+          modifiersClassNames={{ booked: "day-booked", blocked: "day-blocked" }}
           disabled={(date) => {
             const key = localDateKey(date);
             const blockedSet = new Set(blockedDates);
@@ -264,10 +287,19 @@ export default function BookingForm({
           fromDate={new Date()}
           numberOfMonths={1}
         />
-        <div className="flex gap-4 px-4 pb-3 pt-1 border-t border-sand/50">
+        <div className="flex flex-wrap gap-4 px-4 pb-3 pt-1 border-t border-sand/50">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-sm bg-terracotta" />
             <span className="font-dm text-xs text-espresso/50">Gebucht</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div
+              className="w-3 h-3 rounded-sm"
+              style={{
+                background: "repeating-linear-gradient(135deg, #f0ebe4, #f0ebe4 3px, rgba(156,136,128,0.5) 3px, rgba(156,136,128,0.5) 4px)",
+              }}
+            />
+            <span className="font-dm text-xs text-espresso/50">Gesperrt</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-sm bg-espresso" />
