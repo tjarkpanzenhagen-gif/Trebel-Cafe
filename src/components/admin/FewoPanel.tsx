@@ -203,11 +203,11 @@ function BlockedDatesEditor({
     setRangeTo("");
   }
 
-  async function handleSave() {
+  async function handleSave(overrideDates?: string[]) {
     setSaving(true);
     setError("");
     setSuccess(false);
-    const blockedDates = blocked.map((d) => d.toISOString().slice(0, 10));
+    const blockedDates = overrideDates ?? blocked.map((d) => d.toISOString().slice(0, 10));
     try {
       const res = await fetch(`/api/fewo/${apt.id}/availability`, {
         method: "PUT",
@@ -215,6 +215,7 @@ function BlockedDatesEditor({
         body: JSON.stringify({ blockedDates, global: isGlobal }),
       });
       if (res.ok) {
+        if (overrideDates !== undefined) setBlocked([]);
         onSaved(blockedDates, isGlobal);
         setSuccess(true);
         setTimeout(() => setSuccess(false), 2500);
@@ -347,7 +348,7 @@ function BlockedDatesEditor({
               Abbrechen
             </button>
             <button
-              onClick={() => { setBlocked([]); setClearConfirm(false); }}
+              onClick={() => { setClearConfirm(false); handleSave([]); }}
               className="flex-1 px-3 py-2 bg-red-500 text-white font-dm text-sm rounded-lg hover:bg-red-600 transition-colors"
             >
               Ja, alle entsperren
@@ -363,7 +364,7 @@ function BlockedDatesEditor({
             {isGlobal ? "Alle globalen entsperren" : `Nur ${apt.name} entsperren`}
           </button>
           <button
-            onClick={handleSave}
+            onClick={() => handleSave()}
             disabled={saving}
             className="flex-1 px-4 py-2.5 bg-espresso text-cream font-dm text-sm rounded-lg hover:bg-terracotta transition-colors disabled:opacity-50"
           >
