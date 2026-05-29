@@ -107,6 +107,19 @@ export default function SpeisekarteClient({ items }: { items: MenuItem[] }) {
                 <h2 className="font-playfair text-3xl text-espresso">{section.title}</h2>
                 <div className="w-16 h-px bg-terracotta mt-4" />
               </AnimatedSection>
+              {section.key === "kuchenUndGebaeck" && (
+                <AnimatedSection className="mb-8">
+                  <div className="flex items-start gap-3 bg-terracotta/8 border border-terracotta/20 rounded-2xl px-6 py-5">
+                    <span className="text-2xl mt-0.5">🍰</span>
+                    <div>
+                      <p className="font-playfair text-espresso font-semibold mb-1">Frisch aus unserer Backstube</p>
+                      <p className="font-dm text-sm text-espresso/70 leading-relaxed">
+                        Unsere Torten & Blechkuchen werden täglich frisch gebacken. Welche Sorten heute in der Auslage stehen, siehst du am besten vor Ort bei uns.
+                      </p>
+                    </div>
+                  </div>
+                </AnimatedSection>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {sectionItems.map((item, i) => (
                   <AnimatedSection key={item.id} delay={i * 0.08}>
