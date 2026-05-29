@@ -7,16 +7,29 @@ export default function AboutTeaser() {
   return (
     <section className="py-20 px-6 bg-sand/20">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        {/* Photo */}
+        {/* Photos — stacked layout */}
         <AnimatedSection>
-          <div className="relative h-80 md:h-[460px] rounded-2xl overflow-hidden shadow-lg">
-            <Image
-              src="/images/Cafe/wir.jpg"
-              alt="Gemütliches Café-Ambiente im Trebel Café"
-              fill
-              className="object-cover hover:scale-105 transition-transform duration-700"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+          <div className="relative h-80 md:h-[460px]">
+            {/* Back photo */}
+            <div className="absolute top-0 left-0 w-[80%] h-[80%] rounded-2xl overflow-hidden shadow-lg">
+              <Image
+                src="/images/Cafe/wir.jpg"
+                alt="Team des Trebel Cafés"
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 768px) 80vw, 40vw"
+              />
+            </div>
+            {/* Front photo */}
+            <div className="absolute bottom-0 right-0 w-[60%] h-[60%] rounded-2xl overflow-hidden shadow-xl border-4 border-cream">
+              <Image
+                src="/images/Cafe/WhatsApp Image 2026-05-25 at 16.29.19.jpeg"
+                alt="Gemütliches Café-Ambiente im Trebel Café"
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 768px) 60vw, 30vw"
+              />
+            </div>
           </div>
         </AnimatedSection>
 
