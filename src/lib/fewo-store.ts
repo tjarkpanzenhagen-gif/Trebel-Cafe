@@ -97,6 +97,10 @@ export async function readFewo(): Promise<FewoData> {
           apt.maxPersons = def.maxPersons;
           healed = true;
         }
+        if (apt.images.length === 0 && def.images.length > 0) {
+          apt.images = def.images;
+          healed = true;
+        }
       }
       if (healed) await kv.set(KV_KEY, migrated);
       return migrated;
