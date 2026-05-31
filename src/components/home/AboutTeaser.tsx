@@ -7,38 +7,16 @@ export default function AboutTeaser() {
   return (
     <section className="py-20 px-6 bg-sand/20">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        {/* Photos — side by side */}
+        {/* Photo */}
         <AnimatedSection>
-          <div className="grid grid-cols-2 gap-3 h-80 md:h-[460px]">
-            <div className="relative rounded-2xl overflow-hidden shadow-lg">
-              <Image
-                src="/images/Cafe/wir.jpg"
-                alt="Team des Trebel Cafés"
-                fill
-                className="object-cover object-top hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 50vw, 25vw"
-              />
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="relative rounded-2xl overflow-hidden shadow-lg flex-1">
-                <Image
-                  src="/images/Cafe/cafe-innen.jpg"
-                  alt="Trebel Café von außen"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-700"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
-              </div>
-              <div className="relative rounded-2xl overflow-hidden shadow-lg flex-1">
-                <Image
-                  src="/images/Cafe/wir1.jpg"
-                  alt="Im Trebel Café"
-                  fill
-                  className="object-cover object-top hover:scale-105 transition-transform duration-700"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
-              </div>
-            </div>
+          <div className="relative h-80 md:h-[460px] rounded-2xl overflow-hidden shadow-lg">
+            <Image
+              src="/images/Cafe/wir.jpg"
+              alt="Team des Trebel Cafés"
+              fill
+              className="object-cover object-top hover:scale-105 transition-transform duration-700"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
           </div>
         </AnimatedSection>
 
