@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
     };
     data.bookings.push(booking);
     await writeBookings(data);
-    sendBookingNotification(booking); // fire-and-forget, never blocks response
+    await sendBookingNotification(booking);
     return NextResponse.json(booking, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Buchung konnte nicht gespeichert werden" }, { status: 500 });
