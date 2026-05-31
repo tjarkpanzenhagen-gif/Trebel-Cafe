@@ -11,14 +11,14 @@ type Props = {
 
 const PLACEHOLDER_IMAGES: Record<string, string[]> = {
   "wohnung-1": [
-    "/images/wohnungen/wohnung-01.jpg",
-    "/images/wohnungen/wohnung-02.jpg",
-    "/images/wohnungen/wohnung-03.jpg",
+    "/images/wohnungen/klein-wohnen.jpg",
+    "/images/wohnungen/klein-kamin.jpg",
+    "/images/wohnungen/klein-bett.jpg",
   ],
   "wohnung-2": [
-    "/images/wohnungen/wohnung-04.jpg",
-    "/images/wohnungen/wohnung-05.jpg",
-    "/images/wohnungen/wohnung-01.jpg",
+    "/images/wohnungen/gross-wohnen1.jpg",
+    "/images/wohnungen/gross-wohnen2.jpg",
+    "/images/wohnungen/gross-bett.jpg",
   ],
 };
 
