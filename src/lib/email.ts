@@ -11,7 +11,10 @@ export async function sendBookingNotification(booking: Booking): Promise<void> {
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
-  if (!host || !user || !pass) return; // not configured — skip silently
+  if (!host || !user || !pass) {
+    console.error("[email] SMTP not configured — missing:", { host: !!host, user: !!user, pass: !!pass });
+    return;
+  }
 
   const port = Number(process.env.SMTP_PORT ?? 587);
   const to = process.env.NOTIFY_EMAIL ?? user;
@@ -45,6 +48,7 @@ export async function sendBookingNotification(booking: Booking): Promise<void> {
   ].filter((l) => l !== undefined).join("\n");
 
   try {
+    console.log("[email] Sending to", to, "via", host, port);
     const nodemailer = await import("nodemailer");
     const transporter = nodemailer.default.createTransport({
       host,
@@ -58,7 +62,8 @@ export async function sendBookingNotification(booking: Booking): Promise<void> {
       subject: `Neue Anfrage: ${booking.apartmentName} · ${booking.checkIn}`,
       text,
     });
-  } catch {
-    // Email failure must never break the booking flow
+    console.log("[email] Sent successfully");
+  } catch (err) {
+    console.error("[email] Send failed:", err);
   }
 }
