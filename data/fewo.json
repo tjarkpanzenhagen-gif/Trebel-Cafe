@@ -8,7 +8,15 @@
       "description": "Ruhig gelegen, warm eingerichtet — das Trebel Café liegt direkt vor der Tür.",
       "details": "Auf rund 45 m² wartet ein volleingerichtetes Apartment mit separatem Schlafzimmer, hellem Wohnbereich und kompakter Küchenzeile. Bettwäsche und Handtücher sind inklusive. Frühstück, selbstgebackene Kuchen und Torten gibt es nur wenige Schritte entfernt im Café.",
       "maxPersons": 2,
-      "images": [],
+      "images": [
+        "/images/wohnungen/klein-wohnen.jpg",
+        "/images/wohnungen/klein-kamin.jpg",
+        "/images/wohnungen/klein-bett.jpg",
+        "/images/wohnungen/klein-bettsicht.jpg",
+        "/images/wohnungen/klein-kueche.jpg",
+        "/images/wohnungen/klein-eingang.jpg",
+        "/images/wohnungen/klein-bad.jpg"
+      ],
       "pricing": {
         "perNight": 54,
         "kinderbettFee": 15,
@@ -28,7 +36,19 @@
       "description": "Hell, geräumig und familienfähig — Platz für bis zu drei Personen.",
       "details": "Mit rund 55 m², zwei Schlafbereichen und einem hellen Wohnzimmer ist unsere zweite Wohnung der ideale Ausgangspunkt für Ausflüge in den Trebeltal-Naturpark. Vollständig ausgestattet, inkl. Bettwäsche und Handtücher. Das Café mit Frühstück und selbstgebackenen Kuchen befindet sich direkt vor der Tür.",
       "maxPersons": 3,
-      "images": [],
+      "images": [
+        "/images/wohnungen/gross-wohnen1.jpg",
+        "/images/wohnungen/gross-wohnen2.jpg",
+        "/images/wohnungen/gross-bett.jpg",
+        "/images/wohnungen/gross-bett2.jpg",
+        "/images/wohnungen/gross-bett3.jpg",
+        "/images/wohnungen/gross-kueche1.jpg",
+        "/images/wohnungen/gross-kueche2.jpg",
+        "/images/wohnungen/gross-wohnen3.jpg",
+        "/images/wohnungen/gross-wohnen4.jpg",
+        "/images/wohnungen/gross-bad.jpg",
+        "/images/wohnungen/gross-dusche.jpg"
+      ],
       "pricing": {
         "perNight": 54,
         "kinderbettFee": 15,
