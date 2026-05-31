@@ -7,28 +7,37 @@ export default function AboutTeaser() {
   return (
     <section className="py-20 px-6 bg-sand/20">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        {/* Photos — stacked layout */}
+        {/* Photos — side by side */}
         <AnimatedSection>
-          <div className="relative h-80 md:h-[460px]">
-            {/* Back photo */}
-            <div className="absolute top-0 left-0 w-[80%] h-[80%] rounded-2xl overflow-hidden shadow-lg">
+          <div className="grid grid-cols-2 gap-3 h-80 md:h-[460px]">
+            <div className="relative rounded-2xl overflow-hidden shadow-lg">
               <Image
                 src="/images/Cafe/wir.jpg"
                 alt="Team des Trebel Cafés"
                 fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 80vw, 40vw"
+                className="object-cover object-top hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 768px) 50vw, 25vw"
               />
             </div>
-            {/* Front photo */}
-            <div className="absolute bottom-0 right-0 w-[58%] h-[58%] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-cream/60">
-              <Image
-                src="/images/Cafe/cafe-innen.jpg"
-                alt="Gemütliches Café-Ambiente im Trebel Café"
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 60vw, 30vw"
-              />
+            <div className="flex flex-col gap-3">
+              <div className="relative rounded-2xl overflow-hidden shadow-lg flex-1">
+                <Image
+                  src="/images/Cafe/cafe-innen.jpg"
+                  alt="Trebel Café von außen"
+                  fill
+                  className="object-cover hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </div>
+              <div className="relative rounded-2xl overflow-hidden shadow-lg flex-1">
+                <Image
+                  src="/images/Cafe/wir1.jpg"
+                  alt="Im Trebel Café"
+                  fill
+                  className="object-cover object-top hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </div>
             </div>
           </div>
         </AnimatedSection>
