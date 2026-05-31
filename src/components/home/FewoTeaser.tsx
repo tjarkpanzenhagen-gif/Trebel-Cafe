@@ -6,8 +6,8 @@ import Button from "@/components/ui/Button";
 import { readFewo } from "@/lib/fewo-store";
 
 const PLACEHOLDER_IMAGES: Record<string, string> = {
-  "wohnung-1": "/images/wohnungen/wohnung-01.jpg",
-  "wohnung-2": "/images/wohnungen/wohnung-04.jpg",
+  "wohnung-1": "/images/wohnungen/klein-wohnen.jpg",
+  "wohnung-2": "/images/wohnungen/gross-wohnen1.jpg",
 };
 
 export default async function FewoTeaser() {

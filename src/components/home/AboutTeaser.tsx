@@ -21,9 +21,9 @@ export default function AboutTeaser() {
               />
             </div>
             {/* Front photo */}
-            <div className="absolute bottom-0 right-0 w-[60%] h-[60%] rounded-2xl overflow-hidden shadow-xl border-4 border-cream">
+            <div className="absolute bottom-0 right-0 w-[58%] h-[58%] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-cream/60">
               <Image
-                src="/images/Cafe/WhatsApp Image 2026-05-25 at 16.29.19.jpeg"
+                src="/images/Cafe/cafe-innen.jpg"
                 alt="Gemütliches Café-Ambiente im Trebel Café"
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-700"
