@@ -5,9 +5,9 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import type { MenuItem } from "@/lib/menu-store";
 
 const SECTIONS: { key: MenuItem["kategorie"]; label: string; title: string; note?: string }[] = [
-  { key: "fruehstueck", label: "Bis 11:30 Uhr", title: "Frühstück" },
+  { key: "fruehstueck", label: "Bis 11:30 Uhr", title: "Frühstück", note: "Getränkeänderung + 1,00 €" },
   { key: "fruehstueckExtras", label: "Zum Dazubestellen", title: "Frühstücksextras" },
-  { key: "mittagskarte", label: "11:30 – 14:30 Uhr", title: "Kleine Mittagskarte" },
+  { key: "mittagskarte", label: "11:30 – 14:30 Uhr", title: "Kleine Mittagskarte", note: "Wechselnde Wochenangebote sind beim Personal zu erfragen." },
   { key: "kuchenUndGebaeck", label: "Aus unserer Backstube", title: "Kuchen & Gebäck" },
   { key: "wein", label: "Vom Winzer", title: "Wein & Sekt" },
   { key: "heissgetraenke", label: "Mit Hafermilch +0,50 €", title: "Heißgetränke" },
@@ -18,16 +18,16 @@ const SECTIONS: { key: MenuItem["kategorie"]; label: string; title: string; note
 
 function MenuRow({ item }: { item: MenuItem }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 py-3 border-b border-sand/60 last:border-b-0 group">
+    <div className="flex items-start justify-between gap-4 py-3 border-b border-sand/60 last:border-b-0 group">
       <div className="min-w-0">
-        <span className="font-dm text-sm text-espresso group-hover:text-terracotta transition-colors">
+        <p className="font-dm text-sm text-espresso group-hover:text-terracotta transition-colors">
           {item.name}
-        </span>
+        </p>
         {item.description && (
-          <span className="font-dm text-xs text-espresso/45 ml-2">{item.description}</span>
+          <p className="font-dm text-xs text-espresso/45 mt-0.5 leading-relaxed">{item.description}</p>
         )}
       </div>
-      <span className="font-playfair text-terracotta text-sm whitespace-nowrap shrink-0">{item.price}</span>
+      <span className="font-playfair text-terracotta text-sm whitespace-nowrap shrink-0 pt-0.5">{item.price}</span>
     </div>
   );
 }
@@ -62,6 +62,12 @@ export default function SpeisekarteClient({ items }: { items: MenuItem[] }) {
               </AnimatedSection>
             )}
 
+            {section.note && (
+              <AnimatedSection className="mb-4">
+                <p className="font-dm text-sm text-espresso/50 italic">{section.note}</p>
+              </AnimatedSection>
+            )}
+
             <AnimatedSection>
               <div className="max-w-2xl">
                 {section.items.map((item) => (
@@ -74,9 +80,12 @@ export default function SpeisekarteClient({ items }: { items: MenuItem[] }) {
         </section>
       ))}
 
-      <AnimatedSection className="py-12 text-center">
+      <AnimatedSection className="py-12 text-center space-y-3">
         <p className="font-cormorant italic text-xl text-espresso/60">
           Alle Preise inkl. MwSt. — Saisonale Änderungen vorbehalten.
+        </p>
+        <p className="font-dm text-sm text-espresso/40">
+          Zusatzstoffe und Allergene sind beim Personal zu erfragen.
         </p>
       </AnimatedSection>
     </>

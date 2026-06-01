@@ -13,10 +13,10 @@ const KV_KEY = "trebelcafe_menu_v2";
 
 export const INITIAL_MENU: MenuItem[] = [
   // Frühstück
-  { id: "f1", name: "Kleines Frühstück", description: "", price: "11,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
-  { id: "f2", name: "Kinder-Frühstück", description: "bis 10 Jahre", price: "7,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
-  { id: "f3", name: "Großes Frühstück", description: "", price: "20,50 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
-  { id: "f4", name: "Frühstück für Zwei", description: "", price: "41,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
+  { id: "f1", name: "Kleines Frühstück", description: "1 Brötchen, Butter, Wurst oder Käse, Konfitüre, 1 Glas Orangensaft, Kaffee oder Tee", price: "11,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
+  { id: "f2", name: "Kinder-Frühstück", description: "bis 10 Jahre · 1 Brötchen, Butter, Nutella oder Konfitüre, 1 Tasse Kakao", price: "7,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
+  { id: "f3", name: "Großes Frühstück", description: "auch nur mit Käse oder Wurst möglich · 2 Brötchen, Brot, Butter, Wurst, Käse, Konfitüre, Honig, Quark, 1 Glas Orangensaft, Kaffee oder Tee", price: "20,50 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
+  { id: "f4", name: "Frühstück für Zwei", description: "4 Brötchen, Brot, Butter, Wurst, Käse, Konfitüre, Quark, Honig, Lachs, Kaffee oder Tee, 2 Glas Orangensaft, 2 Glas Sekt", price: "41,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
   { id: "f5", name: "Halbes belegtes Brötchen – Käse/Salami", description: "", price: "2,90 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "fruehstueck" },
   { id: "f6", name: "Halbes belegtes Brötchen – Roher Schinken", description: "", price: "3,20 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "fruehstueck" },
   { id: "f7", name: "Halbes belegtes Brötchen – Lachs", description: "", price: "4,90 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "fruehstueck" },
@@ -38,8 +38,8 @@ export const INITIAL_MENU: MenuItem[] = [
   { id: "m4", name: "Strammer Max", description: "Roher Schinken, Brot, Spiegelei", price: "9,90 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "mittagskarte" },
   { id: "m5", name: "Strammer Moritz", description: "Salami, Brot, Spiegelei", price: "8,90 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "mittagskarte" },
   { id: "m6", name: "Stramme Susi", description: "Käse, Brot, Spiegelei", price: "8,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "mittagskarte" },
-  { id: "m7", name: "Kleiner Salat", description: "", price: "5,50 €", vegan: true, vegetarisch: true, glutenfrei: true, kategorie: "mittagskarte" },
-  { id: "m8", name: "Großer Salat", description: "", price: "9,50 €", vegan: true, vegetarisch: true, glutenfrei: true, kategorie: "mittagskarte" },
+  { id: "m7", name: "Kleiner Salat", description: "Verschiedene Salat- und Gemüsesorten mit Honig-Senf-Dressing", price: "5,50 €", vegan: true, vegetarisch: true, glutenfrei: true, kategorie: "mittagskarte" },
+  { id: "m8", name: "Großer Salat", description: "Verschiedene Salat- und Gemüsesorten mit Honig-Senf-Dressing", price: "9,50 €", vegan: true, vegetarisch: true, glutenfrei: true, kategorie: "mittagskarte" },
   // Wein
   { id: "w1", name: "Schwarzriesling", description: "0,25l", price: "6,60 €", vegan: true, vegetarisch: true, glutenfrei: true, kategorie: "wein" },
   { id: "w2", name: "Rêve de Rosé", description: "0,25l", price: "6,60 €", vegan: true, vegetarisch: true, glutenfrei: true, kategorie: "wein" },
@@ -58,9 +58,9 @@ export const INITIAL_MENU: MenuItem[] = [
   { id: "h10", name: "Heiße Schokolade mit Sahnehaube", description: "", price: "5,30 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "heissgetraenke" },
   { id: "h11", name: "Heiße weiße Schokolade mit Sahnehaube", description: "", price: "5,30 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "heissgetraenke" },
   { id: "h12", name: "Chococcio", description: "auch in weiß", price: "6,30 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "heissgetraenke" },
-  { id: "h13", name: "Lumumba", description: "Heiße Schokolade, Rum, Sahne", price: "6,50 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "heissgetraenke" },
-  { id: "h14", name: "Baileys Chocolate", description: "Heiße weiße Schokolade, Baileys, Sahne", price: "6,50 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "heissgetraenke" },
-  { id: "h15", name: "Grog", description: "Wasser, Rum, Zucker", price: "3,90 €", vegan: true, vegetarisch: true, glutenfrei: true, kategorie: "heissgetraenke" },
+  { id: "h13", name: "Lumumba", description: "Heiße Schokolade mit Rum und Sahnehaube", price: "6,50 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "heissgetraenke" },
+  { id: "h14", name: "Baileys Chocolate", description: "Heiße weiße Schokolade mit Baileys und Sahnehaube", price: "6,50 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "heissgetraenke" },
+  { id: "h15", name: "Grog", description: "Wasser mit Rum und Zucker", price: "3,90 €", vegan: true, vegetarisch: true, glutenfrei: true, kategorie: "heissgetraenke" },
   { id: "h16", name: "Hüttentee 50% vol.", description: "", price: "4,90 €", vegan: true, vegetarisch: true, glutenfrei: true, kategorie: "heissgetraenke" },
   // Softgetränke
   { id: "s1", name: "Wasser raus/still", description: "0,33l", price: "2,60 €", vegan: true, vegetarisch: true, glutenfrei: true, kategorie: "softgetraenke" },
