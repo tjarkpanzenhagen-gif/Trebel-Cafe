@@ -9,7 +9,7 @@ export type MenuItem = {
   kategorie: "wochenkarte" | "kuchenUndGebaeck" | "fruehstueck" | "fruehstueckExtras" | "mittagskarte" | "wein" | "heissgetraenke" | "softgetraenke" | "bier" | "eisKaltgetraenke";
 };
 
-const KV_KEY = "trebelcafe_menu_v2";
+const KV_KEY = "trebelcafe_menu_v3";
 
 export const INITIAL_MENU: MenuItem[] = [
   // Frühstück
