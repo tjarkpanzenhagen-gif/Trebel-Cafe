@@ -1,137 +1,78 @@
 "use client";
 
-import { useState } from "react";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import SectionLabel from "@/components/ui/SectionLabel";
 import type { MenuItem } from "@/lib/menu-store";
 
-type Filter = "vegan" | "vegetarisch" | "glutenfrei";
-
-const SECTIONS = [
-  { key: "wochenkarte" as const, label: "Frisch & wechselnd", title: "Wochenkarte" },
-  { key: "kuchenUndGebaeck" as const, label: "Aus unserer Backstube", title: "Kuchen & Gebäck" },
-  { key: "getraenke" as const, label: "Heiß & kalt", title: "Getränke" },
+const SECTIONS: { key: MenuItem["kategorie"]; label: string; title: string; note?: string }[] = [
+  { key: "fruehstueck", label: "Bis 11:30 Uhr", title: "Frühstück" },
+  { key: "fruehstueckExtras", label: "Zum Dazubestellen", title: "Frühstücksextras" },
+  { key: "mittagskarte", label: "11:30 – 14:30 Uhr", title: "Kleine Mittagskarte" },
+  { key: "kuchenUndGebaeck", label: "Aus unserer Backstube", title: "Kuchen & Gebäck" },
+  { key: "wein", label: "Vom Winzer", title: "Wein & Sekt" },
+  { key: "heissgetraenke", label: "Mit Hafermilch +0,50 €", title: "Heißgetränke" },
+  { key: "softgetraenke", label: "Alkoholfrei", title: "Softgetränke" },
+  { key: "bier", label: "Vom Fass & Flasche", title: "Bier" },
+  { key: "eisKaltgetraenke", label: "Mit Hafermilch +0,50 €", title: "Eis-Kaltgetränke" },
 ];
 
-const FILTERS: { key: Filter; label: string }[] = [
-  { key: "vegan", label: "Vegan" },
-  { key: "vegetarisch", label: "Vegetarisch" },
-  { key: "glutenfrei", label: "Glutenfrei" },
-];
-
-function Badge({ label }: { label: string }) {
+function MenuRow({ item }: { item: MenuItem }) {
   return (
-    <span className="inline-block text-xs font-dm px-2 py-0.5 rounded-full bg-sage/15 text-sage border border-sage/25">
-      {label}
-    </span>
-  );
-}
-
-function MenuCard({ item }: { item: MenuItem }) {
-  return (
-    <div className="border border-sand rounded-2xl p-6 bg-cream hover:-translate-y-1 hover:shadow-md transition-all duration-300 group flex flex-col gap-3">
-      <div>
-        <div className="w-6 h-px bg-terracotta mb-4 group-hover:w-12 transition-all duration-300" />
-        <h3 className="font-playfair text-lg text-espresso mb-2">{item.name}</h3>
-        <p className="font-dm text-sm text-espresso/60 leading-relaxed">{item.description}</p>
+    <div className="flex items-baseline justify-between gap-4 py-3 border-b border-sand/60 last:border-b-0 group">
+      <div className="min-w-0">
+        <span className="font-dm text-sm text-espresso group-hover:text-terracotta transition-colors">
+          {item.name}
+        </span>
+        {item.description && (
+          <span className="font-dm text-xs text-espresso/45 ml-2">{item.description}</span>
+        )}
       </div>
-      <div className="flex items-center justify-between mt-auto pt-2">
-        <p className="font-playfair text-terracotta font-semibold">{item.price}</p>
-        <div className="flex gap-1 flex-wrap justify-end">
-          {item.vegan && <Badge label="Vegan" />}
-          {item.vegetarisch && !item.vegan && <Badge label="Vegetarisch" />}
-          {item.glutenfrei && <Badge label="Glutenfrei" />}
-        </div>
-      </div>
+      <span className="font-playfair text-terracotta text-sm whitespace-nowrap shrink-0">{item.price}</span>
     </div>
   );
 }
 
 export default function SpeisekarteClient({ items }: { items: MenuItem[] }) {
-  const [activeFilters, setActiveFilters] = useState<Set<Filter>>(new Set());
-
-  function toggleFilter(filter: Filter) {
-    setActiveFilters((prev) => {
-      const next = new Set(prev);
-      if (next.has(filter)) next.delete(filter);
-      else next.add(filter);
-      return next;
-    });
-  }
-
-  function getFilteredItems(kategorie: MenuItem["kategorie"]) {
-    const categoryItems = items.filter((i) => i.kategorie === kategorie);
-    if (activeFilters.size === 0) return categoryItems;
-    return categoryItems.filter((item) => [...activeFilters].some((f) => item[f]));
-  }
+  const sectionsWithItems = SECTIONS.map((s) => ({
+    ...s,
+    items: items.filter((i) => i.kategorie === s.key),
+  })).filter((s) => s.items.length > 0);
 
   return (
     <>
-      {/* Filter bar */}
-      <div className="flex items-center justify-center gap-2 pb-8 flex-wrap">
-        <button
-          onClick={() => setActiveFilters(new Set())}
-          className={`px-4 py-1.5 rounded-full font-dm text-sm transition-colors border ${
-            activeFilters.size === 0
-              ? "bg-terracotta text-white border-terracotta"
-              : "border-sand text-espresso/60 hover:border-terracotta hover:text-terracotta"
-          }`}
-        >
-          Alle
-        </button>
-        {FILTERS.map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => toggleFilter(key)}
-            className={`px-4 py-1.5 rounded-full font-dm text-sm transition-colors border ${
-              activeFilters.has(key)
-                ? "bg-terracotta text-white border-terracotta"
-                : "border-sand text-espresso/60 hover:border-terracotta hover:text-terracotta"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      {sectionsWithItems.map((section, idx) => (
+        <section key={section.key}>
+          <div className="py-12">
+            <AnimatedSection className="mb-6">
+              <SectionLabel>{section.label}</SectionLabel>
+              <h2 className="font-playfair text-3xl text-espresso">{section.title}</h2>
+              <div className="w-12 h-px bg-terracotta mt-3" />
+            </AnimatedSection>
 
-      <div className="section-divider" />
-
-      {SECTIONS.map((section, sectionIndex) => {
-        const sectionItems = getFilteredItems(section.key);
-        if (sectionItems.length === 0) return null;
-        return (
-          <section key={section.key}>
-            <div className="py-16">
-              <AnimatedSection className="mb-10">
-                <SectionLabel>{section.label}</SectionLabel>
-                <h2 className="font-playfair text-3xl text-espresso">{section.title}</h2>
-                <div className="w-16 h-px bg-terracotta mt-4" />
-              </AnimatedSection>
-              {section.key === "kuchenUndGebaeck" && (
-                <AnimatedSection className="mb-8">
-                  <div className="flex items-start gap-3 bg-terracotta/8 border border-terracotta/20 rounded-2xl px-6 py-5">
-                    <span className="text-2xl mt-0.5">🍰</span>
-                    <div>
-                      <p className="font-playfair text-espresso font-semibold mb-1">Frisch aus unserer Backstube</p>
-                      <p className="font-dm text-sm text-espresso/70 leading-relaxed">
-                        Unsere Torten & Blechkuchen werden täglich frisch gebacken. Welche Sorten heute in der Auslage stehen, siehst du am besten vor Ort bei uns.
-                      </p>
-                    </div>
+            {section.key === "kuchenUndGebaeck" && (
+              <AnimatedSection className="mb-6">
+                <div className="flex items-start gap-3 bg-terracotta/8 border border-terracotta/20 rounded-2xl px-6 py-5">
+                  <div>
+                    <p className="font-playfair text-espresso font-semibold mb-1">Frisch aus unserer Backstube</p>
+                    <p className="font-dm text-sm text-espresso/70 leading-relaxed">
+                      Unsere Torten & Blechkuchen werden täglich frisch gebacken. Welche Sorten heute in der Auslage stehen, siehst du am besten vor Ort.
+                    </p>
                   </div>
-                </AnimatedSection>
-              )}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sectionItems.map((item, i) => (
-                  <AnimatedSection key={item.id} delay={i * 0.08}>
-                    <MenuCard item={item} />
-                  </AnimatedSection>
+                </div>
+              </AnimatedSection>
+            )}
+
+            <AnimatedSection>
+              <div className="max-w-2xl">
+                {section.items.map((item) => (
+                  <MenuRow key={item.id} item={item} />
                 ))}
               </div>
-            </div>
-            {sectionIndex < SECTIONS.length - 1 && <div className="section-divider" />}
-          </section>
-        );
-      })}
+            </AnimatedSection>
+          </div>
+          {idx < sectionsWithItems.length - 1 && <div className="section-divider" />}
+        </section>
+      ))}
 
       <AnimatedSection className="py-12 text-center">
         <p className="font-cormorant italic text-xl text-espresso/60">
