@@ -26,9 +26,14 @@ export const metadata: Metadata = {
   title: "Trebel Café Tribsees — Selbstgebackenes mit Herz",
   description:
     "Familiäres Café in Tribsees — Kuchen und Torten frisch aus eigener Küche, Eis und Brot aus der Region. Geöffnet Do–Mo 9–17 Uhr.",
+  metadataBase: new URL("https://dastrebelcafetribsees.de"),
+  alternates: {
+    canonical: "https://dastrebelcafetribsees.de",
+  },
   openGraph: {
     title: "Trebel Café Tribsees",
     description: "Selbstgebackenes mit Herz — mitten in Tribsees.",
+    url: "https://dastrebelcafetribsees.de",
     locale: "de_DE",
     type: "website",
   },

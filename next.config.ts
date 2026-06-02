@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
       { source: "/Kontakt", destination: "/reservierung", permanent: true },
       { source: "/kontakt", destination: "/reservierung", permanent: true },
       { source: "/Ferienwohnungen", destination: "/ferienwohnungen", permanent: true },
+      { source: "/Home", destination: "/", permanent: true },
+      { source: "/home", destination: "/", permanent: true },
     ];
   },
   images: {
