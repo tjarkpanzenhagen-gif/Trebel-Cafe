@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from "next/cache";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
@@ -22,6 +23,7 @@ function isActiveWeek(item: MenuItem, today: Date): boolean {
 }
 
 export default async function WeeklyMenu() {
+  noStore();
   const items = await readMenu();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
