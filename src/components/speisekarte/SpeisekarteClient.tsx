@@ -5,6 +5,7 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import type { MenuItem } from "@/lib/menu-store";
 
 const SECTIONS: { key: MenuItem["kategorie"]; label: string; title: string; note?: string }[] = [
+  { key: "wochenkarte", label: "Wechselnd", title: "Wochenkarte" },
   { key: "fruehstueck", label: "Bis 11:30 Uhr", title: "Frühstück", note: "Getränkeänderung + 1,00 €" },
   { key: "fruehstueckExtras", label: "Zum Dazubestellen", title: "Frühstücksextras" },
   { key: "mittagskarte", label: "11:30 – 14:30 Uhr", title: "Kleine Mittagskarte", note: "Wechselnde Wochenangebote sind beim Personal zu erfragen." },
@@ -48,6 +49,19 @@ export default function SpeisekarteClient({ items }: { items: MenuItem[] }) {
               <h2 className="font-playfair text-3xl text-espresso">{section.title}</h2>
               <div className="w-12 h-px bg-terracotta mt-3" />
             </AnimatedSection>
+
+            {section.key === "wochenkarte" && (
+              <AnimatedSection className="mb-6">
+                <div className="flex items-start gap-3 bg-sand/40 border border-sand rounded-2xl px-6 py-5">
+                  <div>
+                    <p className="font-playfair text-espresso font-semibold mb-1">Frisch & wechselnd</p>
+                    <p className="font-dm text-sm text-espresso/70 leading-relaxed">
+                      Unsere Wochenkarte wechselt regelmäßig. Preise können je nach Saison und Verfügbarkeit leicht variieren — sprecht uns gerne an!
+                    </p>
+                  </div>
+                </div>
+              </AnimatedSection>
+            )}
 
             {section.key === "kuchenUndGebaeck" && (
               <AnimatedSection className="mb-6">

@@ -9,9 +9,14 @@ export type MenuItem = {
   kategorie: "wochenkarte" | "kuchenUndGebaeck" | "fruehstueck" | "fruehstueckExtras" | "mittagskarte" | "wein" | "heissgetraenke" | "softgetraenke" | "bier" | "eisKaltgetraenke";
 };
 
-const KV_KEY = "trebelcafe_menu_v3";
+const KV_KEY = "trebelcafe_menu_v4";
 
 export const INITIAL_MENU: MenuItem[] = [
+  // Wochenkarte Juni 2026
+  { id: "wk1", name: "Salat mit Ziegenkäse im Speckmantel", description: "4.–8. Juni · mit Brot und Butter", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte" },
+  { id: "wk2", name: "Bauernfrühstück mit Salatgarnitur", description: "11.–15. Juni", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte" },
+  { id: "wk3", name: "Kartoffelpuffer mit Matjes", description: "18.–22. Juni · nach Hausfrauen Art", price: "16,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte" },
+  { id: "wk4", name: "Salat mit Hühnchen", description: "25.–29. Juni", price: "16,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte" },
   // Frühstück
   { id: "f1", name: "Kleines Frühstück", description: "1 Brötchen, Butter, Wurst oder Käse, Konfitüre, 1 Glas Orangensaft, Kaffee oder Tee", price: "11,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
   { id: "f2", name: "Kinder-Frühstück", description: "bis 10 Jahre · 1 Brötchen, Butter, Nutella oder Konfitüre, 1 Tasse Kakao", price: "7,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
