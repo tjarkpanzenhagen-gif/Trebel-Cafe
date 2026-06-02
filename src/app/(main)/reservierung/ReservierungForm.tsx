@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { contact } from "@/lib/content";
 
 const TIMES = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -11,45 +10,51 @@ const TIMES = [
 
 export default function ReservierungForm() {
   const [name, setName] = useState("");
-  const [contactVal, setContactVal] = useState("");
+  const [contact, setContact] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("10:00");
   const [persons, setPersons] = useState("2 Personen");
   const [message, setMessage] = useState("");
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim() || !contactVal.trim() || !date) return;
+    setStatus("loading");
+    setErrorMsg("");
 
-    const body = [
-      `Name: ${name}`,
-      `Kontakt: ${contactVal}`,
-      `Datum: ${date}`,
-      `Uhrzeit: ${time} Uhr`,
-      `Personen: ${persons}`,
-      `Nachricht: ${message || "–"}`,
-    ].join("\n");
-
-    window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent("Tischreservierung: " + name)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    try {
+      const res = await fetch("/api/reservierung", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, contact, date, time, persons, message }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error ?? "Unbekannter Fehler");
+      }
+      setStatus("success");
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Anfrage fehlgeschlagen");
+      setStatus("error");
+    }
   }
 
   const inputClass =
     "w-full border border-sand rounded-xl px-4 py-3 font-dm text-sm bg-cream focus:outline-none focus:border-terracotta transition-colors";
 
-  if (sent) {
+  if (status === "success") {
     return (
       <div className="text-center py-12 space-y-4">
         <div className="w-14 h-14 rounded-full bg-sage/20 flex items-center justify-center mx-auto">
           <span className="text-2xl text-sage">✓</span>
         </div>
-        <h3 className="font-playfair text-2xl text-espresso">E-Mail geöffnet</h3>
+        <h3 className="font-playfair text-2xl text-espresso">Anfrage gesendet</h3>
         <p className="font-dm text-sm text-espresso/60 max-w-xs mx-auto">
-          Bitte senden Sie die E-Mail ab. Wir melden uns schnellstmöglich zur Bestätigung.
+          Wir haben Ihre Reservierungsanfrage erhalten und melden uns schnellstmöglich zur Bestätigung.
         </p>
         <button
-          onClick={() => setSent(false)}
+          onClick={() => { setStatus("idle"); setName(""); setContact(""); setDate(""); setMessage(""); }}
           className="font-dm text-sm text-terracotta hover:underline mt-2"
         >
           Neue Anfrage
@@ -77,8 +82,8 @@ export default function ReservierungForm() {
         <input
           type="text"
           required
-          value={contactVal}
-          onChange={(e) => setContactVal(e.target.value)}
+          value={contact}
+          onChange={(e) => setContact(e.target.value)}
           className={inputClass}
           placeholder="Wie können wir euch erreichen?"
           maxLength={100}
@@ -125,15 +130,18 @@ export default function ReservierungForm() {
           maxLength={500}
         />
       </div>
+
+      {status === "error" && (
+        <p className="font-dm text-sm text-red-500 text-center">{errorMsg}</p>
+      )}
+
       <button
         type="submit"
-        className="w-full bg-terracotta text-white py-4 rounded-xl font-dm font-medium hover:bg-[#b3623c] transition-colors duration-300"
+        disabled={status === "loading"}
+        className="w-full bg-terracotta text-white py-4 rounded-xl font-dm font-medium hover:bg-[#b3623c] transition-colors duration-300 disabled:opacity-60"
       >
-        Anfrage senden
+        {status === "loading" ? "Wird gesendet…" : "Anfrage senden"}
       </button>
-      <p className="text-xs text-espresso/40 text-center font-dm">
-        Öffnet Ihr E-Mail-Programm. Wir melden uns schnellstmöglich zur Bestätigung.
-      </p>
     </form>
   );
 }
