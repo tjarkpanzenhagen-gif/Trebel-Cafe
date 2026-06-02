@@ -7,16 +7,18 @@ export type MenuItem = {
   vegetarisch: boolean;
   glutenfrei: boolean;
   kategorie: "wochenkarte" | "kuchenUndGebaeck" | "fruehstueck" | "fruehstueckExtras" | "mittagskarte" | "wein" | "heissgetraenke" | "softgetraenke" | "bier" | "eisKaltgetraenke";
+  weekStart?: string; // ISO date, e.g. "2026-06-04"
+  weekEnd?: string;   // ISO date, e.g. "2026-06-08"
 };
 
 const KV_KEY = "trebelcafe_menu_v4";
 
 export const INITIAL_MENU: MenuItem[] = [
   // Wochenkarte Juni 2026
-  { id: "wk1", name: "Salat mit Ziegenkäse im Speckmantel", description: "4.–8. Juni · mit Brot und Butter", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte" },
-  { id: "wk2", name: "Bauernfrühstück mit Salatgarnitur", description: "11.–15. Juni", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte" },
-  { id: "wk3", name: "Kartoffelpuffer mit Matjes", description: "18.–22. Juni · nach Hausfrauen Art", price: "16,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte" },
-  { id: "wk4", name: "Salat mit Hühnchen", description: "25.–29. Juni", price: "16,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte" },
+  { id: "wk1", name: "Salat mit Ziegenkäse im Speckmantel", description: "mit Brot und Butter", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-06-04", weekEnd: "2026-06-09" },
+  { id: "wk2", name: "Bauernfrühstück mit Salatgarnitur", description: "", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-06-11", weekEnd: "2026-06-16" },
+  { id: "wk3", name: "Kartoffelpuffer mit Matjes", description: "nach Hausfrauen Art", price: "16,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-06-18", weekEnd: "2026-06-23" },
+  { id: "wk4", name: "Salat mit Hühnchen", description: "", price: "16,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-06-25", weekEnd: "2026-06-30" },
   // Frühstück
   { id: "f1", name: "Kleines Frühstück", description: "1 Brötchen, Butter, Wurst oder Käse, Konfitüre, 1 Glas Orangensaft, Kaffee oder Tee", price: "11,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
   { id: "f2", name: "Kinder-Frühstück", description: "bis 10 Jahre · 1 Brötchen, Butter, Nutella oder Konfitüre, 1 Tasse Kakao", price: "7,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
@@ -97,6 +99,17 @@ export const INITIAL_MENU: MenuItem[] = [
   { id: "e6", name: "Ice Latte", description: "Espresso, kalter Milchschaum, Vanilleeis", price: "5,90 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "eisKaltgetraenke" },
 ];
 
+function migrateItems(items: MenuItem[]): MenuItem[] {
+  const initialById = new Map(INITIAL_MENU.map((i) => [i.id, i]));
+  return items.map((item) => {
+    if (item.kategorie === "wochenkarte" && !item.weekStart) {
+      const ref = initialById.get(item.id);
+      if (ref?.weekStart) return { ...item, weekStart: ref.weekStart, weekEnd: ref.weekEnd };
+    }
+    return item;
+  });
+}
+
 const KV_URL = process.env.trebelcafe_KV_REST_API_URL;
 const KV_TOKEN = process.env.trebelcafe_KV_REST_API_TOKEN;
 
@@ -118,7 +131,7 @@ export async function readMenu(): Promise<MenuItem[]> {
         await kv.set(KV_KEY, INITIAL_MENU);
         return INITIAL_MENU;
       }
-      return items;
+      return migrateItems(items);
     } catch {
       return INITIAL_MENU;
     }
@@ -127,7 +140,7 @@ export async function readMenu(): Promise<MenuItem[]> {
     const { readFileSync } = await import("fs");
     const { join } = await import("path");
     try {
-      return JSON.parse(readFileSync(join(process.cwd(), "data", "menu.json"), "utf-8"));
+      return migrateItems(JSON.parse(readFileSync(join(process.cwd(), "data", "menu.json"), "utf-8")));
     } catch {
       return INITIAL_MENU;
     }
