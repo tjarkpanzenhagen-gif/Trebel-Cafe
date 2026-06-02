@@ -113,6 +113,10 @@ function PricingEditor({
   );
 }
 
+function toLocalISO(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 // ─── Blocked Dates Editor ─────────────────────────────────────────────────────
 
 const CAL_STYLE = `
@@ -190,11 +194,11 @@ function BlockedDatesEditor({
     const start = new Date(rangeFrom + "T00:00:00");
     const end = new Date(rangeTo + "T00:00:00");
     if (start > end) return;
-    const existing = new Set(blocked.map((d) => d.toISOString().slice(0, 10)));
+    const existing = new Set(blocked.map((d) => toLocalISO(d)));
     const toAdd: Date[] = [];
     const curr = new Date(start);
     while (curr <= end) {
-      const key = curr.toISOString().slice(0, 10);
+      const key = toLocalISO(curr);
       if (!existing.has(key)) toAdd.push(new Date(curr));
       curr.setDate(curr.getDate() + 1);
     }
@@ -207,7 +211,7 @@ function BlockedDatesEditor({
     setSaving(true);
     setError("");
     setSuccess(false);
-    const blockedDates = overrideDates ?? blocked.map((d) => d.toISOString().slice(0, 10));
+    const blockedDates = overrideDates ?? blocked.map((d) => toLocalISO(d));
     try {
       const res = await fetch(`/api/fewo/${apt.id}/availability`, {
         method: "PUT",
@@ -305,7 +309,7 @@ function BlockedDatesEditor({
             onSelect={(days: Date[] | undefined) => {
               if (!isGlobal) {
                 const globalKeys = new Set(globalBlockedDates);
-                setBlocked((days ?? []).filter((d) => !globalKeys.has(d.toISOString().slice(0, 10))));
+                setBlocked((days ?? []).filter((d) => !globalKeys.has(toLocalISO(d))));
               } else {
                 setBlocked(days ?? []);
               }
@@ -313,7 +317,7 @@ function BlockedDatesEditor({
             modifiers={{ global: globalDateObjs }}
             modifiersClassNames={{ global: "day-global" }}
             disabled={(date) =>
-              !isGlobal && globalBlockedDates.includes(date.toISOString().slice(0, 10))
+              !isGlobal && globalBlockedDates.includes(toLocalISO(date))
             }
           />
         </div>
