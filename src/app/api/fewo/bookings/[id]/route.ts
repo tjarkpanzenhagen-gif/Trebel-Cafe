@@ -33,8 +33,8 @@ export async function PUT(
     revalidatePath("/ferienwohnungen", "layout");
 
     const updated = data.bookings[index];
-    if (status === "confirmed") sendBookingConfirmation(updated);
-    if (status === "cancelled") sendBookingCancellation(updated);
+    if (status === "confirmed") await sendBookingConfirmation(updated);
+    if (status === "cancelled") await sendBookingCancellation(updated);
 
     return NextResponse.json(updated);
   } catch (e) {
