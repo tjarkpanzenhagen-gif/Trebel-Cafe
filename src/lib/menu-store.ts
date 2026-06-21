@@ -19,6 +19,11 @@ export const INITIAL_MENU: MenuItem[] = [
   { id: "wk2", name: "Bauernfrühstück mit Salatgarnitur", description: "", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-06-11", weekEnd: "2026-06-16" },
   { id: "wk3", name: "Kartoffelpuffer mit Matjes", description: "nach Hausfrauen Art", price: "16,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-06-18", weekEnd: "2026-06-23" },
   { id: "wk4", name: "Salat mit Hühnchen", description: "", price: "16,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-06-25", weekEnd: "2026-06-30" },
+  // Wochenkarte Juli 2026
+  { id: "wk-jul1", name: "Backkartoffel", description: "", price: "ab 9,90 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "wochenkarte", weekStart: "2026-07-02", weekEnd: "2026-07-06" },
+  { id: "wk-jul2", name: "Bauernfrühstück mit Salatgarnitur", description: "", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-07-09", weekEnd: "2026-07-13" },
+  { id: "wk-jul3", name: "Salat mit Käse-Schinkenstreifen", description: "dazu Brot & Butter", price: "13,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-07-23", weekEnd: "2026-07-27" },
+  { id: "wk-jul4", name: "Kartoffelpuffer", description: "", price: "ab 6,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-07-30", weekEnd: "2026-08-03" },
   // Frühstück
   { id: "f1", name: "Kleines Frühstück", description: "1 Brötchen, Butter, Wurst oder Käse, Konfitüre, 1 Glas Orangensaft, Kaffee oder Tee", price: "11,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
   { id: "f2", name: "Kinder-Frühstück", description: "bis 10 Jahre · 1 Brötchen, Butter, Nutella oder Konfitüre, 1 Tasse Kakao", price: "7,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
@@ -101,13 +106,18 @@ export const INITIAL_MENU: MenuItem[] = [
 
 function migrateItems(items: MenuItem[]): MenuItem[] {
   const initialById = new Map(INITIAL_MENU.map((i) => [i.id, i]));
-  return items.map((item) => {
+  const existingIds = new Set(items.map((i) => i.id));
+
+  const patched = items.map((item) => {
     if (item.kategorie === "wochenkarte" && !item.weekStart) {
       const ref = initialById.get(item.id);
       if (ref?.weekStart) return { ...item, weekStart: ref.weekStart, weekEnd: ref.weekEnd };
     }
     return item;
   });
+
+  const newItems = INITIAL_MENU.filter((i) => !existingIds.has(i.id));
+  return [...patched, ...newItems];
 }
 
 const KV_URL = process.env.trebelcafe_KV_REST_API_URL;
@@ -126,12 +136,16 @@ export async function readMenu(): Promise<MenuItem[]> {
   if (hasKVCredentials()) {
     try {
       const kv = await getKV();
-      const items = await kv.get<MenuItem[]>(KV_KEY);
-      if (!items) {
+      const raw = await kv.get<MenuItem[]>(KV_KEY);
+      if (!raw) {
         await kv.set(KV_KEY, INITIAL_MENU);
         return INITIAL_MENU;
       }
-      return migrateItems(items);
+      const migrated = migrateItems(raw);
+      if (migrated.length !== raw.length) {
+        kv.set(KV_KEY, migrated).catch(() => {});
+      }
+      return migrated;
     } catch {
       return INITIAL_MENU;
     }

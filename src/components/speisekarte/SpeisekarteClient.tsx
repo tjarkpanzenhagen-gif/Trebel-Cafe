@@ -27,6 +27,27 @@ function formatDateRange(weekStart?: string, weekEnd?: string): string {
   return `${s} – ${end.toLocaleDateString("de-DE", opts)}`;
 }
 
+const MONTH_NAMES = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+
+function isInCurrentMonth(item: MenuItem): boolean {
+  if (!item.weekStart) return true;
+  const now = new Date();
+  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  lastOfMonth.setHours(23, 59, 59, 999);
+  const start = new Date(item.weekStart);
+  const end = item.weekEnd ? new Date(item.weekEnd) : start;
+  return start <= lastOfMonth && end >= firstOfMonth;
+}
+
+function isInNextMonth(item: MenuItem): boolean {
+  if (!item.weekStart) return false;
+  const now = new Date();
+  const nextMonthDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const start = new Date(item.weekStart);
+  return start.getMonth() === nextMonthDate.getMonth() && start.getFullYear() === nextMonthDate.getFullYear();
+}
+
 function isActiveWeek(item: MenuItem): boolean {
   if (!item.weekStart || !item.weekEnd) return false;
   const today = new Date();
@@ -93,9 +114,15 @@ function MenuRow({ item }: { item: MenuItem }) {
 }
 
 export default function SpeisekarteClient({ items }: { items: MenuItem[] }) {
+  const now = new Date();
+  const nextMonthName = MONTH_NAMES[(now.getMonth() + 1) % 12];
+  const nextMonthItems = items.filter((i) => i.kategorie === "wochenkarte" && isInNextMonth(i));
+
   const sectionsWithItems = SECTIONS.map((s) => ({
     ...s,
-    items: items.filter((i) => i.kategorie === s.key),
+    items: items
+      .filter((i) => i.kategorie === s.key)
+      .filter((i) => s.key !== "wochenkarte" || isInCurrentMonth(i)),
   })).filter((s) => s.items.length > 0);
 
   return (
@@ -152,6 +179,19 @@ export default function SpeisekarteClient({ items }: { items: MenuItem[] }) {
                 )}
               </div>
             </AnimatedSection>
+
+            {section.key === "wochenkarte" && nextMonthItems.length > 0 && (
+              <AnimatedSection className="mt-8">
+                <div className="max-w-2xl">
+                  <p className="font-playfair text-base text-espresso/50 mb-3">Ab {nextMonthName}</p>
+                  <div className="opacity-60">
+                    {nextMonthItems.map((item) => (
+                      <WeekRow key={item.id} item={item} />
+                    ))}
+                  </div>
+                </div>
+              </AnimatedSection>
+            )}
           </div>
           {idx < sectionsWithItems.length - 1 && <div className="section-divider" />}
         </section>
