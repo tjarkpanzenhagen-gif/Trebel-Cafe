@@ -28,6 +28,10 @@ export type FewoData = {
   globalBlockedDates: string[];
 };
 
+export function isAufbettungRequired(persons: number, pricing: ApartmentPricing): boolean {
+  return pricing.aufbettungFee > 0 && persons >= 3;
+}
+
 export function calculatePrice(
   nights: number,
   extras: { kinderbett: boolean; aufbettung: boolean },

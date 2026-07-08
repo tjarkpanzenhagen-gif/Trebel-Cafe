@@ -95,7 +95,7 @@ export default async function ApartmentDetailPage({ params }: Props) {
               Ruhige Lage
             </span>
             <span className="font-dm text-xs text-cream/50 bg-cream/8 border border-cream/15 px-3 py-1.5 rounded-full">
-              {apt.maxPersons} Personen (opt. {apt.maxPersons + (apt.pricing.kinderbettFee > 0 ? 1 : 0) + (apt.pricing.aufbettungFee > 0 ? 1 : 0)})
+              Bis zu {apt.maxPersons} Personen
             </span>
           </div>
         </div>

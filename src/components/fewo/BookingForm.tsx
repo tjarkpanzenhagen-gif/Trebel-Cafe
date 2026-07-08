@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import type { ApartmentPricing, ApartmentDiscounts } from "@/lib/fewo-utils";
-import { calculatePrice } from "@/lib/fewo-utils";
+import { calculatePrice, isAufbettungRequired } from "@/lib/fewo-utils";
 
 type Props = {
   apartmentName: string;
@@ -75,6 +75,10 @@ export default function BookingForm({
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
+  const aufbettungRequired = isAufbettungRequired(persons, pricing);
+  const effectiveExtras = { ...extras, aufbettung: extras.aufbettung || aufbettungRequired };
+  const personsMax = maxPersons + (extras.kinderbett ? 1 : 0);
+
   const checkIn = range.from ? localDateKey(range.from) : "";
   const checkOut = range.to ? localDateKey(range.to) : "";
   const nights = getNights(range.from, range.to);
@@ -119,10 +123,13 @@ export default function BookingForm({
       ? `Kinderbett bereits vergeben${kinderbettStatus.nextAvailableDate ? `, wieder verfügbar ab ${kinderbettStatus.nextAvailableDate}` : ""}.`
       : "";
 
-  const priceCalc = nights > 0 ? calculatePrice(nights, extras, pricing, discounts) : null;
+  const priceCalc = nights > 0 ? calculatePrice(nights, effectiveExtras, pricing, discounts) : null;
 
   const canSubmit =
     nights > 0 &&
+    Number.isInteger(persons) &&
+    persons >= 1 &&
+    persons <= personsMax &&
     name.trim() &&
     email.trim() &&
     phone.trim() &&
@@ -150,7 +157,7 @@ export default function BookingForm({
           email,
           phone,
           persons,
-          extras,
+          extras: effectiveExtras,
           message,
           estimatedTotal: priceCalc.total,
         }),
@@ -170,8 +177,8 @@ export default function BookingForm({
     setSubmitted(true);
 
     const extraLines = [
-      extras.kinderbett ? "Kinderbett: Ja" : "",
-      extras.aufbettung ? "Aufbettung: Ja" : "",
+      effectiveExtras.kinderbett ? "Kinderbett: Ja" : "",
+      effectiveExtras.aufbettung ? "Aufbettung: Ja" : "",
     ].filter(Boolean).join("\n");
 
     const body = [
@@ -369,13 +376,13 @@ export default function BookingForm({
         <label className="block font-dm text-xs text-espresso/60 mb-1.5 uppercase tracking-wider">
           Personen
           <span className="ml-1 normal-case font-dm text-espresso/35">
-            (max. {maxPersons + (extras.kinderbett ? 1 : 0) + (extras.aufbettung ? 1 : 0)})
+            (max. {personsMax})
           </span>
         </label>
         <input
           type="number"
           min={1}
-          max={maxPersons + (extras.kinderbett ? 1 : 0) + (extras.aufbettung ? 1 : 0)}
+          max={personsMax}
           value={persons}
           onChange={(e) => setPersons(Number(e.target.value))}
           className={inputClass}
@@ -405,17 +412,26 @@ export default function BookingForm({
           </p>
         )}
         {showAufbettung && (
-          <label className="flex items-center gap-3 cursor-pointer group">
-            <input
-              type="checkbox"
-              checked={extras.aufbettung}
-              onChange={(e) => setExtras((prev) => ({ ...prev, aufbettung: e.target.checked }))}
-              className="w-4 h-4 accent-terracotta"
-            />
-            <span className="font-dm text-sm text-espresso group-hover:text-terracotta transition-colors">
-              Aufbettung (+{pricing.aufbettungFee} €)
-            </span>
-          </label>
+          <>
+            <label className={`flex items-center gap-3 group ${aufbettungRequired ? "cursor-default" : "cursor-pointer"}`}>
+              <input
+                type="checkbox"
+                checked={effectiveExtras.aufbettung}
+                disabled={aufbettungRequired}
+                aria-describedby={aufbettungRequired ? "aufbettung-auto-hint" : undefined}
+                onChange={(e) => setExtras((prev) => ({ ...prev, aufbettung: e.target.checked }))}
+                className="w-4 h-4 accent-terracotta"
+              />
+              <span className={`font-dm text-sm text-espresso ${aufbettungRequired ? "" : "group-hover:text-terracotta"} transition-colors`}>
+                Aufbettung (+{pricing.aufbettungFee} €)
+              </span>
+            </label>
+            {aufbettungRequired && (
+              <p id="aufbettung-auto-hint" className="font-dm text-xs text-espresso/50 ml-7">
+                Ab 3 Personen ist die Aufbettung automatisch enthalten.
+              </p>
+            )}
+          </>
         )}
       </div>
 
@@ -457,7 +473,7 @@ export default function BookingForm({
           {priceCalc.extrasTotal > 0 && (
             <div className="flex justify-between">
               <span className="font-dm text-sm text-espresso/60">
-                Extras ({[extras.kinderbett && "Kinderbett", extras.aufbettung && "Aufbettung"].filter(Boolean).join(", ")})
+                Extras ({[effectiveExtras.kinderbett && "Kinderbett", effectiveExtras.aufbettung && "Aufbettung"].filter(Boolean).join(", ")})
               </span>
               <span className="font-dm text-sm text-espresso">{priceCalc.extrasTotal.toFixed(2)} €</span>
             </div>

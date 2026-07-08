@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { readBookings, writeBookings } from "@/lib/bookings-store";
 import { readFewo } from "@/lib/fewo-store";
+import { calculatePrice, isAufbettungRequired } from "@/lib/fewo-utils";
 import { sendBookingNotification } from "@/lib/email";
 
 function isAuthenticated(request: NextRequest) {
@@ -32,7 +33,6 @@ export async function POST(request: NextRequest) {
       apartmentName,
       checkIn,
       checkOut,
-      nights,
       name,
       email,
       phone,
@@ -74,8 +74,20 @@ export async function POST(request: NextRequest) {
     const safeCheckIn = String(checkIn).slice(0, 10);
     const safeCheckOut = String(checkOut).slice(0, 10);
 
+    const safePersons = Math.max(1, Math.min(20, Math.round(Number(persons) || 1)));
+    const safeNights = Math.max(0, Math.min(365, Math.round(
+      (new Date(safeCheckOut + "T00:00:00Z").getTime() - new Date(safeCheckIn + "T00:00:00Z").getTime()) /
+        (1000 * 60 * 60 * 24)
+    )));
+
     // Blocked dates check (global + per-apartment)
     const apt = fewoData.apartments.find((a) => a.id === safeAptId);
+    if (apt && isAufbettungRequired(safePersons, apt.pricing)) {
+      safeExtras.aufbettung = true;
+    }
+    const safeTotal = apt
+      ? calculatePrice(safeNights, safeExtras, apt.pricing, apt.discounts).total
+      : Math.max(0, Number(estimatedTotal));
     const blockedSet = new Set([
       ...(fewoData.globalBlockedDates ?? []),
       ...(apt?.blockedDates ?? []),
@@ -105,14 +117,14 @@ export async function POST(request: NextRequest) {
       apartmentName: String(apartmentName ?? "").slice(0, 100),
       checkIn: String(checkIn).slice(0, 10),
       checkOut: String(checkOut).slice(0, 10),
-      nights: Math.max(0, Math.min(365, Number(nights))),
+      nights: safeNights,
       name: String(name).slice(0, 100),
       email: String(email).slice(0, 200),
       phone: String(phone).slice(0, 50),
-      persons: Math.max(1, Math.min(20, Number(persons))),
+      persons: safePersons,
       extras: safeExtras,
       message: String(message ?? "").slice(0, 1000),
-      estimatedTotal: Math.max(0, Number(estimatedTotal)),
+      estimatedTotal: safeTotal,
       status: "pending" as const,
       createdAt: new Date().toISOString(),
     };
