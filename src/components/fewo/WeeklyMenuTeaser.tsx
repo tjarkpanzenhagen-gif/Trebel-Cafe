@@ -1,16 +1,16 @@
-import type { MenuItem } from "@/lib/menu-store";
+import { readMenu, type MenuItem } from "@/lib/menu-store";
+import { todayInBerlin } from "@/lib/dates";
 import SectionLabel from "@/components/ui/SectionLabel";
 
 async function getWochenkarte(): Promise<MenuItem[]> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/menu`, { next: { revalidate: 3600 } });
-    if (!res.ok) return [];
-    const items: MenuItem[] = await res.json();
-    return items.filter((i) => i.kategorie === "wochenkarte").slice(0, 3);
-  } catch {
-    return [];
-  }
+  const items = await readMenu();
+  const wochenkarte = items.filter((i) => i.kategorie === "wochenkarte");
+  const todayKey = todayInBerlin();
+  const current = wochenkarte
+    .filter((i) => i.weekStart && (i.weekEnd ?? i.weekStart) >= todayKey)
+    .sort((a, b) => (a.weekStart! < b.weekStart! ? -1 : 1));
+  const dishes = current.length > 0 ? current : wochenkarte.filter((i) => !i.weekStart);
+  return dishes.slice(0, 3);
 }
 
 export default async function WeeklyMenuTeaser() {

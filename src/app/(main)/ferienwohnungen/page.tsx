@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Ferienwohnungen | Trebel Café",
   description:
     "Übernachten Sie direkt am Trebel Café in Tribsees. Zwei gemütliche Ferienwohnungen, inkl. Bettwäsche und Handtücher.",
+  alternates: { canonical: "/ferienwohnungen" },
 };
 
 export default async function FerienwohnungenPage() {
@@ -33,7 +34,7 @@ export default async function FerienwohnungenPage() {
           {/* Stats row */}
           <div className="flex items-center justify-center gap-6 md:gap-10 mt-10">
             <div className="text-center">
-              <p className="font-playfair text-3xl text-terracotta">2</p>
+              <p className="font-playfair text-3xl text-terracotta">{data.apartments.length}</p>
               <p className="font-dm text-xs text-cream/40 uppercase tracking-widest mt-1">Wohnungen</p>
             </div>
             <div className="w-px h-10 bg-cream/15" />

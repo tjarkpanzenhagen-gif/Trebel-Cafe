@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-import { readBookings, writeBookings } from "@/lib/bookings-store";
+import { readBookings, writeBookings, getKinderbettBookedPeriods } from "@/lib/bookings-store";
 import { readFewo } from "@/lib/fewo-store";
 import { calculatePrice, isAufbettungRequired } from "@/lib/fewo-utils";
 import { sendBookingNotification } from "@/lib/email";
-
-function isAuthenticated(request: NextRequest) {
-  const secret = process.env.ADMIN_SESSION_SECRET || "dev-secret-change-in-production";
-  return request.cookies.get("admin_session")?.value === secret;
-}
+import { isAuthenticated } from "@/lib/auth";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
+import { todayInBerlin } from "@/lib/dates";
 
 export async function GET(request: NextRequest) {
   if (!isAuthenticated(request)) {
@@ -27,20 +25,15 @@ const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 export async function POST(request: NextRequest) {
   try {
+    if (!rateLimit(`booking:${clientIp(request)}`, 5, 10 * 60 * 1000)) {
+      return NextResponse.json(
+        { error: "Zu viele Anfragen. Bitte später erneut versuchen." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
-    const {
-      apartmentId,
-      apartmentName,
-      checkIn,
-      checkOut,
-      name,
-      email,
-      phone,
-      persons,
-      extras,
-      message,
-      estimatedTotal,
-    } = body;
+    const { apartmentId, checkIn, checkOut, name, email, phone, persons, extras, message } = body;
 
     if (!apartmentId || !checkIn || !checkOut || !name || !email || !phone) {
       return NextResponse.json({ error: "Fehlende Pflichtfelder" }, { status: 400 });
@@ -54,8 +47,7 @@ export async function POST(request: NextRequest) {
     if (String(checkIn) >= String(checkOut)) {
       return NextResponse.json({ error: "Abreisedatum muss nach Anreisedatum liegen" }, { status: 400 });
     }
-    const today = new Date().toISOString().slice(0, 10);
-    if (String(checkIn) < today) {
+    if (String(checkIn) < todayInBerlin()) {
       return NextResponse.json({ error: "Anreisedatum liegt in der Vergangenheit" }, { status: 400 });
     }
     if (String(name).length > 100 || String(phone).length > 50 || String(message ?? "").length > 1000) {
@@ -74,23 +66,27 @@ export async function POST(request: NextRequest) {
     const safeCheckIn = String(checkIn).slice(0, 10);
     const safeCheckOut = String(checkOut).slice(0, 10);
 
-    const safePersons = Math.max(1, Math.min(20, Math.round(Number(persons) || 1)));
+    const apt = fewoData.apartments.find((a) => a.id === safeAptId);
+    if (!apt) {
+      return NextResponse.json({ error: "Ferienwohnung nicht gefunden" }, { status: 404 });
+    }
+
+    const personsMax = apt.maxPersons + (safeExtras.kinderbett ? 1 : 0);
+    const safePersons = Math.max(1, Math.min(personsMax, Math.round(Number(persons) || 1)));
     const safeNights = Math.max(0, Math.min(365, Math.round(
       (new Date(safeCheckOut + "T00:00:00Z").getTime() - new Date(safeCheckIn + "T00:00:00Z").getTime()) /
         (1000 * 60 * 60 * 24)
     )));
 
-    // Blocked dates check (global + per-apartment)
-    const apt = fewoData.apartments.find((a) => a.id === safeAptId);
-    if (apt && isAufbettungRequired(safePersons, apt.pricing)) {
+    if (isAufbettungRequired(safePersons, apt.pricing)) {
       safeExtras.aufbettung = true;
     }
-    const safeTotal = apt
-      ? calculatePrice(safeNights, safeExtras, apt.pricing, apt.discounts).total
-      : Math.max(0, Number(estimatedTotal));
+    const safeTotal = calculatePrice(safeNights, safeExtras, apt.pricing, apt.discounts).total;
+
+    // Blocked dates check (global + per-apartment)
     const blockedSet = new Set([
       ...(fewoData.globalBlockedDates ?? []),
-      ...(apt?.blockedDates ?? []),
+      ...(apt.blockedDates ?? []),
     ]);
     for (let d = new Date(safeCheckIn + "T00:00:00Z"); d < new Date(safeCheckOut + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + 1)) {
       if (blockedSet.has(d.toISOString().slice(0, 10))) {
@@ -110,13 +106,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Der Zeitraum ist bereits belegt" }, { status: 409 });
     }
 
+    // Only one Kinderbett exists across both apartments
+    if (safeExtras.kinderbett) {
+      const kinderbettConflict = getKinderbettBookedPeriods(bookingsData.bookings).some(
+        (p) => p.checkIn < safeCheckOut && p.checkOut > safeCheckIn
+      );
+      if (kinderbettConflict) {
+        return NextResponse.json(
+          { error: "Das Kinderbett ist im gewählten Zeitraum bereits vergeben" },
+          { status: 409 }
+        );
+      }
+    }
+
     const data = bookingsData;
     const booking = {
       id: randomUUID(),
-      apartmentId: String(apartmentId).slice(0, 50),
-      apartmentName: String(apartmentName ?? "").slice(0, 100),
-      checkIn: String(checkIn).slice(0, 10),
-      checkOut: String(checkOut).slice(0, 10),
+      apartmentId: safeAptId,
+      apartmentName: apt.name,
+      checkIn: safeCheckIn,
+      checkOut: safeCheckOut,
       nights: safeNights,
       name: String(name).slice(0, 100),
       email: String(email).slice(0, 200),

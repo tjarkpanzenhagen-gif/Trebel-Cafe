@@ -3,6 +3,7 @@ import AnimatedSection from "@/components/ui/AnimatedSection";
 import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
 import { readMenu, type MenuItem } from "@/lib/menu-store";
+import { todayInBerlin } from "@/lib/dates";
 
 function formatDateRange(weekStart?: string, weekEnd?: string): string {
   if (!weekStart) return "";
@@ -14,36 +15,28 @@ function formatDateRange(weekStart?: string, weekEnd?: string): string {
   return `${s} – ${end.toLocaleDateString("de-DE", opts)}`;
 }
 
-function isActiveWeek(item: MenuItem, today: Date): boolean {
+function isActiveWeek(item: MenuItem, todayKey: string): boolean {
   if (!item.weekStart || !item.weekEnd) return false;
-  const start = new Date(item.weekStart);
-  const end = new Date(item.weekEnd);
-  end.setHours(23, 59, 59, 999);
-  return today >= start && today <= end;
+  return item.weekStart <= todayKey && todayKey <= item.weekEnd;
 }
 
 export default async function WeeklyMenu() {
   noStore();
   const items = await readMenu();
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const todayKey = todayInBerlin();
 
   const wochenkarte = items
     .filter((i) => i.kategorie === "wochenkarte" && i.weekStart)
-    .sort((a, b) => new Date(a.weekStart!).getTime() - new Date(b.weekStart!).getTime());
+    .sort((a, b) => (a.weekStart! < b.weekStart! ? -1 : 1));
 
   // Group by month — show current month, or next month if current is empty
-  const currentMonth = today.getMonth();
-  const currentYear = today.getFullYear();
-
-  let monthItems = wochenkarte.filter((i) => {
-    const d = new Date(i.weekStart!);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-  });
+  let monthItems = wochenkarte.filter(
+    (i) => i.weekStart!.slice(0, 7) === todayKey.slice(0, 7)
+  );
 
   // If no items this month, show next available month
   if (monthItems.length === 0) {
-    monthItems = wochenkarte.filter((i) => new Date(i.weekStart!) >= today).slice(0, 4);
+    monthItems = wochenkarte.filter((i) => i.weekStart! >= todayKey).slice(0, 4);
   }
 
   // If still nothing with dates, fall back to plain wochenkarte items
@@ -78,7 +71,7 @@ export default async function WeeklyMenu() {
 
         <div className={`grid ${cols} gap-6 mb-10`}>
           {displayItems.map((dish, i) => {
-            const active = isActiveWeek(dish, today);
+            const active = isActiveWeek(dish, todayKey);
             return (
               <AnimatedSection key={dish.id} delay={i * 0.12}>
                 <div

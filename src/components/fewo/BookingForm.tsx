@@ -85,6 +85,7 @@ export default function BookingForm({
 
   useEffect(() => {
     if (!extras.kinderbett || !checkIn || !checkOut) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setKinderbettStatus(null);
       setKinderbettLoading(false);
       return;
@@ -112,6 +113,9 @@ export default function BookingForm({
     () => blockedDates.map((d) => new Date(d + "T00:00:00")),
     [blockedDates]
   );
+
+  const bookedSet = useMemo(() => new Set(bookedDates), [bookedDates]);
+  const blockedSet = useMemo(() => new Set(blockedDates), [blockedDates]);
 
   const rangeError =
     checkIn && checkOut && hasInvalidInRange(range.from, range.to, blockedDates, bookedDates)
@@ -149,17 +153,14 @@ export default function BookingForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           apartmentId,
-          apartmentName,
           checkIn,
           checkOut,
-          nights,
           name,
           email,
           phone,
           persons,
           extras: effectiveExtras,
           message,
-          estimatedTotal: priceCalc.total,
         }),
       });
       if (!res.ok) {
@@ -201,7 +202,7 @@ export default function BookingForm({
       `Nachricht: ${message || "–"}`,
     ].filter((l) => l !== undefined).join("\n");
 
-    window.location.href = `mailto:trebelcafe@gmx.de?subject=Buchungsanfrage: ${encodeURIComponent(apartmentName)}&body=${encodeURIComponent(body)}`;
+    window.location.assign(`mailto:trebelcafe@gmx.de?subject=Buchungsanfrage: ${encodeURIComponent(apartmentName)}&body=${encodeURIComponent(body)}`);
   }
 
   if (submitted) {
@@ -302,12 +303,13 @@ export default function BookingForm({
           modifiers={{ booked: bookedDateObjs, blocked: blockedDateObjs }}
           modifiersClassNames={{ booked: "day-booked", blocked: "day-blocked" }}
           disabled={(date) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (date < today) return true;
             const key = localDateKey(date);
-            const blockedSet = new Set(blockedDates);
-            const bookedSet = new Set(bookedDates);
             return blockedSet.has(key) || bookedSet.has(key);
           }}
-          fromDate={new Date()}
+          startMonth={new Date()}
           numberOfMonths={1}
         />
         <div className="flex flex-wrap gap-4 px-4 pb-3 pt-1 border-t border-sand/50">

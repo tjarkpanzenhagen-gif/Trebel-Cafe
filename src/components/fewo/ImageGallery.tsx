@@ -38,8 +38,8 @@ export default function ImageGallery({ images, alt }: { images: string[]; alt: s
     el?.scrollIntoView({ inline: "center", behavior: "smooth", block: "nearest" });
   }, [lightbox]);
 
-  const visibleCount = Math.min(images.length, 5);
-  const remaining = images.length - visibleCount;
+  // The grid shows 3 images (hero + 2 thumbnails)
+  const remaining = images.length - 3;
 
   return (
     <>
@@ -77,7 +77,7 @@ export default function ImageGallery({ images, alt }: { images: string[]; alt: s
         {images[2] && (
           <div
             className="relative overflow-hidden cursor-pointer group"
-            onClick={() => setLightbox(images.length > visibleCount ? 2 : 2)}
+            onClick={() => setLightbox(2)}
           >
             <img
               src={images[2]}

@@ -11,6 +11,7 @@ const promiseIcons = [CroissantIcon, HouseHeartIcon, Coffee01Icon];
 export const metadata: Metadata = {
   title: "Über uns — Trebel Café Tribsees",
   description: "Das Trebel Café in Tribsees — geführt von Familie Wendel-Bigalke. Kuchen, Torten und Eintöpfe frisch aus eigener Küche, Eis und Brot aus der Region.",
+  alternates: { canonical: "/ueber-uns" },
 };
 
 export default function UeberUnsPage() {

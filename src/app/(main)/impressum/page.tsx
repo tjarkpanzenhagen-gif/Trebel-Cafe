@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Impressum — Trebel Café Tribsees" };
+export const metadata: Metadata = {
+  title: "Impressum — Trebel Café Tribsees",
+  alternates: { canonical: "/impressum" },
+};
 
 export default function ImpressumPage() {
   return (

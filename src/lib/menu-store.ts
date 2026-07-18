@@ -1,3 +1,16 @@
+export const MENU_KATEGORIEN = [
+  "wochenkarte",
+  "kuchenUndGebaeck",
+  "fruehstueck",
+  "fruehstueckExtras",
+  "mittagskarte",
+  "wein",
+  "heissgetraenke",
+  "softgetraenke",
+  "bier",
+  "eisKaltgetraenke",
+] as const;
+
 export type MenuItem = {
   id: string;
   name: string;
@@ -6,7 +19,7 @@ export type MenuItem = {
   vegan: boolean;
   vegetarisch: boolean;
   glutenfrei: boolean;
-  kategorie: "wochenkarte" | "kuchenUndGebaeck" | "fruehstueck" | "fruehstueckExtras" | "mittagskarte" | "wein" | "heissgetraenke" | "softgetraenke" | "bier" | "eisKaltgetraenke";
+  kategorie: (typeof MENU_KATEGORIEN)[number];
   weekStart?: string; // ISO date, e.g. "2026-06-04"
   weekEnd?: string;   // ISO date, e.g. "2026-06-08"
 };

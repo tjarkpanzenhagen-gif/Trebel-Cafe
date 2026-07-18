@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { readFewo, writeFewo } from "@/lib/fewo-store";
-
-function isAuthenticated(request: NextRequest) {
-  const secret = process.env.ADMIN_SESSION_SECRET || "dev-secret-change-in-production";
-  return request.cookies.get("admin_session")?.value === secret;
-}
+import { isAuthenticated } from "@/lib/auth";
 
 export async function PUT(
   request: NextRequest,
@@ -31,16 +27,16 @@ export async function PUT(
       name,
       description,
       details,
-      maxPersons: Number(maxPersons),
+      maxPersons: Number(maxPersons) || data.apartments[index].maxPersons,
       pricing: {
-        perNight: Number(pricing.perNight),
-        kinderbettFee: Number(pricing.kinderbettFee ?? 15),
-        aufbettungFee: Number(pricing.aufbettungFee ?? 0),
-        cleaningFee: Number(pricing.cleaningFee),
+        perNight: Number(pricing.perNight) || 0,
+        kinderbettFee: Number(pricing.kinderbettFee ?? 15) || 0,
+        aufbettungFee: Number(pricing.aufbettungFee ?? 0) || 0,
+        cleaningFee: Number(pricing.cleaningFee) || 0,
       },
       discounts: {
-        threeNights: Number(discounts.threeNights),
-        sevenNights: Number(discounts.sevenNights),
+        threeNights: Number(discounts.threeNights) || 0,
+        sevenNights: Number(discounts.sevenNights) || 0,
       },
     };
     await writeFewo(data);

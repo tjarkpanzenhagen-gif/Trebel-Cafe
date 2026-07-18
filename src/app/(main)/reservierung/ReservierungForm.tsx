@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getClosedDayReason } from "@/lib/dates";
 
 const TIMES = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -18,8 +19,11 @@ export default function ReservierungForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
+  const closedReason = date ? getClosedDayReason(date) : null;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (closedReason) return;
     setStatus("loading");
     setErrorMsg("");
 
@@ -100,6 +104,9 @@ export default function ReservierungForm() {
             min={new Date().toISOString().slice(0, 10)}
             className={inputClass}
           />
+          {closedReason && (
+            <p className="font-dm text-xs text-red-500 mt-1.5">{closedReason}</p>
+          )}
         </div>
         <div>
           <label className="block font-dm text-sm text-espresso/70 mb-2">Uhrzeit *</label>
@@ -137,7 +144,7 @@ export default function ReservierungForm() {
 
       <button
         type="submit"
-        disabled={status === "loading"}
+        disabled={status === "loading" || Boolean(closedReason)}
         className="w-full bg-terracotta text-white py-4 rounded-xl font-dm font-medium hover:bg-[#b3623c] transition-colors duration-300 disabled:opacity-60"
       >
         {status === "loading" ? "Wird gesendet…" : "Anfrage senden"}

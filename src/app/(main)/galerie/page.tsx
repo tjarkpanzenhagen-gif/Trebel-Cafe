@@ -6,12 +6,13 @@ import GalerieGrid from "@/components/galerie/GalerieGrid";
 export const metadata: Metadata = {
   title: "Galerie — Trebel Café Tribsees",
   description: "Bilder aus dem Trebel Café — Atmosphäre, Kuchen und gemütliche Momente.",
+  alternates: { canonical: "/galerie" },
 };
 
 const galleryImages = [
-  { src: "/images/Cafe/cafe-01.jpg", alt: "Trebel Café Atmosphäre", tall: true },
-  { src: "/images/Cafe/cafe-02.jpg", alt: "Trebel Café Einblick", tall: false },
-  { src: "/images/Cafe/cafe-05.jpg", alt: "Trebel Café Tribsees", tall: false },
+  { src: "/images/Cafe/cafe-01.jpg", alt: "Trebel Café Atmosphäre" },
+  { src: "/images/Cafe/cafe-02.jpg", alt: "Trebel Café Einblick" },
+  { src: "/images/Cafe/cafe-05.jpg", alt: "Trebel Café Tribsees" },
 ];
 
 export default function GaleriePage() {

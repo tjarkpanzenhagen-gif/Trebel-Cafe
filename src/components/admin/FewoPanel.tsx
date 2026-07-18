@@ -186,6 +186,7 @@ function BlockedDatesEditor({
 
   useEffect(() => {
     const source = isGlobal ? globalBlockedDates : apt.blockedDates;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setBlocked(source.map((d) => new Date(d + "T00:00:00")));
   }, [isGlobal, apt.blockedDates, globalBlockedDates]);
 
@@ -429,7 +430,7 @@ function BookingCard({
           {booking.persons} {booking.persons === 1 ? "Person" : "Personen"}
           {extraLabels.length > 0 ? ` · ${extraLabels.join(", ")}` : ""}
         </p>
-        {booking.message && <p className="italic text-espresso/40 mt-1">„{booking.message}"</p>}
+        {booking.message && <p className="italic text-espresso/40 mt-1">„{booking.message}&#34;</p>}
       </div>
 
       <div className="flex items-center justify-between mt-3 pt-3 border-t border-sand/60">
@@ -498,6 +499,7 @@ function BookingsView({ apartmentId }: { apartmentId: string }) {
     }
   }, []);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
 
   async function updateStatus(id: string, status: "confirmed" | "cancelled") {

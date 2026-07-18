@@ -29,33 +29,36 @@ function formatDateRange(weekStart?: string, weekEnd?: string): string {
 
 const MONTH_NAMES = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
+function monthKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
 function isInCurrentMonth(item: MenuItem): boolean {
   if (!item.weekStart) return true;
-  const now = new Date();
-  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  lastOfMonth.setHours(23, 59, 59, 999);
-  const start = new Date(item.weekStart);
-  const end = item.weekEnd ? new Date(item.weekEnd) : start;
-  return start <= lastOfMonth && end >= firstOfMonth;
+  const current = monthKey(new Date());
+  const startMonth = item.weekStart.slice(0, 7);
+  const endMonth = (item.weekEnd ?? item.weekStart).slice(0, 7);
+  return startMonth <= current && endMonth >= current;
 }
 
 function isInNextMonth(item: MenuItem): boolean {
   if (!item.weekStart) return false;
   const now = new Date();
-  const nextMonthDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-  const start = new Date(item.weekStart);
-  return start.getMonth() === nextMonthDate.getMonth() && start.getFullYear() === nextMonthDate.getFullYear();
+  const next = monthKey(new Date(now.getFullYear(), now.getMonth() + 1, 1));
+  return item.weekStart.slice(0, 7) === next;
+}
+
+function localDateKey(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
 function isActiveWeek(item: MenuItem): boolean {
   if (!item.weekStart || !item.weekEnd) return false;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const start = new Date(item.weekStart);
-  const end = new Date(item.weekEnd);
-  end.setHours(23, 59, 59, 999);
-  return today >= start && today <= end;
+  const todayKey = localDateKey(new Date());
+  return item.weekStart <= todayKey && todayKey <= item.weekEnd;
 }
 
 function WeekRow({ item }: { item: MenuItem }) {

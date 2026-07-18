@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-import { readMenu, writeMenu } from "@/lib/menu-store";
-
-function isAuthenticated(request: NextRequest) {
-  const secret = process.env.ADMIN_SESSION_SECRET || "dev-secret-change-in-production";
-  return request.cookies.get("admin_session")?.value === secret;
-}
+import { readMenu, writeMenu, MENU_KATEGORIEN } from "@/lib/menu-store";
+import { isAuthenticated } from "@/lib/auth";
 
 export async function GET() {
   try {
@@ -25,6 +21,9 @@ export async function POST(request: NextRequest) {
     const { name, description, price, vegan, vegetarisch, glutenfrei, kategorie } = body;
     if (!name || !description || !price || !kategorie) {
       return NextResponse.json({ error: "Fehlende Pflichtfelder" }, { status: 400 });
+    }
+    if (!(MENU_KATEGORIEN as readonly string[]).includes(String(kategorie))) {
+      return NextResponse.json({ error: "Ungültige Kategorie" }, { status: 400 });
     }
     const items = await readMenu();
     const newItem = {

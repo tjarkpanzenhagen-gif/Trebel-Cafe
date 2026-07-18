@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readMenu, writeMenu } from "@/lib/menu-store";
-
-function isAuthenticated(request: NextRequest) {
-  const secret = process.env.ADMIN_SESSION_SECRET || "dev-secret-change-in-production";
-  return request.cookies.get("admin_session")?.value === secret;
-}
+import { readMenu, writeMenu, MENU_KATEGORIEN } from "@/lib/menu-store";
+import { isAuthenticated } from "@/lib/auth";
 
 export async function PUT(
   request: NextRequest,
@@ -20,12 +16,15 @@ export async function PUT(
     if (!name || !description || !price || !kategorie) {
       return NextResponse.json({ error: "Fehlende Pflichtfelder" }, { status: 400 });
     }
+    if (!(MENU_KATEGORIEN as readonly string[]).includes(String(kategorie))) {
+      return NextResponse.json({ error: "Ungültige Kategorie" }, { status: 400 });
+    }
     const items = await readMenu();
     const index = items.findIndex((item) => item.id === id);
     if (index === -1) {
       return NextResponse.json({ error: "Nicht gefunden" }, { status: 404 });
     }
-    items[index] = { id, name, description, price, vegan: Boolean(vegan), vegetarisch: Boolean(vegetarisch), glutenfrei: Boolean(glutenfrei), kategorie };
+    items[index] = { ...items[index], name, description, price, vegan: Boolean(vegan), vegetarisch: Boolean(vegetarisch), glutenfrei: Boolean(glutenfrei), kategorie };
     await writeMenu(items);
     return NextResponse.json(items[index]);
   } catch (e) {

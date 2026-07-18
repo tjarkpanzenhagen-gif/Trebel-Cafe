@@ -9,6 +9,7 @@ import ReservierungForm from "./ReservierungForm";
 export const metadata: Metadata = {
   title: "Reservierung — Trebel Café Tribsees",
   description: "Tisch reservieren im Trebel Café Tribsees. Auch für unsere Frühstücksbuffets.",
+  alternates: { canonical: "/reservierung" },
 };
 
 export default function ReservierungPage() {

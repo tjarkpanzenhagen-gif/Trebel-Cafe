@@ -5,7 +5,7 @@ import Image from "next/image";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 // Image in grid uses next/image; lightbox uses <img> to avoid fill-container sizing constraints
 
-type GalleryImage = { src: string; alt: string; tall: boolean };
+type GalleryImage = { src: string; alt: string };
 
 export default function GalerieGrid({ images }: { images: GalleryImage[] }) {
   const [lightbox, setLightbox] = useState<number | null>(null);

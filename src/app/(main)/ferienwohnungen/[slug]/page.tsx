@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: apt ? `${apt.name} | Trebel Café` : "Ferienwohnung | Trebel Café",
     description: apt?.description,
+    alternates: { canonical: `/ferienwohnungen/${slug}` },
   };
 }
 
