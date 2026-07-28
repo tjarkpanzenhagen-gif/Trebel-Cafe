@@ -37,6 +37,11 @@ export const INITIAL_MENU: MenuItem[] = [
   { id: "wk-jul2", name: "Bauernfrühstück mit Salatgarnitur", description: "", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-07-09", weekEnd: "2026-07-13" },
   { id: "wk-jul3", name: "Salat mit Käse-Schinkenstreifen", description: "dazu Brot & Butter", price: "13,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-07-23", weekEnd: "2026-07-27" },
   { id: "wk-jul4", name: "Kartoffelpuffer", description: "", price: "ab 6,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-07-30", weekEnd: "2026-08-03" },
+  // Wochenkarte August 2026
+  { id: "wk-aug1", name: "Lippischer Pickert", description: "", price: "ab 6,50 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-08-06", weekEnd: "2026-08-10" },
+  { id: "wk-aug2", name: "Backkartoffel mit Matjes", description: "nach Hausfrauen Art", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: true, kategorie: "wochenkarte", weekStart: "2026-08-13", weekEnd: "2026-08-17" },
+  { id: "wk-aug3", name: "Salat mit Ziegenkäse im Speckmantel", description: "mit Brot und Butter", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-08-20", weekEnd: "2026-08-24" },
+  { id: "wk-aug4", name: "Bauernfrühstück mit Salatgarnitur", description: "", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-08-27", weekEnd: "2026-08-31" },
   // Frühstück
   { id: "f1", name: "Kleines Frühstück", description: "1 Brötchen, Butter, Wurst oder Käse, Konfitüre, 1 Glas Orangensaft, Kaffee oder Tee", price: "11,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
   { id: "f2", name: "Kinder-Frühstück", description: "bis 10 Jahre · 1 Brötchen, Butter, Nutella oder Konfitüre, 1 Tasse Kakao", price: "7,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
