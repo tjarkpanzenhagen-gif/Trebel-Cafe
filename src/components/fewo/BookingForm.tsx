@@ -45,6 +45,28 @@ function hasInvalidInRange(
   return false;
 }
 
+// A day that's occupied because another stay starts that day is still a valid
+// checkout day for a new stay (checkout ~10:00, next check-in ~14:00). Only
+// disable it outright when it's not being chosen as a range end, or when the
+// range up to (but excluding) it still contains another blocked/booked night.
+function isDateDisabled(
+  date: Date,
+  today: Date,
+  rangeFrom: Date | undefined,
+  rangeTo: Date | undefined,
+  blockedDates: string[],
+  bookedDates: string[]
+): boolean {
+  if (date < today) return true;
+  const key = localDateKey(date);
+  if (new Set(blockedDates).has(key)) return true;
+  if (!new Set(bookedDates).has(key)) return false;
+  if (rangeFrom && !rangeTo && date > rangeFrom) {
+    return hasInvalidInRange(rangeFrom, date, blockedDates, bookedDates);
+  }
+  return true;
+}
+
 export default function BookingForm({
   apartmentName,
   apartmentId,
@@ -113,9 +135,6 @@ export default function BookingForm({
     () => blockedDates.map((d) => new Date(d + "T00:00:00")),
     [blockedDates]
   );
-
-  const bookedSet = useMemo(() => new Set(bookedDates), [bookedDates]);
-  const blockedSet = useMemo(() => new Set(blockedDates), [blockedDates]);
 
   const rangeError =
     checkIn && checkOut && hasInvalidInRange(range.from, range.to, blockedDates, bookedDates)
@@ -305,9 +324,7 @@ export default function BookingForm({
           disabled={(date) => {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            if (date < today) return true;
-            const key = localDateKey(date);
-            return blockedSet.has(key) || bookedSet.has(key);
+            return isDateDisabled(date, today, range.from, range.to, blockedDates, bookedDates);
           }}
           startMonth={new Date()}
           numberOfMonths={1}
