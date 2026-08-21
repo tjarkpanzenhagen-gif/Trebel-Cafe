@@ -13,6 +13,9 @@ const galleryImages = [
   { src: "/images/Cafe/cafe-01.jpg", alt: "Trebel Café Atmosphäre" },
   { src: "/images/Cafe/cafe-02.jpg", alt: "Trebel Café Einblick" },
   { src: "/images/Cafe/cafe-05.jpg", alt: "Trebel Café Tribsees" },
+  { src: "/images/Cafe/cafe-06.jpg", alt: "Mini Herz-Torte mit Erdbeeren und Schokolade" },
+  { src: "/images/Cafe/cafe-07.jpg", alt: "Mohntorte mit Maracuja-Sahnetupfen" },
+  { src: "/images/Cafe/cafe-08.jpg", alt: "Schokoladentorte mit frischen Apfelspalten" },
 ];
 
 export default function GaleriePage() {
