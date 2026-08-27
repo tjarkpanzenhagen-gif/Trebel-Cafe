@@ -42,6 +42,12 @@ export const INITIAL_MENU: MenuItem[] = [
   { id: "wk-aug2", name: "Backkartoffel mit Matjes", description: "nach Hausfrauen Art", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: true, kategorie: "wochenkarte", weekStart: "2026-08-13", weekEnd: "2026-08-17" },
   { id: "wk-aug3", name: "Salat mit Ziegenkäse im Speckmantel", description: "mit Brot und Butter", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-08-20", weekEnd: "2026-08-24" },
   { id: "wk-aug4", name: "Bauernfrühstück mit Salatgarnitur", description: "", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-08-27", weekEnd: "2026-08-31" },
+  // Wochenkarte September 2026
+  { id: "wk-sep1", name: "Puffer mit Matjes", description: "nach Hausfrauen Art", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-09-03", weekEnd: "2026-09-07" },
+  { id: "wk-sep2", name: "Steckrübeneintopf", description: "", price: "9,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-09-10", weekEnd: "2026-09-14" },
+  { id: "wk-sep3", name: "Zwiebelkuchen", description: "", price: "4,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-09-17", weekEnd: "2026-09-21" },
+  { id: "wk-sep4", name: "Zwiebelkuchen mit Federweißer", description: "", price: "8,80 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-09-17", weekEnd: "2026-09-21" },
+  { id: "wk-sep5", name: "Lippischer Pickert", description: "", price: "ab 6,50 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-09-24", weekEnd: "2026-09-28" },
   // Frühstück
   { id: "f1", name: "Kleines Frühstück", description: "1 Brötchen, Butter, Wurst oder Käse, Konfitüre, 1 Glas Orangensaft, Kaffee oder Tee", price: "11,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
   { id: "f2", name: "Kinder-Frühstück", description: "bis 10 Jahre · 1 Brötchen, Butter, Nutella oder Konfitüre, 1 Tasse Kakao", price: "7,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
