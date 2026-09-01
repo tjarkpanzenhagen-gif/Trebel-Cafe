@@ -42,7 +42,7 @@ export default async function FewoTeaser() {
                         src={imgSrc}
                         alt={apt.name}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105 photo-warm"
                         sizes="(max-width: 768px) 100vw, 50vw"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-espresso/60 via-transparent to-transparent" />

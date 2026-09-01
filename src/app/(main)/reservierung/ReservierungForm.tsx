@@ -145,7 +145,7 @@ export default function ReservierungForm() {
       <button
         type="submit"
         disabled={status === "loading" || Boolean(closedReason)}
-        className="w-full bg-terracotta text-white py-4 rounded-xl font-dm font-medium hover:bg-[#b3623c] transition-colors duration-300 disabled:opacity-60"
+        className="w-full bg-terracotta text-white py-4 rounded-xl font-dm font-medium hover:bg-[#7A331A] transition-colors duration-300 disabled:opacity-60"
       >
         {status === "loading" ? "Wird gesendet…" : "Anfrage senden"}
       </button>

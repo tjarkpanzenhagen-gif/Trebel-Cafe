@@ -71,7 +71,7 @@ export default function Navigation() {
             ))}
             <Link
               href="/reservierung"
-              className="ml-2 px-5 py-2 rounded-full bg-terracotta text-white text-sm font-medium hover:bg-[#b3623c] transition-all duration-300 animate-pulse-ring"
+              className="ml-2 px-5 py-2 rounded-full bg-terracotta text-white text-sm font-medium hover:bg-[#7A331A] transition-all duration-300 animate-pulse-ring"
             >
               Tisch reservieren
             </Link>

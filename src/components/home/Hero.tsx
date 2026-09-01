@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Button from "@/components/ui/Button";
+import AutumnLeaves from "@/components/home/AutumnLeaves";
 
 export default function Hero() {
   return (
@@ -11,13 +12,27 @@ export default function Hero() {
           alt="Gemütliches Café-Interieur mit warmem Licht"
           fill
           priority
-          className="object-cover object-center animate-ken-burns"
+          className="object-cover object-center animate-ken-burns photo-warm"
           sizes="100vw"
         />
       </div>
 
-      {/* Warm overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-espresso/50 via-espresso/40 to-espresso/60" />
+      {/* Cool dusk sky above, warm hearth glow below — the contrast is what reads as "cozy", not a flat orange wash */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(52,61,79,0.55) 0%, rgba(42,23,16,0.28) 42%, rgba(42,23,16,0.42) 70%, rgba(42,23,16,0.66) 100%)",
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse at 50% 122%, rgba(169,75,34,0.32) 0%, rgba(169,75,34,0) 46%)",
+        }}
+      />
+
+      <AutumnLeaves />
 
       {/* Grain overlay */}
       <div

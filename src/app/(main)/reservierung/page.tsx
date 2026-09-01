@@ -47,7 +47,7 @@ export default function ReservierungPage() {
 
             <div>
               <div className="flex items-center gap-2 mb-5">
-                <HugeiconsIcon icon={Calendar01Icon} size={18} color="#C4724A" strokeWidth={1.5} />
+                <HugeiconsIcon icon={Calendar01Icon} size={18} color="#A94B22" strokeWidth={1.5} />
                 <h3 className="font-playfair text-xl text-espresso">Frühstücksbuffets 2026</h3>
               </div>
               <div className="space-y-4">

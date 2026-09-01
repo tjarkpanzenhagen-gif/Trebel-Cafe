@@ -52,7 +52,7 @@ export default function GalerieGrid({ images }: { images: GalleryImage[] }) {
                 height={0}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 style={{ width: "100%", height: "auto" }}
-                className="block group-hover:scale-105 transition-transform duration-700"
+                className="block group-hover:scale-105 transition-transform duration-700 photo-warm"
               />
               <div className="absolute inset-0 bg-espresso/0 group-hover:bg-espresso/30 transition-colors duration-300 flex items-end p-4">
                 <p className="font-cormorant italic text-white text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
@@ -88,7 +88,7 @@ export default function GalerieGrid({ images }: { images: GalleryImage[] }) {
           <img
             src={images[lightbox].src}
             alt={images[lightbox].alt}
-            className="max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
+            className="max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl photo-warm"
             onClick={(e) => e.stopPropagation()}
           />
           <button

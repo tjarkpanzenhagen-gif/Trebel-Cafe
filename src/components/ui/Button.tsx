@@ -19,7 +19,7 @@ export default function Button({
 
   const variants = {
     filled:
-      "bg-terracotta text-white hover:bg-[#b3623c] hover:shadow-lg hover:-translate-y-0.5",
+      "bg-terracotta text-white hover:bg-[#7A331A] hover:shadow-lg hover:-translate-y-0.5",
     outline:
       "border-2 border-terracotta text-terracotta hover:bg-terracotta hover:text-white",
     "outline-light":

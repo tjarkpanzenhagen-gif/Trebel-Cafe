@@ -195,7 +195,7 @@ function Modal({
           <button
             onClick={onSave}
             disabled={saving}
-            className="px-5 py-2 bg-terracotta text-white font-dm text-sm rounded-lg hover:bg-[#b3623c] transition-colors disabled:opacity-50"
+            className="px-5 py-2 bg-terracotta text-white font-dm text-sm rounded-lg hover:bg-[#7A331A] transition-colors disabled:opacity-50"
           >
             {saving ? "Speichern…" : "Speichern"}
           </button>
@@ -367,7 +367,7 @@ export default function AdminDashboardClient({
               </p>
               <button
                 onClick={openCreate}
-                className="flex items-center gap-2 px-4 py-2 bg-terracotta text-white font-dm text-sm rounded-lg hover:bg-[#b3623c] transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-terracotta text-white font-dm text-sm rounded-lg hover:bg-[#7A331A] transition-colors"
               >
                 <span>+</span>
                 <span>Neues Gericht</span>

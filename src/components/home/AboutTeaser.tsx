@@ -14,7 +14,7 @@ export default function AboutTeaser() {
               src="/images/Cafe/wir.jpg"
               alt="Team des Trebel Cafés"
               fill
-              className="object-cover object-top hover:scale-105 transition-transform duration-700"
+              className="object-cover object-top hover:scale-105 transition-transform duration-700 photo-warm"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>

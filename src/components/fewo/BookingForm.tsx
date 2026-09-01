@@ -239,24 +239,24 @@ export default function BookingForm({
   }
 
   const inputClass =
-    "w-full border border-sand rounded-lg px-3 py-2.5 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors bg-white/60";
+    "w-full border border-sand rounded-lg px-3 py-2.5 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors bg-paper/70";
 
   return (
     <div className="space-y-4">
       <h3 className="font-playfair text-xl text-espresso">Buchungsanfrage</h3>
 
       {/* Range calendar */}
-      <div className="booking-cal border border-sand rounded-xl bg-white">
+      <div className="booking-cal border border-sand rounded-xl bg-paper card-warm">
         <style>{`
           .booking-cal .rdp-root {
-            --rdp-accent-color: #2C1810;
+            --rdp-accent-color: #2A1710;
             --rdp-accent-background-color: rgba(44,24,16,0.08);
-            --rdp-today-color: #C4724A;
+            --rdp-today-color: #A94B22;
             --rdp-selected-border: none;
-            --rdp-range_start-background: #2C1810;
-            --rdp-range_end-background: #2C1810;
+            --rdp-range_start-background: #2A1710;
+            --rdp-range_end-background: #2A1710;
             --rdp-range_middle-background: rgba(44,24,16,0.08);
-            --rdp-range_middle-color: #2C1810;
+            --rdp-range_middle-color: #2A1710;
             --rdp-day_button-border-radius: 6px;
             margin: 0;
             width: 100%;
@@ -265,13 +265,13 @@ export default function BookingForm({
           .booking-cal .rdp-month { width: 100%; }
           .booking-cal .rdp-month_caption {
             font-family: var(--font-playfair, serif);
-            color: #2C1810;
+            color: #2A1710;
             font-size: 0.95rem;
             padding: 10px 4px 4px;
           }
           .booking-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 12px; }
           .booking-cal .day-booked .rdp-day_button {
-            background-color: #C4724A !important;
+            background-color: #A94B22 !important;
             color: white !important;
             border: none !important;
             border-radius: 6px;
@@ -280,8 +280,8 @@ export default function BookingForm({
           .booking-cal .day-booked { opacity: 1 !important; }
           .booking-cal .day-blocked { opacity: 1 !important; position: relative; }
           .booking-cal .day-blocked .rdp-day_button {
-            background-color: #f0ebe4 !important;
-            color: #9c8880 !important;
+            background-color: #EAD9BE !important;
+            color: #8A7460 !important;
             border: none !important;
             border-radius: 6px;
             cursor: not-allowed;
@@ -303,13 +303,13 @@ export default function BookingForm({
           }
           .booking-cal .rdp-range_start .rdp-day_button,
           .booking-cal .rdp-range_end .rdp-day_button {
-            background-color: #2C1810 !important;
-            color: #F5EFE6 !important;
+            background-color: #2A1710 !important;
+            color: #F3E4C8 !important;
             border-radius: 6px !important;
           }
           .booking-cal .rdp-range_middle .rdp-day_button {
             background-color: rgba(44,24,16,0.12) !important;
-            color: #2C1810 !important;
+            color: #2A1710 !important;
             border-radius: 0 !important;
           }
           .booking-cal .rdp-range_start { border-radius: 6px 0 0 6px; }
@@ -338,7 +338,7 @@ export default function BookingForm({
             <div
               className="w-3 h-3 rounded-sm"
               style={{
-                background: "repeating-linear-gradient(135deg, #f0ebe4, #f0ebe4 3px, rgba(156,136,128,0.5) 3px, rgba(156,136,128,0.5) 4px)",
+                background: "repeating-linear-gradient(135deg, #EAD9BE, #EAD9BE 3px, rgba(156,136,128,0.5) 3px, rgba(156,136,128,0.5) 4px)",
               }}
             />
             <span className="font-dm text-xs text-espresso/50">Gesperrt</span>
@@ -460,7 +460,7 @@ export default function BookingForm({
           rows={3}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="w-full border border-sand rounded-lg px-3 py-2.5 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors resize-none bg-white/60"
+          className="w-full border border-sand rounded-lg px-3 py-2.5 font-dm text-sm text-espresso focus:outline-none focus:border-terracotta transition-colors resize-none bg-paper/70"
         />
       </div>
 
@@ -516,7 +516,7 @@ export default function BookingForm({
         disabled={!canSubmit}
         className={`w-full text-center px-6 py-3 rounded-full font-dm text-sm font-medium transition-all duration-300 ${
           canSubmit
-            ? "bg-terracotta text-white hover:bg-[#b3623c] hover:shadow-md cursor-pointer"
+            ? "bg-terracotta text-white hover:bg-[#7A331A] hover:shadow-md cursor-pointer"
             : "bg-sand text-espresso/40 cursor-not-allowed"
         }`}
       >

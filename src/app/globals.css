@@ -1,12 +1,15 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
-  --color-cream: #FAF6F0;
-  --color-espresso: #2C1810;
-  --color-terracotta: #C4724A;
-  --color-sand: #E8D5C0;
-  --color-sage: #6B7C5E;
+  /* Colors — Herbst/Winter palette: toasted, ember-warm, woodland-deep */
+  --color-cream: #EEDCBB;
+  --color-espresso: #2A1710;
+  --color-terracotta: #A94B22;
+  --color-sand: #D9B888;
+  --color-sage: #414B2C;
+  --color-wine: #6E2A34;
+  --color-paper: #FBF2E2;
+  --color-ember-deep: #7A331A;
 
   /* Fonts */
   --font-playfair: var(--font-playfair), Georgia, serif;
@@ -29,16 +32,26 @@
   }
 
   @keyframes pulseRing {
-    0% { box-shadow: 0 0 0 0 rgba(196, 114, 74, 0.4); }
-    70% { box-shadow: 0 0 0 8px rgba(196, 114, 74, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(196, 114, 74, 0); }
+    0% { box-shadow: 0 0 0 0 rgba(169, 75, 34, 0.45); }
+    70% { box-shadow: 0 0 0 8px rgba(169, 75, 34, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(169, 75, 34, 0); }
+  }
+
+  @keyframes leafDrift {
+    0% { transform: translate(var(--drift-x0, 0%), -8%) rotate(0deg); opacity: 0; }
+    8% { opacity: 0.8; }
+    38% { transform: translate(var(--drift-xm, -10%), 42%) rotate(calc(var(--drift-rot, 150deg) * 0.45)); }
+    62% { transform: translate(var(--drift-x0, 0%), 64%) rotate(calc(var(--drift-rot, 150deg) * 0.7)); }
+    92% { opacity: 0.8; }
+    100% { transform: translate(var(--drift-x1, -8%), 108%) rotate(var(--drift-rot, 150deg)); opacity: 0; }
   }
 }
 
 @layer base {
   body {
-    background-color: #FAF6F0;
-    color: #2C1810;
+    background-color: #EEDCBB;
+    background-image: radial-gradient(ellipse 120% 60% at 50% -10%, rgba(169, 75, 34, 0.12) 0%, rgba(169, 75, 34, 0) 60%);
+    color: #2A1710;
   }
 
   /* Grain texture overlay */
@@ -51,7 +64,7 @@
     height: 100%;
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.025;
+    opacity: 0.05;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 128px 128px;
@@ -60,11 +73,62 @@
   h1, h2, h3 {
     font-family: var(--font-playfair), Georgia, serif;
   }
+
+  ::selection {
+    background-color: #A94B22;
+    color: #FBF2E2;
+  }
+
+  html {
+    scrollbar-color: #A94B22 #EEDCBB;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #EEDCBB;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #A94B22;
+    border-radius: 8px;
+    border: 3px solid #EEDCBB;
+  }
 }
 
 @layer utilities {
   .section-divider {
-    border-top: 1px solid #C4724A;
-    opacity: 0.3;
+    border-top: 1px solid #A94B22;
+    opacity: 0.35;
+  }
+
+  .leaf-drift {
+    animation-play-state: running;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .leaf-drift {
+      animation: none !important;
+      opacity: 0.4 !important;
+    }
+  }
+
+  /* Warms up photography to match the autumn palette — biased to push summer greens
+     toward olive/brown rather than just tinting everything orange */
+  .photo-warm {
+    filter: saturate(1.02) sepia(0.22) hue-rotate(-8deg) contrast(1.06) brightness(0.96);
+  }
+
+  .card-warm {
+    box-shadow: 0 1px 2px rgba(42, 23, 16, 0.06), 0 8px 24px -12px rgba(122, 51, 26, 0.28);
+  }
+
+  /* Fine kraft-paper fiber texture for the current week's dish — a nod to the
+     handwritten notepad the weekly specials actually get written on */
+  .kraft-texture {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='fiber'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.9' numOctaves='2' seed='7'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.42  0 0 0 0 0.24  0 0 0 0 0.13  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23fiber)'/%3E%3C/svg%3E");
+    background-blend-mode: multiply;
   }
 }

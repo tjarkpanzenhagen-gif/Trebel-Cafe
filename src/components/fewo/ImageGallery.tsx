@@ -53,7 +53,7 @@ export default function ImageGallery({ images, alt }: { images: string[]; alt: s
           <img
             src={images[0]}
             alt={alt}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 photo-warm"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
         </div>
@@ -67,7 +67,7 @@ export default function ImageGallery({ images, alt }: { images: string[]; alt: s
             <img
               src={images[1]}
               alt=""
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 photo-warm"
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
           </div>
@@ -82,7 +82,7 @@ export default function ImageGallery({ images, alt }: { images: string[]; alt: s
             <img
               src={images[2]}
               alt=""
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 photo-warm"
             />
             {remaining > 0 ? (
               <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-1">
@@ -137,7 +137,7 @@ export default function ImageGallery({ images, alt }: { images: string[]; alt: s
           <img
             src={images[lightbox]}
             alt={alt}
-            className="max-h-[80vh] max-w-[88vw] object-contain rounded-xl shadow-2xl"
+            className="max-h-[80vh] max-w-[88vw] object-contain rounded-xl shadow-2xl photo-warm"
             onClick={(e) => e.stopPropagation()}
           />
 
@@ -168,7 +168,7 @@ export default function ImageGallery({ images, alt }: { images: string[]; alt: s
                       : "border-white/15 hover:border-white/40 opacity-60 hover:opacity-100"
                   }`}
                 >
-                  <img src={src} alt="" className="w-full h-full object-cover" />
+                  <img src={src} alt="" className="w-full h-full object-cover photo-warm" />
                 </button>
               ))}
             </div>

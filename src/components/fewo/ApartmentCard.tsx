@@ -39,7 +39,7 @@ export default function ApartmentCard({ apartment, delay = 0 }: Props) {
               src={images[0]}
               alt={apartment.name}
               fill
-              className="object-cover transition-transform duration-700 hover:scale-105"
+              className="object-cover transition-transform duration-700 hover:scale-105 photo-warm"
               sizes="(max-width: 768px) 100vw, 60vw"
             />
           </div>
@@ -50,7 +50,7 @@ export default function ApartmentCard({ apartment, delay = 0 }: Props) {
                   src={src}
                   alt=""
                   fill
-                  className="object-cover transition-transform duration-700 hover:scale-105"
+                  className="object-cover transition-transform duration-700 hover:scale-105 photo-warm"
                   sizes="(max-width: 768px) 50vw, 20vw"
                 />
               </div>

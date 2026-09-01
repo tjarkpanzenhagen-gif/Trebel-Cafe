@@ -105,7 +105,7 @@ function PricingEditor({
       <button
         onClick={handleSave}
         disabled={saving}
-        className="w-full px-4 py-2.5 bg-terracotta text-white font-dm text-sm rounded-lg hover:bg-[#b3623c] transition-colors disabled:opacity-50"
+        className="w-full px-4 py-2.5 bg-terracotta text-white font-dm text-sm rounded-lg hover:bg-[#7A331A] transition-colors disabled:opacity-50"
       >
         {saving ? "Speichern…" : "Preise speichern"}
       </button>
@@ -121,24 +121,24 @@ function toLocalISO(d: Date) {
 
 const CAL_STYLE = `
   .admin-cal .rdp-root {
-    --rdp-accent-color: #C4724A;
+    --rdp-accent-color: #A94B22;
     --rdp-accent-background-color: rgba(196,114,74,0.15);
-    --rdp-today-color: #6B7C5E;
+    --rdp-today-color: #414B2C;
     --rdp-day_button-border-radius: 6px;
     margin: 0;
   }
-  .admin-cal .rdp-month_caption { font-family: var(--font-playfair, serif); color: #2C1810; }
+  .admin-cal .rdp-month_caption { font-family: var(--font-playfair, serif); color: #2A1710; }
   .admin-cal .rdp-day { font-family: var(--font-dm-sans, sans-serif); font-size: 13px; }
   .admin-cal .rdp-selected .rdp-day_button {
-    background-color: #C4724A !important;
+    background-color: #A94B22 !important;
     color: white !important;
     border: none !important;
     border-radius: 6px;
   }
   .admin-cal .day-global { opacity: 1 !important; }
   .admin-cal .day-global .rdp-day_button {
-    background-color: #f0ebe4 !important;
-    color: #9c8880 !important;
+    background-color: #EAD9BE !important;
+    color: #8A7460 !important;
     border: none !important;
     border-radius: 6px;
     position: relative;
@@ -279,7 +279,7 @@ function BlockedDatesEditor({
           <button
             onClick={addRange}
             disabled={!rangeFrom || !rangeTo}
-            className="px-4 py-2 bg-terracotta text-white font-dm text-sm rounded-lg hover:bg-[#b3623c] transition-colors disabled:opacity-40"
+            className="px-4 py-2 bg-terracotta text-white font-dm text-sm rounded-lg hover:bg-[#7A331A] transition-colors disabled:opacity-40"
           >
             +
           </button>
@@ -295,7 +295,7 @@ function BlockedDatesEditor({
               <div
                 className="w-3 h-3 rounded-sm flex-shrink-0"
                 style={{
-                  background: "repeating-linear-gradient(135deg, #f0ebe4, #f0ebe4 3px, rgba(196,114,74,0.5) 3px, rgba(196,114,74,0.5) 4px)",
+                  background: "repeating-linear-gradient(135deg, #EAD9BE, #EAD9BE 3px, rgba(196,114,74,0.5) 3px, rgba(196,114,74,0.5) 4px)",
                 }}
               />
               <span className="font-dm text-xs text-espresso/40">Beide gesperrt</span>
@@ -529,7 +529,7 @@ function BookingsView({ apartmentId }: { apartmentId: string }) {
   if (loadError) return (
     <div className="py-10 text-center space-y-3">
       <p className="font-dm text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3">{loadError}</p>
-      <button onClick={load} className="font-dm text-xs text-terracotta hover:text-[#b3623c] transition-colors">↻ Erneut versuchen</button>
+      <button onClick={load} className="font-dm text-xs text-terracotta hover:text-[#7A331A] transition-colors">↻ Erneut versuchen</button>
     </div>
   );
 
@@ -558,7 +558,7 @@ function BookingsView({ apartmentId }: { apartmentId: string }) {
             </span>
           )}
         </div>
-        <button onClick={load} className="font-dm text-xs text-terracotta hover:text-[#b3623c] transition-colors">
+        <button onClick={load} className="font-dm text-xs text-terracotta hover:text-[#7A331A] transition-colors">
           ↻ Aktualisieren
         </button>
       </div>

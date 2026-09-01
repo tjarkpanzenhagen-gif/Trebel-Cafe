@@ -75,10 +75,10 @@ export default async function WeeklyMenu() {
             return (
               <AnimatedSection key={dish.id} delay={i * 0.12}>
                 <div
-                  className={`border rounded-2xl p-6 transition-all duration-300 bg-cream group relative ${
+                  className={`border rounded-2xl p-6 transition-all duration-300 bg-paper group relative ${
                     active
-                      ? "border-terracotta/60 shadow-md ring-1 ring-terracotta/20"
-                      : "border-sand hover:-translate-y-1 hover:shadow-md"
+                      ? "border-terracotta/60 card-warm kraft-texture ring-1 ring-terracotta/20"
+                      : "border-sand hover:-translate-y-1 hover:card-warm"
                   }`}
                 >
                   {active && (

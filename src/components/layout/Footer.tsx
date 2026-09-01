@@ -2,10 +2,24 @@ import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Clock01Icon, TelephoneIcon, Mail01Icon, MapPinIcon } from "@hugeicons/core-free-icons";
 import { contact, hours, closures2026 } from "@/lib/content";
+import { Leaf, randomLeafScatter } from "@/components/ui/Leaf";
 
 export default function Footer() {
+  const scatter = randomLeafScatter(9);
   return (
-    <footer className="bg-espresso text-cream/80 font-dm">
+    <footer className="bg-espresso text-cream/80 font-dm relative">
+      {/* Leaf scatter — marks the fall from the page's warm cream into the espresso footer */}
+      <div className="relative h-14 md:h-16 overflow-hidden" aria-hidden="true">
+        {scatter.map((leaf, i) => (
+          <div
+            key={i}
+            className="absolute"
+            style={{ left: leaf.left, top: leaf.top, width: leaf.size, height: leaf.size, opacity: leaf.opacity }}
+          >
+            <Leaf color={leaf.color} rotate={leaf.rotate} shape={leaf.shape} />
+          </div>
+        ))}
+      </div>
       <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Brand */}
         <div>
@@ -52,7 +66,7 @@ export default function Footer() {
             href={contact.mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-terracotta hover:text-[#d4845c] transition-colors"
+            className="text-sm text-terracotta hover:text-[#C46A3A] transition-colors"
           >
             Auf Google Maps öffnen →
           </a>

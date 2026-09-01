@@ -20,12 +20,12 @@ export default function Promise() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {promises.map((p, i) => (
             <AnimatedSection key={p.title} delay={i * 0.15}>
-              <div className="bg-cream rounded-2xl p-8 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300 text-center">
+              <div className="bg-paper rounded-2xl p-8 card-warm hover:-translate-y-1 transition-all duration-300 text-center">
                 <div className="flex justify-center mb-4">
                   <HugeiconsIcon
                     icon={icons[i]}
                     size={32}
-                    color="#C4724A"
+                    color="#A94B22"
                     strokeWidth={1.5}
                   />
                 </div>
