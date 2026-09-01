@@ -127,19 +127,33 @@ export const INITIAL_MENU: MenuItem[] = [
   { id: "e6", name: "Ice Latte", description: "Espresso, kalter Milchschaum, Vanilleeis", price: "5,90 €", vegan: false, vegetarisch: true, glutenfrei: true, kategorie: "eisKaltgetraenke" },
 ];
 
+// One-time correction: "wk-sep4" (Zwiebelkuchen mit Federweißer) was briefly its
+// own wochenkarte entry and got persisted to KV before being folded into wk-sep3's
+// description. Drop that stale duplicate wherever it's still stored.
+const REMOVED_IDS = new Set(["wk-sep4"]);
+
 function migrateItems(items: MenuItem[]): MenuItem[] {
   const initialById = new Map(INITIAL_MENU.map((i) => [i.id, i]));
   const existingIds = new Set(items.map((i) => i.id));
 
-  const patched = items.map((item) => {
-    if (item.kategorie === "wochenkarte" && !item.weekStart) {
-      const ref = initialById.get(item.id);
-      if (ref?.weekStart) return { ...item, weekStart: ref.weekStart, weekEnd: ref.weekEnd };
-    }
-    return item;
-  });
+  const patched = items
+    .filter((item) => !REMOVED_IDS.has(item.id))
+    .map((item) => {
+      if (item.kategorie === "wochenkarte" && !item.weekStart) {
+        const ref = initialById.get(item.id);
+        if (ref?.weekStart) return { ...item, weekStart: ref.weekStart, weekEnd: ref.weekEnd };
+      }
+      // wk-sep3 already existed with the old, since-corrected description/price
+      // in KV — those two fields specifically never auto-sync from code, so
+      // pull the current values in for this one known-stale entry.
+      if (item.id === "wk-sep3") {
+        const ref = initialById.get(item.id);
+        if (ref) return { ...item, description: ref.description, price: ref.price };
+      }
+      return item;
+    });
 
-  const newItems = INITIAL_MENU.filter((i) => !existingIds.has(i.id));
+  const newItems = INITIAL_MENU.filter((i) => !existingIds.has(i.id) && !REMOVED_IDS.has(i.id));
   return [...patched, ...newItems];
 }
 
