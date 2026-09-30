@@ -47,6 +47,10 @@ export const INITIAL_MENU: MenuItem[] = [
   { id: "wk-sep2", name: "Steckrübeneintopf", description: "", price: "9,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-09-10", weekEnd: "2026-09-14" },
   { id: "wk-sep3", name: "Zwiebelkuchen", description: "mit Federweißer 8,80 €", price: "4,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-09-17", weekEnd: "2026-09-21" },
   { id: "wk-sep5", name: "Lippischer Pickert", description: "", price: "ab 6,50 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-09-24", weekEnd: "2026-09-28" },
+  // Wochenkarte Oktober 2026
+  { id: "wk-okt1", name: "Bauernfrühstück", description: "", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-10-01", weekEnd: "2026-10-05" },
+  { id: "wk-okt2", name: "Kartoffelpuffer", description: "", price: "ab 6,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-10-08", weekEnd: "2026-10-12" },
+  { id: "wk-okt3", name: "Zwiebelkuchen mit Federweißer", description: "", price: "8,80 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-10-29", weekEnd: "2026-11-02" },
   // Frühstück
   { id: "f1", name: "Kleines Frühstück", description: "1 Brötchen, Butter, Wurst oder Käse, Konfitüre, 1 Glas Orangensaft, Kaffee oder Tee", price: "11,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
   { id: "f2", name: "Kinder-Frühstück", description: "bis 10 Jahre · 1 Brötchen, Butter, Nutella oder Konfitüre, 1 Tasse Kakao", price: "7,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
