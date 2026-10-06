@@ -76,7 +76,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-cream/10 py-6 px-6 max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-cream/40">
         <p>© {new Date().getFullYear()} Trebel Café Tribsees — Familie Wendel-Bigalke</p>
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
           <a
             href={contact.instagramUrl}
             target="_blank"
@@ -90,6 +90,14 @@ export default function Footer() {
           </a>
           <Link href="/impressum" className="hover:text-cream transition-colors">Impressum</Link>
           <Link href="/datenschutz" className="hover:text-cream transition-colors">Datenschutz</Link>
+          <a
+            href="https://www.tjark-panzenhagen.de"
+            target="_blank"
+            rel="noopener"
+            className="hover:text-cream transition-colors"
+          >
+            Website von Tjark Panzenhagen
+          </a>
         </div>
       </div>
     </footer>
