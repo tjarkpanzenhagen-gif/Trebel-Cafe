@@ -91,7 +91,7 @@ export default function Footer() {
           <Link href="/impressum" className="hover:text-cream transition-colors">Impressum</Link>
           <Link href="/datenschutz" className="hover:text-cream transition-colors">Datenschutz</Link>
           <a
-            href="https://www.tjark-panzenhagen.de"
+            href="https://www.tjark-panzenhagen.de/webdesign/tribsees"
             target="_blank"
             rel="noopener"
             className="hover:text-cream transition-colors"
