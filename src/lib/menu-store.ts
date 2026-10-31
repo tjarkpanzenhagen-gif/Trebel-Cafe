@@ -51,6 +51,11 @@ export const INITIAL_MENU: MenuItem[] = [
   { id: "wk-okt1", name: "Bauernfrühstück", description: "", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-10-01", weekEnd: "2026-10-05" },
   { id: "wk-okt2", name: "Kartoffelpuffer", description: "", price: "ab 6,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-10-08", weekEnd: "2026-10-12" },
   { id: "wk-okt3", name: "Zwiebelkuchen mit Federweißer", description: "", price: "8,80 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-10-29", weekEnd: "2026-11-02" },
+  // Wochenkarte November 2026
+  { id: "wk-nov1", name: "Kartoffelpuffer", description: "", price: "ab 6,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-11-05", weekEnd: "2026-11-09" },
+  { id: "wk-nov2", name: "Kartoffelplätzchen", description: "", price: "ab 6,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-11-12", weekEnd: "2026-11-16" },
+  { id: "wk-nov3", name: "Bauernfrühstück", description: "", price: "14,50 €", vegan: false, vegetarisch: false, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-11-19", weekEnd: "2026-11-23" },
+  { id: "wk-nov4", name: "Lippischer Pickert", description: "", price: "ab 6,50 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "wochenkarte", weekStart: "2026-11-26", weekEnd: "2026-11-30" },
   // Frühstück
   { id: "f1", name: "Kleines Frühstück", description: "1 Brötchen, Butter, Wurst oder Käse, Konfitüre, 1 Glas Orangensaft, Kaffee oder Tee", price: "11,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
   { id: "f2", name: "Kinder-Frühstück", description: "bis 10 Jahre · 1 Brötchen, Butter, Nutella oder Konfitüre, 1 Tasse Kakao", price: "7,90 €", vegan: false, vegetarisch: true, glutenfrei: false, kategorie: "fruehstueck" },
