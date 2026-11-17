@@ -4,6 +4,8 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
 import { readMenu, type MenuItem } from "@/lib/menu-store";
 import { todayInBerlin } from "@/lib/dates";
+import { isEintopfSeason, isEintopfUpcoming } from "@/lib/eintopf";
+import { EintopfSeason } from "@/components/ui/EintopfSeason";
 
 function formatDateRange(weekStart?: string, weekEnd?: string): string {
   if (!weekStart) return "";
@@ -24,6 +26,7 @@ export default async function WeeklyMenu() {
   noStore();
   const items = await readMenu();
   const todayKey = todayInBerlin();
+  const inSeason = isEintopfSeason(todayKey);
 
   const wochenkarte = items
     .filter((i) => i.kategorie === "wochenkarte" && i.weekStart)
@@ -65,10 +68,19 @@ export default async function WeeklyMenu() {
         <AnimatedSection className="text-center mb-12">
           <SectionLabel>Frisch & wechselnd</SectionLabel>
           <h2 className="font-playfair text-3xl md:text-4xl text-espresso">
-            {referenceMonth ? `Wochenangebote ${referenceMonth}` : "Was kocht diese Woche?"}
+            {inSeason
+              ? "Eintöpfe im Winter"
+              : referenceMonth
+              ? `Wochenangebote ${referenceMonth}`
+              : "Was kocht diese Woche?"}
           </h2>
         </AnimatedSection>
 
+        {inSeason ? (
+          <AnimatedSection className="max-w-2xl mx-auto mb-10">
+            <EintopfSeason />
+          </AnimatedSection>
+        ) : (
         <div className={`grid ${cols} gap-6 mb-10`}>
           {displayItems.map((dish, i) => {
             const active = isActiveWeek(dish, todayKey);
@@ -108,6 +120,13 @@ export default async function WeeklyMenu() {
             );
           })}
         </div>
+        )}
+
+        {isEintopfUpcoming(todayKey) && (
+          <AnimatedSection className="max-w-2xl mx-auto mb-10">
+            <EintopfSeason upcoming />
+          </AnimatedSection>
+        )}
 
         <AnimatedSection className="text-center">
           <Button href="/speisekarte" variant="outline">
