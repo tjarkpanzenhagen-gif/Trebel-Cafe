@@ -1,5 +1,6 @@
 import { readMenu, type MenuItem } from "@/lib/menu-store";
 import { todayInBerlin } from "@/lib/dates";
+import { isEintopfSeason } from "@/lib/eintopf";
 import SectionLabel from "@/components/ui/SectionLabel";
 
 async function getWochenkarte(): Promise<MenuItem[]> {
@@ -14,9 +15,10 @@ async function getWochenkarte(): Promise<MenuItem[]> {
 }
 
 export default async function WeeklyMenuTeaser() {
-  const dishes = await getWochenkarte();
+  const inSeason = isEintopfSeason(todayInBerlin());
+  const dishes = inSeason ? [] : await getWochenkarte();
 
-  if (dishes.length === 0) return null;
+  if (!inSeason && dishes.length === 0) return null;
 
   return (
     <section className="py-16 px-6 bg-sand/30">
@@ -27,7 +29,9 @@ export default async function WeeklyMenuTeaser() {
             Essen im Trebel Café
           </h2>
           <p className="font-dm text-sm text-espresso/60 mt-3 max-w-md mx-auto">
-            Als Feriengast genießen Sie unsere aktuellen Wochenangebote direkt vor Ort.
+            {inSeason
+              ? "Als Feriengast genießen Sie bis Ende Februar 2027 unsere frisch gekochten Eintöpfe direkt vor Ort."
+              : "Als Feriengast genießen Sie unsere aktuellen Wochenangebote direkt vor Ort."}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">

@@ -2,6 +2,8 @@
 
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import SectionLabel from "@/components/ui/SectionLabel";
+import { EintopfSeason } from "@/components/ui/EintopfSeason";
+import { isEintopfSeason, isEintopfUpcoming } from "@/lib/eintopf";
 import type { MenuItem } from "@/lib/menu-store";
 
 const SECTIONS: { key: MenuItem["kategorie"]; label: string; title: string; note?: string }[] = [
@@ -121,12 +123,16 @@ export default function SpeisekarteClient({ items }: { items: MenuItem[] }) {
   const nextMonthName = MONTH_NAMES[(now.getMonth() + 1) % 12];
   const nextMonthItems = items.filter((i) => i.kategorie === "wochenkarte" && isInNextMonth(i));
 
+  const todayKey = localDateKey(now);
+  const inSeason = isEintopfSeason(todayKey);
+
   const sectionsWithItems = SECTIONS.map((s) => ({
     ...s,
+    title: inSeason && s.key === "wochenkarte" ? "Eintöpfe" : s.title,
     items: items
       .filter((i) => i.kategorie === s.key)
       .filter((i) => s.key !== "wochenkarte" || isInCurrentMonth(i)),
-  })).filter((s) => s.items.length > 0);
+  })).filter((s) => s.items.length > 0 || (inSeason && s.key === "wochenkarte"));
 
   return (
     <>
@@ -139,7 +145,13 @@ export default function SpeisekarteClient({ items }: { items: MenuItem[] }) {
               <div className="w-12 h-px bg-terracotta mt-3" />
             </AnimatedSection>
 
-            {section.key === "wochenkarte" && (
+            {section.key === "wochenkarte" && inSeason && (
+              <AnimatedSection className="max-w-2xl">
+                <EintopfSeason />
+              </AnimatedSection>
+            )}
+
+            {section.key === "wochenkarte" && !inSeason && (
               <AnimatedSection className="mb-6">
                 <div className="flex items-start gap-3 bg-sand/40 border border-sand rounded-2xl px-6 py-5">
                   <div>
@@ -171,17 +183,25 @@ export default function SpeisekarteClient({ items }: { items: MenuItem[] }) {
               </AnimatedSection>
             )}
 
-            <AnimatedSection>
-              <div className="max-w-2xl">
-                {section.items.map((item) =>
-                  section.key === "wochenkarte" ? (
-                    <WeekRow key={item.id} item={item} />
-                  ) : (
-                    <MenuRow key={item.id} item={item} />
-                  )
-                )}
-              </div>
-            </AnimatedSection>
+            {!(section.key === "wochenkarte" && inSeason) && (
+              <AnimatedSection>
+                <div className="max-w-2xl">
+                  {section.items.map((item) =>
+                    section.key === "wochenkarte" ? (
+                      <WeekRow key={item.id} item={item} />
+                    ) : (
+                      <MenuRow key={item.id} item={item} />
+                    )
+                  )}
+                </div>
+              </AnimatedSection>
+            )}
+
+            {section.key === "wochenkarte" && isEintopfUpcoming(todayKey) && (
+              <AnimatedSection className="mt-8 max-w-2xl">
+                <EintopfSeason upcoming />
+              </AnimatedSection>
+            )}
 
             {section.key === "wochenkarte" && nextMonthItems.length > 0 && (
               <AnimatedSection className="mt-8">
